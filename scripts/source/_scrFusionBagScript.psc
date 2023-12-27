@@ -1,70 +1,66 @@
 Scriptname _scrFusionBagScript extends ObjectReference  
 
 Actor Property PlayerRef Auto
-ObjectReference Property _scrFusionContainer Auto
-
-Form[] addedItems
-int[] addedItemCounts
-int i = 0
+ObjectReference Property ThisContainer Auto
+FormList Property FusedResults  Auto  
 
 Event OnActivate(ObjectReference akActionRef)
-	if(akActionRef == PlayerRef)
-		addedItems = new Form[2]
-		addedItemCounts = new int[2]
+	if akActionRef == Game.GetPlayer()
 		; wait for player to leave menu
 		while(! Game.IsLookingControlsEnabled()) 
-			Utility.Wait(1.0)
+			Utility.Wait(0.5)
 		EndWhile
-		RegisterForSingleUpdate(0.2)
-	EndIf
+		RegisterForSingleUpdate(0.1)
+	endif
 EndEvent
 
 Event OnUpdate()
-	if (i > 0 && i < 2) || i > 2 || !(addedItems[0] as Scroll) || !(addedItems[1] as Scroll)
-		Debug.Notification("[SS Debug] Not enough or wrong fusion material: Requires two different types scrolls.")
-		if i > 0
-			_scrFusionContainer.Activate(PlayerRef)
-		endif
+	int itemCount = ThisContainer.GetNumItems()
+	if itemCount == 0
+		return
+	elseif itemCount < 2
+		Debug.Notification("Scroll fusion requires at least two ingredients.")
+		ThisContainer.Activate(PlayerRef)
 		return
 	endif
-	
-	int max = addedItemCounts[0]
-	if max < addedItemCounts[1]
-		max = addedItemCounts[1]
-	endif
-	
-	Scroll fused = ScrollScribe.FuseAndCreate(addedItems[0] as Scroll, addedItems[1] as Scroll)
-	if !fused
-		Debug.Notification("[SS Debug] Incompatible scrolls: Must be of the same casting type.")
-		if i > 0
-			_scrFusionContainer.Activate(PlayerRef)
-		endif
-		return
-	endif
-	_scrFusionContainer.AddItem(fused, max)
-	_scrFusionContainer.RemoveItem(addedItems[0], max)
-	_scrFusionContainer.RemoveItem(addedItems[1], max)
-	
-	_scrFusionContainer.Activate(PlayerRef)
-	
-	Debug.Notification("[SS Debug] Fusion successful.")
-	
-	Utility.Wait(1.0)
-EndEvent
 
-Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
-	if i < 2
-		addedItems[i] = akBaseItem;
-		addedItemCounts[i] = aiItemCount
-	endif
-	i += 1
-EndEvent
-
-Event OnItemRemoved(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
-	if i >= 0 && i < 2
-		addedItems[i] = none;
-		addedItemCounts[i] = 0
-	endif
-	
-	i -= 1
+	bool fusionSuccess = false
+	bool ranOnce = false
+	while !ranOnce || fusionSuccess
+		Scroll firstScroll = none
+		fusionSuccess = false
+		int i = 0
+		while i < itemCount
+			Scroll itm = ThisContainer.GetNthForm(i) as Scroll
+			if itm && !FusedResults.HasForm(itm)
+				if !firstScroll
+					firstScroll = itm
+				elseif itm != firstScroll && ScrollScribe.CanFuse(firstScroll, itm)
+					int countFirst = ThisContainer.GetItemCount(firstScroll)
+					int countSecond = ThisContainer.GetItemCount(itm)
+					int countFuse = countFirst
+					if countFuse > countSecond
+						countFuse = countSecond
+					endif
+					
+					Scroll fusedScroll = ScrollScribe.FuseAndCreate(firstScroll, itm)
+					FusedResults.AddForm(fusedScroll)
+					ThisContainer.AddItem(fusedScroll, countFuse)
+					ThisContainer.RemoveItem(firstScroll, countFuse)
+					ThisContainer.RemoveItem(itm, countFuse)
+					Utility.Wait(0.1)
+					fusionSuccess = true
+					Debug.Notification("Fusion successful: " + fusedScroll.GetName())
+				else
+					fusionSuccess = false
+					Debug.Notification("Incompatible scrolls: " + firstScroll.GetName() + " and " + itm.GetName())
+				endif
+			endif
+			i += 1
+		endwhile
+		ranOnce = true
+	endwhile
+	FusedResults.Revert()
+	Utility.Wait(0.5)
+	ThisContainer.Activate(PlayerRef)
 EndEvent
