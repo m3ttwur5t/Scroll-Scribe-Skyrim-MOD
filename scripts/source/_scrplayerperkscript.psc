@@ -1,28 +1,24 @@
 ScriptName _scrPlayerPerkScript extends ReferenceAlias
-Perk Property _scrScrollScalingPerk Auto
-Perk Property _scrDustDropPerk Auto
-Spell Property CraftSkillRef Auto
-Spell Property TrackerSkillRef Auto
+
+Perk Property ScrollScalingPerk Auto
+Perk Property DustDropPerk Auto
+Spell Property CraftSkill Auto
+Spell Property TrackerSkill Auto
 
 Event OnInit()
 	Actor Player = Game.GetPLayer()
-	if !Player.HasSpell(CraftSkillRef)
-		Player.AddSpell(CraftSkillRef, false)
+	if !Player.HasSpell(CraftSkill)
+		Player.AddSpell(CraftSkill, false)
 	EndIf
-	if !Player.HasPerk(_scrScrollScalingPerk)
-		Player.AddPerk(_scrScrollScalingPerk)
+	if !Player.HasPerk(ScrollScalingPerk)
+		Player.AddPerk(ScrollScalingPerk)
 		if Player.GetAV("Variable09") == 0
 			Player.SetAV("Variable09", 1)
 		EndIf
 	EndIf
 	
-	;if !Player.HasPerk(_scrDustDropPerk)
-	;	Player.AddPerk(_scrDustDropPerk)
-	;	Debug.Notification("[SS Debug] DustDrop perk added")
-	;EndIf
-	
-	if !Player.HasSpell(TrackerSkillRef)
-		TrackerSkillRef.SetNthEffectMagnitude(0, Player.GetAV("Variable09"))
-		Player.AddSpell(TrackerSkillRef, false)
+	if !Player.HasSpell(TrackerSkill)
+		TrackerSkill.SetNthEffectMagnitude(0, Player.GetAV("Variable09"))
+		Player.AddSpell(TrackerSkill, false)
 	EndIf
 EndEvent

@@ -1,17 +1,17 @@
 scriptname _scrMCMscript extends SKI_ConfigBase
 
-GlobalVariable Property _scrDustPerGemRank Auto
-GlobalVariable Property _scrPaperPerBook Auto
+GlobalVariable Property DustPerGemRank Auto
+GlobalVariable Property PaperPerBook Auto
 
-GlobalVariable Property _scrInscriptionExpTNLExponent Auto
-GlobalVariable Property _scrInscriptionExpMultiplier Auto
+GlobalVariable Property InscriptionExpTNLExponent Auto
+GlobalVariable Property InscriptionExpMultiplier Auto
 
-GlobalVariable Property _scrCraftingFilterNovice Auto
-GlobalVariable Property _scrCraftingFilterApprentice Auto
-GlobalVariable Property _scrCraftingFilterAdept Auto
-GlobalVariable Property _scrCraftingFilterExpert Auto
-GlobalVariable Property _scrCraftingFilterMaster Auto
-GlobalVariable Property _scrCraftingFilterStrange Auto
+GlobalVariable Property CraftingFilterNovice Auto
+GlobalVariable Property CraftingFilterApprentice Auto
+GlobalVariable Property CraftingFilterAdept Auto
+GlobalVariable Property CraftingFilterExpert Auto
+GlobalVariable Property CraftingFilterMaster Auto
+GlobalVariable Property CraftingFilterStrange Auto
 
 ; slider OIDs
 int expTNLexponent_S
@@ -31,67 +31,67 @@ event OnPageReset(string page)
 	
 	if (page == "" || page == "Config")
 		AddHeaderOption("Experience")
-		expTNLexponent_S 	= AddSliderOption("Difficulty Curve", _scrInscriptionExpTNLExponent.GetValue(), "{2}")
-		expMULT_S 			= AddSliderOption("Experience Multiplier", _scrInscriptionExpMultiplier.GetValue(), "{2}x")
+		expTNLexponent_S 	= AddSliderOption("Difficulty Curve", InscriptionExpTNLExponent.GetValue(), "{2}")
+		expMULT_S 			= AddSliderOption("Experience Multiplier", InscriptionExpMultiplier.GetValue(), "{2}x")
 		
 		SetCursorPosition(1) ; Move cursor to top right position
 		AddHeaderOption("Crafting Reagents")
-		dusttogem_S 		= AddSliderOption("Dust from Gems", _scrDustPerGemRank.GetValueInt(), "{0}")
-		papertobook_S 		= AddSliderOption("Paper from Books", _scrPaperPerBook.GetValueInt(), "{0}")
+		dusttogem_S 		= AddSliderOption("Dust from Gems", DustPerGemRank.GetValueInt(), "{0}")
+		papertobook_S 		= AddSliderOption("Paper from Books", PaperPerBook.GetValueInt(), "{0}")
 		
 		SetCursorPosition(8)
 		AddHeaderOption("Crafting Menu Filter")
-		toggleNovice_S 		= AddToggleOption("Novice Scrolls", 	_scrCraftingFilterNovice.GetValueInt())
-		toggleApprentice_S 	= AddToggleOption("Apprentice Scrolls", _scrCraftingFilterApprentice.GetValueInt())
-		toggleAdept_S 		= AddToggleOption("Adept Scrolls", 		_scrCraftingFilterAdept.GetValueInt())
-		toggleExpert_S 		= AddToggleOption("Expert Scrolls", 	_scrCraftingFilterExpert.GetValueInt())
-		toggleMaster_S 		= AddToggleOption("Master Scrolls", 	_scrCraftingFilterMaster.GetValueInt())
-		toggleStrange_S		= AddToggleOption("Strange Scrolls", 	_scrCraftingFilterStrange.GetValueInt())
+		toggleNovice_S 		= AddToggleOption("Novice Scrolls", 	CraftingFilterNovice.GetValueInt())
+		toggleApprentice_S 	= AddToggleOption("Apprentice Scrolls", CraftingFilterApprentice.GetValueInt())
+		toggleAdept_S 		= AddToggleOption("Adept Scrolls", 		CraftingFilterAdept.GetValueInt())
+		toggleExpert_S 		= AddToggleOption("Expert Scrolls", 	CraftingFilterExpert.GetValueInt())
+		toggleMaster_S 		= AddToggleOption("Master Scrolls", 	CraftingFilterMaster.GetValueInt())
+		toggleStrange_S		= AddToggleOption("Strange Scrolls", 	CraftingFilterStrange.GetValueInt())
 	endIf
 endEvent
 
 event OnOptionSelect(int option)
 	int value = 0;
 	if (option == toggleNovice_S)
-		value = (_scrCraftingFilterNovice.GetValueInt() + 1) % 2
-		_scrCraftingFilterNovice.SetValue(value)
+		value = (CraftingFilterNovice.GetValueInt() + 1) % 2
+		CraftingFilterNovice.SetValue(value)
 	elseif (option == toggleApprentice_S)
-		value = (_scrCraftingFilterApprentice.GetValueInt() + 1) % 2
-		_scrCraftingFilterApprentice.SetValue(value)
+		value = (CraftingFilterApprentice.GetValueInt() + 1) % 2
+		CraftingFilterApprentice.SetValue(value)
 	elseif (option == toggleAdept_S)
-		value = (_scrCraftingFilterAdept.GetValueInt() + 1) % 2
-		_scrCraftingFilterAdept.SetValue(value)
+		value = (CraftingFilterAdept.GetValueInt() + 1) % 2
+		CraftingFilterAdept.SetValue(value)
 	elseif (option == toggleExpert_S)
-		value = (_scrCraftingFilterExpert.GetValueInt() + 1) % 2
-		_scrCraftingFilterExpert.SetValue(value)
+		value = (CraftingFilterExpert.GetValueInt() + 1) % 2
+		CraftingFilterExpert.SetValue(value)
 	elseif (option == toggleMaster_S)
-		value = (_scrCraftingFilterMaster.GetValueInt() + 1) % 2
-		_scrCraftingFilterMaster.SetValue(value)
+		value = (CraftingFilterMaster.GetValueInt() + 1) % 2
+		CraftingFilterMaster.SetValue(value)
 	elseif (option == toggleStrange_S)
-		value = (_scrCraftingFilterStrange.GetValueInt() + 1) % 2
-		_scrCraftingFilterStrange.SetValue(value)
+		value = (CraftingFilterStrange.GetValueInt() + 1) % 2
+		CraftingFilterStrange.SetValue(value)
 	EndIf
 	SetToggleOptionValue(option, value)
 EndEvent
 
 event OnOptionSliderOpen(int option)
 	if (option == expTNLexponent_S)
-		SetSliderDialogStartValue(_scrInscriptionExpTNLExponent.GetValue())
+		SetSliderDialogStartValue(InscriptionExpTNLExponent.GetValue())
 		SetSliderDialogDefaultValue(1.10)
 		SetSliderDialogRange(1.0, 1.5)
 		SetSliderDialogInterval(0.01)
 	elseIf (option == expMULT_S)
-		SetSliderDialogStartValue(_scrInscriptionExpMultiplier.GetValue())
+		SetSliderDialogStartValue(InscriptionExpMultiplier.GetValue())
 		SetSliderDialogDefaultValue(1.0)
 		SetSliderDialogRange(0.5, 2.0)
 		SetSliderDialogInterval(0.1)
 	elseIf (option == dusttogem_S)
-		SetSliderDialogStartValue(_scrDustPerGemRank.GetValueInt())
+		SetSliderDialogStartValue(DustPerGemRank.GetValueInt())
 		SetSliderDialogDefaultValue(8)
 		SetSliderDialogRange(1, 20)
 		SetSliderDialogInterval(1)
 	elseIf (option == papertobook_S)
-		SetSliderDialogStartValue(_scrPaperPerBook.GetValueInt())
+		SetSliderDialogStartValue(PaperPerBook.GetValueInt())
 		SetSliderDialogDefaultValue(5)
 		SetSliderDialogRange(1, 20)
 		SetSliderDialogInterval(1)
@@ -101,17 +101,17 @@ endEvent
 
 event OnOptionSliderAccept(int option, float value)
 	if (option == expTNLexponent_S)
-		_scrInscriptionExpTNLExponent.SetValue(value)
-		SetSliderOptionValue(expTNLexponent_S, _scrInscriptionExpTNLExponent.GetValue(), "{2}")
+		InscriptionExpTNLExponent.SetValue(value)
+		SetSliderOptionValue(expTNLexponent_S, InscriptionExpTNLExponent.GetValue(), "{2}")
 	elseIf (option == expMULT_S)
-		_scrInscriptionExpMultiplier.SetValue(value)
-		SetSliderOptionValue(expMULT_S,  _scrInscriptionExpMultiplier.GetValue(), "{2}x")
+		InscriptionExpMultiplier.SetValue(value)
+		SetSliderOptionValue(expMULT_S,  InscriptionExpMultiplier.GetValue(), "{2}x")
 	elseIf (option == dusttogem_S)
-		_scrDustPerGemRank.SetValueInt(value as Int)
-		SetSliderOptionValue(dusttogem_S, _scrDustPerGemRank.GetValueInt(), "{0}")
+		DustPerGemRank.SetValueInt(value as Int)
+		SetSliderOptionValue(dusttogem_S, DustPerGemRank.GetValueInt(), "{0}")
 	elseIf (option == papertobook_S)
-		_scrPaperPerBook.SetValueInt(value as Int)
-		SetSliderOptionValue(papertobook_S, _scrPaperPerBook.GetValueInt(), "{0}")
+		PaperPerBook.SetValueInt(value as Int)
+		SetSliderOptionValue(papertobook_S, PaperPerBook.GetValueInt(), "{0}")
 	endIf
 endEvent
 

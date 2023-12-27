@@ -35,15 +35,10 @@ Event OnUpdate()
 			if itm && !FusedResults.HasForm(itm)
 				if !firstScroll
 					firstScroll = itm
-				elseif itm != firstScroll && ScrollScribe.CanFuse(firstScroll, itm)
-					int countFirst = ThisContainer.GetItemCount(firstScroll)
-					int countSecond = ThisContainer.GetItemCount(itm)
-					int countFuse = countFirst
-					if countFuse > countSecond
-						countFuse = countSecond
-					endif
+				elseif itm != firstScroll && ScrollScribeExtender.CanFuse(firstScroll, itm)
+					int countFuse = m3Helper.Min(ThisContainer.GetItemCount(firstScroll), ThisContainer.GetItemCount(itm))
 					
-					Scroll fusedScroll = ScrollScribe.FuseAndCreate(firstScroll, itm)
+					Scroll fusedScroll = ScrollScribeExtender.FuseAndCreate(firstScroll, itm)
 					FusedResults.AddForm(fusedScroll)
 					ThisContainer.AddItem(fusedScroll, countFuse)
 					ThisContainer.RemoveItem(firstScroll, countFuse)

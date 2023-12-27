@@ -7,11 +7,11 @@ Spell Property InscriptionTrackerSpell Auto
 MagicEffect Property InscriptionTrackerEffect Auto
 Actor Property Player Auto
 
-GlobalVariable Property _scrInscriptionExp Auto
-GlobalVariable Property _scrInscriptionLevel Auto
-GlobalVariable Property _scrInscriptionExpTNL Auto
-GlobalVariable Property _scrInscriptionExpTNLExponent Auto
-GlobalVariable Property _scrInscriptionExpMultiplier Auto
+GlobalVariable Property InscriptionExp Auto
+GlobalVariable Property InscriptionLevel Auto
+GlobalVariable Property InscriptionExpTNL Auto
+GlobalVariable Property InscriptionExpTNLExponent Auto
+GlobalVariable Property InscriptionExpMultiplier Auto
 MiscObject Property _scrArcaneDust Auto
 
 bool bCrafting = false
@@ -38,15 +38,15 @@ EndEvent
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
 	if bCrafting 
 		if akBaseItem.HasKeyword(ListenKeyword) && akSourceContainer == None
-			AdvInscription( Math.Floor(akBaseItem.GetGoldValue() * aiItemCount * _scrInscriptionExpMultiplier.GetValue()) )
+			AdvInscription( Math.Floor(akBaseItem.GetGoldValue() * aiItemCount * InscriptionExpMultiplier.GetValue()) )
 		EndIf
 	EndIf
 EndEvent
 
 Function AdvInscription(int iExp)
-	int iCurrentXP = _scrInscriptionExp.GetValueInt() + iExp
-	int iToNextLvl = _scrInscriptionExpTNL.GetValueInt()
-	int iCurrentLvl =  _scrInscriptionLevel.GetValueInt();
+	int iCurrentXP = InscriptionExp.GetValueInt() + iExp
+	int iToNextLvl = InscriptionExpTNL.GetValueInt()
+	int iCurrentLvl =  InscriptionLevel.GetValueInt();
 	bool bLevelUp = false
 	
 	while iCurrentXP >= iToNextLvl
@@ -54,13 +54,13 @@ Function AdvInscription(int iExp)
 		iCurrentLvl += 1
 		iCurrentXP -= iToNextLvl
 		NotifyRank(iCurrentLvl)
-		iToNextLvl = Math.Ceiling(1 + iToNextLvl * _scrInscriptionExpTNLExponent.GetValue())
+		iToNextLvl = Math.Ceiling(1 + iToNextLvl * InscriptionExpTNLExponent.GetValue())
 	EndWhile
-	_scrInscriptionExp.SetValue(iCurrentXP)
-	_scrInscriptionExpTNL.SetValueInt(iToNextLvl)
+	InscriptionExp.SetValue(iCurrentXP)
+	InscriptionExpTNL.SetValueInt(iToNextLvl)
 	
 	if bLevelUp
-		_scrInscriptionLevel.SetValueInt(iCurrentLvl)
+		InscriptionLevel.SetValueInt(iCurrentLvl)
 		Player.SetAV("Variable09", iCurrentLvl)
 		UpdateTrackingSpell(iCurrentLvl)
 	EndIf
