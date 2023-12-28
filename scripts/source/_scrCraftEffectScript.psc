@@ -1,7 +1,5 @@
 Scriptname _scrCraftEffectScript extends activemagiceffect  
 
-Perk Property PerkRef Auto
-
 FormList Property SoulGemList Auto
 FormList Property PaperBookList Auto
 
@@ -14,6 +12,7 @@ GlobalVariable Property PaperPerBook Auto
 
 int[] iConversionList
 int[] iConversionListBook
+int dustOnHand
 bool bCleanup = false
 
 ; Custom Skills Framework
@@ -21,62 +20,65 @@ GlobalVariable Property CSFAvailablePerkCount  Auto
 GlobalVariable Property CFSOpenSkillsMenu  Auto  
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
-	Actor Player = Game.GetPlayer()
-	if !Player.IsInCombat()
+	if !Game.GetPlayer().IsInCombat()
 		if CSFAvailablePerkCount.GetValueInt() > 0
 			CFSOpenSkillsMenu.SetValueInt(1)
 			return
 		endif
 	
-		iConversionList = new int[6]
-		iConversionListBook = new int[3]
-		int i = 0
-
-		; break gems into dust
-		while i < SoulGemList.GetSize()
-			Form iGem = SoulGemList.GetAt(i)
-			int iGemInventory = PlayerRef.GetItemCount(iGem)
-			
-			iConversionList[i] = iGemInventory
-			
-			PlayerRef.RemoveItem(iGem, iGemInventory, true)
-			PlayerRef.AddItem(ArcaneDust, iGemInventory * DustPerGemRank.GetValueInt() * (1+i), true)
-			
-			i += 1
-		EndWhile
-		
-		; break books into paper
-		i = 0
-		while i < PaperBookList.GetSize()
-			Form iBook = PaperBookList.GetAt(i)
-			int iBookInventory = PlayerRef.GetItemCount(iBook)
-			
-			iConversionListBook[i] = iBookInventory
-			
-			PlayerRef.RemoveItem(iBook, iBookInventory, true)
-			PlayerRef.AddItem(PaperRoll, iBookInventory * PaperPerBook.GetValueInt(), true)
-			
-			i += 1
-		EndWhile
+		Disassemble()
 
 		; activate crafting station so the crafting menu shows up
+		Utility.Wait(1.0)
 		CraftStation.Activate(PlayerRef);
-		Utility.Wait(2.0)
-		
+
 		; wait for player to leave crafting menu
-		while(! Game.IsLookingControlsEnabled()) 
-			Utility.Wait(1.0)
+		while(!Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled()) 
+			Utility.WaitMenuMode(1.0)
 		EndWhile
 		
 		bCleanup = true
-		RegisterForSingleUpdate(0.2)
+		Reassemble();
 	endif
 EndEvent
 
-Event OnUpdate()
+Function Disassemble()
+	iConversionList = new int[6]
+	iConversionListBook = new int[3]
+	dustOnHand = Game.GetPlayer().GetItemCount(ArcaneDust)
+	int i = 0
+
+	; break gems into dust
+	while i < SoulGemList.GetSize()
+		Form iGem = SoulGemList.GetAt(i)
+		int iGemInventory = PlayerRef.GetItemCount(iGem)
+		
+		iConversionList[i] = iGemInventory
+		
+		PlayerRef.RemoveItem(iGem, iGemInventory, true)
+		PlayerRef.AddItem(ArcaneDust, iGemInventory * DustPerGemRank.GetValueInt() * (1+i), true)
+		
+		i += 1
+	EndWhile
+	
+	; break books into paper
+	i = 0
+	while i < PaperBookList.GetSize()
+		Form iBook = PaperBookList.GetAt(i)
+		int iBookInventory = PlayerRef.GetItemCount(iBook)
+		
+		iConversionListBook[i] = iBookInventory
+		
+		PlayerRef.RemoveItem(iBook, iBookInventory, true)
+		PlayerRef.AddItem(PaperRoll, iBookInventory * PaperPerBook.GetValueInt(), true)
+		
+		i += 1
+	EndWhile
+EndFunction
+Function Reassemble()
 	int i
 	; recombine dust to gems
-	int iDustRemains = PlayerRef.GetItemCount(ArcaneDust)
+	int iDustRemains = PlayerRef.GetItemCount(ArcaneDust) - dustOnHand
 	if iDustRemains > DustPerGemRank.GetValueInt()
 		i = iConversionList.Length - 1
 		while i >= 0 
@@ -112,4 +114,4 @@ Event OnUpdate()
 	EndIf
 	
 	bCleanup = false
-EndEvent
+EndFunction

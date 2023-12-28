@@ -1,0 +1,6 @@
+[Inscription]
+type = "Adaptive"
+alias = "Confidence"
+default.formula = "15"
+[Include]
+"Scribe.esp" = ["Inscription"]

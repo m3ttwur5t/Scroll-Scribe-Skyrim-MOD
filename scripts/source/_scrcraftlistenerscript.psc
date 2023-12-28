@@ -1,7 +1,6 @@
 ScriptName _scrCraftListenerScript Extends ReferenceAlias
 
 Keyword Property ListenKeyword Auto
-MagicEffect Property InscriptionTrackerEffect Auto
 Actor Property Player Auto
 
 GlobalVariable Property InscriptionExp Auto
@@ -61,7 +60,7 @@ Function AdvInscription(int iExp)
 	
 	if bLevelUp
 		InscriptionLevel.SetValueInt(iCurrentLvl)
-		Player.SetAV("_scrInscriptionLevel", iCurrentLvl)
+		Player.SetActorValue("Inscription", iCurrentLvl)
 		CSFSkillIncrease.SetValueInt(iCurrentLvl)
 	EndIf
 EndFunction

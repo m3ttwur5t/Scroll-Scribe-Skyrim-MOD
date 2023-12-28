@@ -30,25 +30,27 @@ Event OnUpdate()
 		Scroll firstScroll = none
 		fusionSuccess = false
 		int i = 0
-		while i < itemCount
+		while i < ThisContainer.GetNumItems()
 			Scroll itm = ThisContainer.GetNthForm(i) as Scroll
 			if itm && !FusedResults.HasForm(itm)
 				if !firstScroll
 					firstScroll = itm
-				elseif itm != firstScroll && ScrollScribeExtender.CanFuse(firstScroll, itm)
-					int countFuse = m3Helper.Min(ThisContainer.GetItemCount(firstScroll), ThisContainer.GetItemCount(itm))
-					
-					Scroll fusedScroll = ScrollScribeExtender.FuseAndCreate(firstScroll, itm)
-					FusedResults.AddForm(fusedScroll)
-					ThisContainer.AddItem(fusedScroll, countFuse)
-					ThisContainer.RemoveItem(firstScroll, countFuse)
-					ThisContainer.RemoveItem(itm, countFuse)
-					Utility.Wait(0.1)
-					fusionSuccess = true
-					Debug.Notification("Fusion successful: " + fusedScroll.GetName())
-				else
-					fusionSuccess = false
-					Debug.Notification("Incompatible scrolls: " + firstScroll.GetName() + " and " + itm.GetName())
+				elseif itm != firstScroll
+					if ScrollScribeExtender.CanFuse(firstScroll, itm)
+						int countFuse = m3Helper.Min(ThisContainer.GetItemCount(firstScroll), ThisContainer.GetItemCount(itm))
+						
+						Scroll fusedScroll = ScrollScribeExtender.FuseAndCreate(firstScroll, itm)
+						FusedResults.AddForm(fusedScroll)
+						ThisContainer.AddItem(fusedScroll, countFuse)
+						ThisContainer.RemoveItem(firstScroll, countFuse)
+						ThisContainer.RemoveItem(itm, countFuse)
+						Utility.Wait(0.1)
+						fusionSuccess = true
+						Debug.Notification("Fusion successful: " + fusedScroll.GetName())
+					else
+						fusionSuccess = false
+						Debug.Notification("Incompatible scrolls: " + firstScroll.GetName() + " and " + itm.GetName())
+					endif
 				endif
 			endif
 			i += 1
