@@ -23,7 +23,7 @@ Event OnUpdate()
 		ThisContainer.Activate(PlayerRef)
 		return
 	endif
-
+	
 	bool fusionSuccess = false
 	bool ranOnce = false
 	while !ranOnce || fusionSuccess
@@ -57,5 +57,6 @@ Event OnUpdate()
 	endwhile
 	FusedResults.Revert()
 	Utility.Wait(0.5)
+	
 	ThisContainer.Activate(PlayerRef)
 EndEvent

@@ -1,7 +1,6 @@
 Scriptname _scrCraftEffectScript extends activemagiceffect  
 
 Perk Property PerkRef Auto
-Spell Property TrackerSkill Auto
 
 FormList Property SoulGemList Auto
 FormList Property PaperBookList Auto
@@ -17,19 +16,17 @@ int[] iConversionList
 int[] iConversionListBook
 bool bCleanup = false
 
+; Custom Skills Framework
+GlobalVariable Property CSFAvailablePerkCount  Auto  
+GlobalVariable Property CFSOpenSkillsMenu  Auto  
+
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	Actor Player = Game.GetPlayer()
 	if !Player.IsInCombat()
-		if !Player.HasPerk(PerkRef)
-			Player.AddPerk(PerkRef)
-			if Player.GetAV("Variable09") == 0
-				Player.SetAV("Variable09", 1)
-			EndIf
-		EndIf
-		if !Player.HasSpell(TrackerSkill)
-			TrackerSkill.SetNthEffectMagnitude(0, Player.GetAV("Variable09"))
-			Player.AddSpell(TrackerSkill, false)
-		EndIf
+		if CSFAvailablePerkCount.GetValueInt() > 0
+			CFSOpenSkillsMenu.SetValueInt(1)
+			return
+		endif
 	
 		iConversionList = new int[6]
 		iConversionListBook = new int[3]

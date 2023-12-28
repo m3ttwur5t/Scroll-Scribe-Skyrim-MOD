@@ -1,0 +1,6 @@
+[_scrInscriptionLevel]
+type = "Adaptive"
+alias = "Variable09"
+
+[Include]
+"Scribe.esp" = ["_scrInscriptionLevel"]
