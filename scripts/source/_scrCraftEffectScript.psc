@@ -3,6 +3,8 @@ Scriptname _scrCraftEffectScript extends activemagiceffect
 FormList Property SoulGemList Auto
 FormList Property PaperBookList Auto
 
+Perk Property PaperHarvesterPerk  Auto  
+
 Actor Property PlayerRef Auto
 MiscObject Property ArcaneDust Auto
 MiscObject Property PaperRoll Auto
@@ -18,10 +20,11 @@ bool bCleanup = false
 ; Custom Skills Framework
 GlobalVariable Property CSFAvailablePerkCount  Auto  
 GlobalVariable Property CFSOpenSkillsMenu  Auto  
+FormList Property PerkList Auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	if !Game.GetPlayer().IsInCombat()
-		if CSFAvailablePerkCount.GetValueInt() > 0
+		if CSFAvailablePerkCount.GetValueInt() > 0 && HasLearnedAllPerks() == false
 			CFSOpenSkillsMenu.SetValueInt(1)
 			return
 		endif
@@ -41,6 +44,18 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 		Reassemble();
 	endif
 EndEvent
+
+bool Function HasLearnedAllPerks()
+	int i = PerkList.GetSize() - 1
+	while i >= 0
+		Perk p = PerkList.GetAt(i) as Perk
+		if !PlayerRef.HasPerk(p)
+			return false
+		endif
+		i -= 1
+	endwhile
+	return true
+EndFunction
 
 Function Disassemble()
 	iConversionList = new int[6]
@@ -62,6 +77,10 @@ Function Disassemble()
 	EndWhile
 	
 	; break books into paper
+	int bonusPaper = 0
+	if PlayerRef.HasPerk(PaperHarvesterPerk)
+		bonusPaper = 4
+	endif
 	i = 0
 	while i < PaperBookList.GetSize()
 		Form iBook = PaperBookList.GetAt(i)
@@ -70,7 +89,7 @@ Function Disassemble()
 		iConversionListBook[i] = iBookInventory
 		
 		PlayerRef.RemoveItem(iBook, iBookInventory, true)
-		PlayerRef.AddItem(PaperRoll, iBookInventory * PaperPerBook.GetValueInt(), true)
+		PlayerRef.AddItem(PaperRoll, iBookInventory * (bonusPaper + PaperPerBook.GetValueInt()), true)
 		
 		i += 1
 	EndWhile

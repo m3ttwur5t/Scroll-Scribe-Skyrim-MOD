@@ -8,8 +8,8 @@ Description = "The ability to create enchanted spell scrolls."
 # Custom background nif, INTVampirePerkSkydome.nif is showing the werewolf background, if you use custom
 # nif you made it must have some nodes and images, recommended is to edit this nif instead of creating
 # new from scratch. If you use "Interface/INTPerkSkydome.nif" as base then you must set SkydomeNormalNif to true
-Skydome = "DLC01/Interface/INTVampirePerkSkydome.nif"
-SkydomeNormalNif = false
+Skydome = "Interface/INTPerkSkydome.nif"
+SkydomeNormalNif = true
 
 # This should point to a global variable that contains the current level of skill. Must be set!
 LevelFile = "Scribe.esp"
@@ -67,7 +67,7 @@ Node0.Links = "1"
 # Use GridX and GridY to place the node (negative value not supported), X and Y is extra offset for more precise placement (can have fractions and can be negative)
 # GridX goes from right to left (lower value to higher), GridY goes from bottom to top (lower value to higher)
 
-# Scaling Perk
+# 1 Scaling Perk
 Node1.Enable = true
 Node1.PerkFile = "Scribe.esp"
 Node1.PerkId = 0x9905
@@ -75,32 +75,80 @@ Node1.X = 0
 Node1.Y = 0
 Node1.GridX = 3
 Node1.GridY = 0
-Node1.Links = "2"
+Node1.Links = "2 3"
 
-# To Dust
+# 2 Dust Discount
 Node2.Enable = true
 Node2.PerkFile = "Scribe.esp"
-Node2.PerkId = 0x1E08B
+Node2.PerkId = 0x3613D
 Node2.X = 0
 Node2.Y = 0
-Node2.GridX = 3
+Node2.GridX = 2
 Node2.GridY = 1
-Node2.Links = "3 4"
+Node2.Links = "6 4 8"
 
-# Scroll Fusion
+# 3 Paper Harvester
 Node3.Enable = true
 Node3.PerkFile = "Scribe.esp"
-Node3.PerkId = 0x3362E
+Node3.PerkId = 0x36140
 Node3.X = 0
 Node3.Y = 0
 Node3.GridX = 4
-Node3.GridY = 2
+Node3.GridY = 1
+Node3.Links = "7 8"
 
-# Rip and Tear
+# 4 Enchanted Scrolls
 Node4.Enable = true
 Node4.PerkFile = "Scribe.esp"
-Node4.PerkId = 0x3362F
+Node4.PerkId = 0x3613E
 Node4.X = 0
 Node4.Y = 0
-Node4.GridX = 2
+Node4.GridX = 1
 Node4.GridY = 2
+Node4.Links = "5"
+
+# 5 Attuned Scrolls
+Node5.Enable = true
+Node5.PerkFile = "Scribe.esp"
+Node5.PerkId = 0x3613F
+Node5.X = 0
+Node5.Y = 0
+Node5.GridX = 1
+Node5.GridY = 3
+
+# 6 To Dust
+Node6.Enable = true
+Node6.PerkFile = "Scribe.esp"
+Node6.PerkId = 0x1E08B
+Node6.X = 0
+Node6.Y = 0
+Node6.GridX = 3
+Node6.GridY = 2
+
+# 7 Lucky Scribe
+Node7.Enable = true
+Node7.PerkFile = "Scribe.esp"
+Node7.PerkId = 0x36141
+Node7.X = 0
+Node7.Y = 0
+Node7.GridX = 4
+Node7.GridY = 2
+
+# 8 Rip and Tear
+Node8.Enable = true
+Node8.PerkFile = "Scribe.esp"
+Node8.PerkId = 0x3362F
+Node8.X = 0
+Node8.Y = 0
+Node8.GridX = 3
+Node8.GridY = 3
+Node8.Links = "9"
+
+# 9 Fusion
+Node9.Enable = true
+Node9.PerkFile = "Scribe.esp"
+Node9.PerkId = 0x3362E
+Node9.X = 0
+Node9.Y = 0
+Node9.GridX = 3
+Node9.GridY = 4

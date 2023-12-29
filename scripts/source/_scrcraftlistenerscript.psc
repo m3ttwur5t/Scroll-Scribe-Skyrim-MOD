@@ -1,7 +1,10 @@
 ScriptName _scrCraftListenerScript Extends ReferenceAlias
 
+Quest Property TutorialQuest  Auto  
 Keyword Property ListenKeyword Auto
 Actor Property Player Auto
+
+Perk Property LuckyScribePerk  Auto  
 
 GlobalVariable Property InscriptionExp Auto
 GlobalVariable Property InscriptionLevel Auto
@@ -35,7 +38,17 @@ EndEvent
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
 	if bCrafting 
 		if akSourceContainer == None && akBaseItem.HasKeyword(ListenKeyword)
-			AdvInscription( Math.Floor(akBaseItem.GetGoldValue() * aiItemCount * InscriptionExpMultiplier.GetValue()) )
+			if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(0)
+				TutorialQuest.SetObjectiveCompleted(0, true)
+				TutorialQuest.SetObjectiveDisplayed(10)
+			endif
+			if InscriptionLevel.GetValueInt() < 200
+				AdvInscription( Math.Floor(akBaseItem.GetGoldValue() * aiItemCount * InscriptionExpMultiplier.GetValue()) )
+			endif
+			
+			if Player.HasPerk(LuckyScribePerk) && Utility.RandomInt() > 50
+				Player.AddItem(akBaseItem, 1)
+			endif
 		EndIf
 	EndIf
 EndEvent
@@ -65,15 +78,26 @@ Function AdvInscription(int iExp)
 	EndIf
 EndFunction
 
+int perksAtQuestStart
 Function NotifyRankMaybe(int iValue)
-	if iValue % 25 == 0
-		int iLevel = iValue / 25
-		Debug.Notification("Inscription rank gained!")
-		Debug.Notification("Use the Scroll Crafting ability to spend Inscription perk points.")
+	if iValue % 20 == 0
+		int iLevel = iValue / 20
+		
+		Debug.Notification("Inscription perk gained! Use the Scroll Crafting ability to view skills.")
 		CSFAvailablePerkCount.SetValueInt(CSFAvailablePerkCount.GetValueInt() + 1)
+		
+		if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(10)
+			TutorialQuest.SetStage(10)
+			perksAtQuestStart = CSFAvailablePerkCount.GetValueInt()
+			RegisterForSingleUpdate(1)
+		endif
 	EndIf
 EndFunction
 
-
-
-
+Event OnUpdate()
+	if CSFAvailablePerkCount.GetValueInt() != perksAtQuestStart
+		TutorialQuest.SetStage(20)
+	else
+		RegisterForSingleUpdate(5)
+	endif
+EndEvent

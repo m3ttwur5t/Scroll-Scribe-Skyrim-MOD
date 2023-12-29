@@ -4,6 +4,7 @@ Actor Property PlayerRef Auto
 ObjectReference Property ThisContainer Auto
 FormList Property ExtractedResults  Auto  
 GlobalVariable Property InscriptionLevel Auto
+Quest Property TutorialQuest  Auto  
 
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
@@ -41,7 +42,10 @@ Event OnUpdate()
 					Utility.Wait(0.1)
 					extractionSuccess = true
 					Debug.Notification("Extraction successful")
-				else
+					
+					if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(40)
+						TutorialQuest.SetStage(40)
+					endif
 					extractionSuccess = false
 					Debug.Notification("Extraction failed. Invalid Spell Book: " + itm.GetName())
 				endif
@@ -54,3 +58,5 @@ Event OnUpdate()
 	Utility.Wait(0.5)
 	ThisContainer.Activate(PlayerRef)
 EndEvent
+
+
