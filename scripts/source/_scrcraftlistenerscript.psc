@@ -9,7 +9,6 @@ Perk Property LuckyScribePerk  Auto
 GlobalVariable Property InscriptionExp Auto
 GlobalVariable Property InscriptionLevel Auto
 GlobalVariable Property InscriptionExpTNL Auto
-GlobalVariable Property InscriptionExpTNLExponent Auto
 GlobalVariable Property InscriptionExpMultiplier Auto
 
 bool bCrafting = false
@@ -63,7 +62,7 @@ Function AdvInscription(int iExp)
 		bLevelUp = true
 		iCurrentLvl += 1
 		iCurrentXP -= iToNextLvl
-		iToNextLvl = Math.Ceiling(1 + iToNextLvl * InscriptionExpTNLExponent.GetValue())
+		iToNextLvl = Math.Ceiling(CalculateExpForLevel( (iCurrentLvl+1.0) as float))
 		NotifyRankMaybe(iCurrentLvl)
 	EndWhile
 	InscriptionExp.SetValue(iCurrentXP)
@@ -77,6 +76,10 @@ Function AdvInscription(int iExp)
 		CSFSkillIncrease.SetValueInt(iCurrentLvl)
 	EndIf
 EndFunction
+
+float Function CalculateExpForLevel(float nextLevel)
+	return 150+10*nextLevel+Math.Pow(500, nextLevel/150)
+endfunction
 
 int perksAtQuestStart
 Function NotifyRankMaybe(int iValue)

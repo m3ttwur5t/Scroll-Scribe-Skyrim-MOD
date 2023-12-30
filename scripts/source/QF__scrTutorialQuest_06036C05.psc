@@ -2,23 +2,28 @@
 ;NEXT FRAGMENT INDEX 8
 Scriptname QF__scrTutorialQuest_06036C05 Extends Quest Hidden
 
-;BEGIN FRAGMENT Fragment_0
-Function Fragment_0()
-;BEGIN AUTOCAST TYPE _scrTutorialQuestScript
-Quest __temp = self as Quest
-_scrTutorialQuestScript kmyQuest = __temp as _scrTutorialQuestScript
-;END AUTOCAST
-;BEGIN CODE
-kMyQuest.StartTutorial()
-;END CODE
-EndFunction
-;END FRAGMENT
-
 ;BEGIN FRAGMENT Fragment_3
 Function Fragment_3()
 ;BEGIN CODE
 SetObjectiveCompleted(10, true)
 SetObjectiveDisplayed(20)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_2
+Function Fragment_2()
+;BEGIN CODE
+SetObjectiveCompleted(30, true)
+SetObjectiveDisplayed(40)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_7
+Function Fragment_7()
+;BEGIN CODE
+SetObjectiveCompleted(50, true)
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -41,19 +46,11 @@ SetObjectiveDisplayed(30)
 EndFunction
 ;END FRAGMENT
 
-;BEGIN FRAGMENT Fragment_2
-Function Fragment_2()
+;BEGIN FRAGMENT Fragment_0
+Function Fragment_0()
 ;BEGIN CODE
-SetObjectiveCompleted(30, true)
-SetObjectiveDisplayed(40)
-;END CODE
-EndFunction
-;END FRAGMENT
-
-;BEGIN FRAGMENT Fragment_7
-Function Fragment_7()
-;BEGIN CODE
-SetObjectiveCompleted(50, true)
+SetStage(0)
+SetObjectiveDisplayed(0)
 ;END CODE
 EndFunction
 ;END FRAGMENT
