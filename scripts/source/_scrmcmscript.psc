@@ -2,6 +2,7 @@ scriptname _scrMCMscript extends SKI_ConfigBase
 
 GlobalVariable Property DustPerGemRank Auto
 GlobalVariable Property PaperPerBook Auto
+GlobalVariable Property EnableFilledSoulGems Auto
 
 GlobalVariable Property InscriptionExpMultiplier Auto
 
@@ -15,6 +16,7 @@ GlobalVariable Property CraftingFilterStrange Auto
 ; slider OIDs
 int expMULT_S
 int dusttogem_S
+int dusttogemFilled_S
 int papertobook_S
 
 int toggleNovice_S
@@ -33,7 +35,8 @@ event OnPageReset(string page)
 		
 		SetCursorPosition(1) ; Move cursor to top right position
 		AddHeaderOption("Crafting Reagents")
-		dusttogem_S 		= AddSliderOption("Dust from Gems", DustPerGemRank.GetValueInt(), "{0}")
+		dusttogem_S 		= AddSliderOption("Dust from Soul Gems", DustPerGemRank.GetValueInt(), "{0}")
+		dusttogemFilled_S 	= AddToggleOption("Use filled Soul Gems", EnableFilledSoulGems.GetValueInt())
 		papertobook_S 		= AddSliderOption("Paper from Books", PaperPerBook.GetValueInt(), "{0}")
 		
 		SetCursorPosition(8)
@@ -67,6 +70,9 @@ event OnOptionSelect(int option)
 	elseif (option == toggleStrange_S)
 		value = (CraftingFilterStrange.GetValueInt() + 1) % 2
 		CraftingFilterStrange.SetValue(value)
+	elseif (option == dusttogemFilled_S)
+		value = (EnableFilledSoulGems.GetValueInt() + 1) % 2
+		EnableFilledSoulGems.SetValue(value)
 	EndIf
 	SetToggleOptionValue(option, value)
 EndEvent
@@ -74,18 +80,18 @@ EndEvent
 event OnOptionSliderOpen(int option)
 	If (option == expMULT_S)
 		SetSliderDialogStartValue(InscriptionExpMultiplier.GetValue())
-		SetSliderDialogDefaultValue(1.0)
-		SetSliderDialogRange(1.0, 2.0)
+		SetSliderDialogDefaultValue(2.0)
+		SetSliderDialogRange(1.0, 3.0)
 		SetSliderDialogInterval(0.1)
 	elseIf (option == dusttogem_S)
 		SetSliderDialogStartValue(DustPerGemRank.GetValueInt())
 		SetSliderDialogDefaultValue(10)
-		SetSliderDialogRange(5, 20)
+		SetSliderDialogRange(5, 15)
 		SetSliderDialogInterval(1)
 	elseIf (option == papertobook_S)
 		SetSliderDialogStartValue(PaperPerBook.GetValueInt())
 		SetSliderDialogDefaultValue(10)
-		SetSliderDialogRange(5, 20)
+		SetSliderDialogRange(5, 15)
 		SetSliderDialogInterval(1)
 	endIf
 endEvent
@@ -112,5 +118,7 @@ event OnOptionHighlight(int option)
 		SetInfoText("How much paper should Burned Books and Ruined Books yield?") 
 	ElseIf ( option == toggleNovice_S || option == toggleApprentice_S || option == toggleAdept_S || option == toggleExpert_S || option == toggleMaster_S )
 		SetInfoText("Show or hide scrolls of this level in the crafting menu. 'Strange' scrolls should probably stay hidden.") 
+	ElseIf ( option == dusttogemFilled_S)
+		SetInfoText("By default only empty Soul Gems will be used for Arcane Dust conversion. Enabling this will convert filled Soul Gems as well.") 
 	EndIf
 endEvent

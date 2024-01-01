@@ -1,6 +1,7 @@
 Scriptname _scrCraftEffectScript extends activemagiceffect  
 
 FormList Property SoulGemList Auto
+FormList Property FilledSoulGemList  Auto  
 FormList Property PaperBookList Auto
 
 Perk Property PaperHarvesterPerk  Auto  
@@ -13,9 +14,17 @@ GlobalVariable Property DustPerGemRank Auto
 GlobalVariable Property PaperPerBook Auto
 
 int[] iConversionList
+int[] iConversionListFilled
 int[] iConversionListBook
 int dustOnHand
 bool bCleanup = false
+
+; Animation
+Idle Property IdleStart Auto
+Idle Property IdleStop Auto
+
+; Settings
+GlobalVariable Property ConvertFilledGemsEnabled Auto
 
 ; Custom Skills Framework
 GlobalVariable Property CSFAvailablePerkCount  Auto  
@@ -28,7 +37,15 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 			CFSOpenSkillsMenu.SetValueInt(1)
 			return
 		endif
-	
+		
+		; play nifty animation!
+		if PlayerRef.IsWeaponDrawn()
+			Game.DisablePlayerControls()
+			Game.EnablePlayerControls()
+			Utility.Wait(2)
+		EndIf
+		PlayerRef.PlayIdle(IdleStart)
+		
 		Disassemble()
 
 		; activate crafting station so the crafting menu shows up
@@ -41,7 +58,11 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 		EndWhile
 		
 		bCleanup = true
+		
+		PlayerRef.PlayIdle(IdleStop)
 		Reassemble();
+	else
+		Debug.Notification("Cannot be used in combat.")
 	endif
 EndEvent
 
@@ -59,9 +80,13 @@ EndFunction
 
 Function Disassemble()
 	iConversionList = new int[6]
+	iConversionListFilled = new int[6]
 	iConversionListBook = new int[3]
 	dustOnHand = Game.GetPlayer().GetItemCount(ArcaneDust)
 	int i = 0
+	
+	int dustReceived = 0
+	int paperReceived = 0
 
 	; break gems into dust
 	while i < SoulGemList.GetSize()
@@ -71,10 +96,28 @@ Function Disassemble()
 		iConversionList[i] = iGemInventory
 		
 		PlayerRef.RemoveItem(iGem, iGemInventory, true)
-		PlayerRef.AddItem(ArcaneDust, iGemInventory * DustPerGemRank.GetValueInt() * (1+i), true)
+		dustReceived += iGemInventory * DustPerGemRank.GetValueInt() * (1+i)
+		;PlayerRef.AddItem(ArcaneDust, iGemInventory * DustPerGemRank.GetValueInt() * (1+i), true)
 		
 		i += 1
 	EndWhile
+	
+	; break filled gems into dust (if enabled)
+	i = 0
+	if ConvertFilledGemsEnabled.GetValueInt() != 0
+		while i < FilledSoulGemList.GetSize()
+			Form iGem = FilledSoulGemList.GetAt(i)
+			int iGemInventory = PlayerRef.GetItemCount(iGem)
+			
+			iConversionListFilled[i] = iGemInventory
+			
+			PlayerRef.RemoveItem(iGem, iGemInventory, true)
+			dustReceived += iGemInventory * DustPerGemRank.GetValueInt() * (1+i)
+			;PlayerRef.AddItem(ArcaneDust, iGemInventory * DustPerGemRank.GetValueInt() * (1+i), true)
+			
+			i += 1
+		EndWhile
+	endif
 	
 	; break books into paper
 	int bonusPaper = 0
@@ -89,13 +132,20 @@ Function Disassemble()
 		iConversionListBook[i] = iBookInventory
 		
 		PlayerRef.RemoveItem(iBook, iBookInventory, true)
-		PlayerRef.AddItem(PaperRoll, iBookInventory * (bonusPaper + PaperPerBook.GetValueInt()), true)
+		paperReceived += iBookInventory * (bonusPaper + PaperPerBook.GetValueInt())
+		;PlayerRef.AddItem(PaperRoll, iBookInventory * (bonusPaper + PaperPerBook.GetValueInt()), true)
 		
 		i += 1
 	EndWhile
+	
+	PlayerRef.AddItem(ArcaneDust, dustReceived, true)
+	PlayerRef.AddItem(PaperRoll,paperReceived, true)
 EndFunction
 Function Reassemble()
 	int i
+	
+	int dustRemoved = 0
+	int paperRemoved = 0 
 	; recombine dust to gems
 	int iDustRemains = PlayerRef.GetItemCount(ArcaneDust) - dustOnHand
 	if iDustRemains > DustPerGemRank.GetValueInt()
@@ -106,8 +156,27 @@ Function Reassemble()
 				int iDustConsumed = iGemsReturned * DustPerGemRank.GetValueInt()*(1+i)
 				iDustRemains -= iDustConsumed
 
-				PlayerRef.RemoveItem(ArcaneDust, iDustConsumed, true)
+				dustRemoved += iDustConsumed
+				;PlayerRef.RemoveItem(ArcaneDust, iDustConsumed, true)
 				PlayerRef.AddItem(SoulGemList.GetAt(i), iGemsReturned, true)
+			endif
+			
+			i -= 1	
+		EndWhile
+	EndIf
+	
+	; recombine dust to filled gems (if enabled)
+	if iDustRemains > DustPerGemRank.GetValueInt() && ConvertFilledGemsEnabled.GetValueInt() != 0
+		i = iConversionListFilled.Length - 1
+		while i >= 0 
+			if iConversionListFilled[i] > 0
+				int iGemsReturned = m3Helper.Min( iConversionListFilled[i], Math.Floor(iDustRemains / (DustPerGemRank.GetValueInt()*(1+i))) )
+				int iDustConsumed = iGemsReturned * DustPerGemRank.GetValueInt()*(1+i)
+				iDustRemains -= iDustConsumed
+
+				dustRemoved += iDustConsumed
+				;PlayerRef.RemoveItem(ArcaneDust, iDustConsumed, true)
+				PlayerRef.AddItem(FilledSoulGemList.GetAt(i), iGemsReturned, true)
 			endif
 			
 			i -= 1	
@@ -124,7 +193,8 @@ Function Reassemble()
 				int iPaperConsumed = iBooksReturned * PaperPerBook.GetValueInt()
 				iPaperRemains -= iPaperConsumed
 
-				PlayerRef.RemoveItem(PaperRoll, iPaperConsumed, true)
+				paperRemoved += iPaperConsumed
+				;PlayerRef.RemoveItem(PaperRoll, iPaperConsumed, true)
 				PlayerRef.AddItem(PaperBookList.GetAt(i), iBooksReturned, true)
 			endif
 			
@@ -132,5 +202,10 @@ Function Reassemble()
 		EndWhile
 	EndIf
 	
+	PlayerRef.RemoveItem(PaperRoll, paperRemoved, true)
+	PlayerRef.RemoveItem(ArcaneDust, dustRemoved, true)
+	
 	bCleanup = false
 EndFunction
+
+
