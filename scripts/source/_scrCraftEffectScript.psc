@@ -44,8 +44,8 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 			Game.EnablePlayerControls()
 			Utility.Wait(2)
 		EndIf
-		PlayerRef.PlayIdle(IdleStart)
 		
+		PlayerRef.PlayIdle(IdleStart)
 		Disassemble()
 
 		; activate crafting station so the crafting menu shows up
@@ -59,8 +59,8 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 		
 		bCleanup = true
 		
+		Reassemble()
 		PlayerRef.PlayIdle(IdleStop)
-		Reassemble();
 	else
 		Debug.Notification("Cannot be used in combat.")
 	endif
@@ -122,7 +122,7 @@ Function Disassemble()
 	; break books into paper
 	int bonusPaper = 0
 	if PlayerRef.HasPerk(PaperHarvesterPerk)
-		bonusPaper = 4
+		bonusPaper = 5
 	endif
 	i = 0
 	while i < PaperBookList.GetSize()
