@@ -1,5 +1,7 @@
 Scriptname _scrPageExtractorScript extends ObjectReference  
 
+_scrProgressionScript Property ProgressScript Auto
+
 Actor Property PlayerRef Auto
 ObjectReference Property ThisContainer Auto
 FormList Property ExtractedResults  Auto  
@@ -35,7 +37,7 @@ Event OnUpdate()
 				if product
 					int count = ThisContainer.GetItemCount(itm)
 					int level = InscriptionLevel.GetValueInt()
-					int finalCount = 10 + Math.Floor( 1.0 + Math.Ceiling(level / 10.0) * count * Math.Log(1+level*level) )
+					int finalCount = count * Math.Ceiling(25 + (level * level) / 625) 
 					ExtractedResults.AddForm(product)
 					ThisContainer.AddItem(product, finalCount)
 					ThisContainer.RemoveItem(itm, count)
@@ -43,10 +45,13 @@ Event OnUpdate()
 					extractionSuccess = true
 					Debug.Notification("Extraction successful")
 					
+					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 2 )
+					
 					if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(40)
 						TutorialQuest.SetStage(40)
 					endif
-					extractionSuccess = false
+					
+				else
 					Debug.Notification("Extraction failed. Invalid Spell Book: " + itm.GetName())
 				endif
 			endif
