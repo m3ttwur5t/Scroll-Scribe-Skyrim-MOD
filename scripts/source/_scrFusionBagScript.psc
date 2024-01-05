@@ -61,6 +61,10 @@ Event OnUpdate()
 
 	if fusedOnce
 		PlayerRef.PlaceAtMe(SuccessFX)
+		
+		if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(55)
+			TutorialQuest.SetStage(100)
+		endif
 	endif
 	FusedResults.Revert()
 	Utility.Wait(0.5)
@@ -69,3 +73,5 @@ Event OnUpdate()
 EndEvent
 
 Explosion Property SuccessFX  Auto  
+
+Quest Property TutorialQuest  Auto  

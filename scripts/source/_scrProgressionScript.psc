@@ -47,7 +47,7 @@ endfunction
 
 int perksAtQuestStart
 Function NotifyRankMaybe(int iValue)
-	if iValue % 20 == 0
+	if iValue % 10 == 0
 		int iLevel = iValue / 10
 		
 		Debug.Notification("Inscription perk gained!")

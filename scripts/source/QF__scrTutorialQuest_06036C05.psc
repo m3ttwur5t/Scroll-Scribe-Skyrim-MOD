@@ -1,29 +1,12 @@
 ;BEGIN FRAGMENT CODE - Do not edit anything between this and the end comment
-;NEXT FRAGMENT INDEX 8
+;NEXT FRAGMENT INDEX 10
 Scriptname QF__scrTutorialQuest_06036C05 Extends Quest Hidden
-
-;BEGIN FRAGMENT Fragment_3
-Function Fragment_3()
-;BEGIN CODE
-SetObjectiveCompleted(10, true)
-SetObjectiveDisplayed(20)
-;END CODE
-EndFunction
-;END FRAGMENT
-
-;BEGIN FRAGMENT Fragment_2
-Function Fragment_2()
-;BEGIN CODE
-SetObjectiveCompleted(30, true)
-SetObjectiveDisplayed(40)
-;END CODE
-EndFunction
-;END FRAGMENT
 
 ;BEGIN FRAGMENT Fragment_7
 Function Fragment_7()
 ;BEGIN CODE
 SetObjectiveCompleted(50, true)
+SetObjectiveDisplayed(55)
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -37,11 +20,11 @@ SetObjectiveDisplayed(50)
 EndFunction
 ;END FRAGMENT
 
-;BEGIN FRAGMENT Fragment_4
-Function Fragment_4()
+;BEGIN FRAGMENT Fragment_2
+Function Fragment_2()
 ;BEGIN CODE
-SetObjectiveCompleted(20, true)
-SetObjectiveDisplayed(30)
+SetObjectiveCompleted(30, true)
+SetObjectiveDisplayed(40)
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -51,6 +34,32 @@ Function Fragment_0()
 ;BEGIN CODE
 SetStage(0)
 SetObjectiveDisplayed(0)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_8
+Function Fragment_8()
+;BEGIN CODE
+SetObjectiveCompleted(55, true)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_3
+Function Fragment_3()
+;BEGIN CODE
+SetObjectiveCompleted(10, true)
+SetObjectiveDisplayed(20)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_4
+Function Fragment_4()
+;BEGIN CODE
+SetObjectiveCompleted(20, true)
+SetObjectiveDisplayed(30)
 ;END CODE
 EndFunction
 ;END FRAGMENT
