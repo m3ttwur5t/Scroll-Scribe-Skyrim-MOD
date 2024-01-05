@@ -4,4 +4,4 @@ Requirements:
 - [Custom Skills Framework](https://www.nexusmods.com/skyrimspecialedition/mods/41780)
 - [Actor Value Generator](https://www.nexusmods.com/skyrimspecialedition/mods/84743)
 
-Skill icon source: (https://www.flaticon.com/)
+Skill icon source: https://www.flaticon.com
