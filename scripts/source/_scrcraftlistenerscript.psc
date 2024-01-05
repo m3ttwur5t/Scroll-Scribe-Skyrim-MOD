@@ -42,4 +42,3 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 		EndIf
 	EndIf
 EndEvent
-

@@ -26,6 +26,7 @@ Event OnUpdate()
 	
 	bool fusionSuccess = false
 	bool ranOnce = false
+	bool fusedOnce = false
 	while !ranOnce || fusionSuccess
 		Scroll firstScroll = none
 		fusionSuccess = false
@@ -46,9 +47,9 @@ Event OnUpdate()
 						ThisContainer.RemoveItem(itm, countFuse)
 						Utility.Wait(0.1)
 						fusionSuccess = true
+						fusedOnce = true
 						Debug.Notification("Fusion successful: " + fusedScroll.GetName())
 					else
-						fusionSuccess = false
 						Debug.Notification("Incompatible scrolls: " + firstScroll.GetName() + " and " + itm.GetName())
 					endif
 				endif
@@ -57,8 +58,14 @@ Event OnUpdate()
 		endwhile
 		ranOnce = true
 	endwhile
+
+	if fusedOnce
+		PlayerRef.PlaceAtMe(SuccessFX)
+	endif
 	FusedResults.Revert()
 	Utility.Wait(0.5)
 	
 	ThisContainer.Activate(PlayerRef)
 EndEvent
+
+Explosion Property SuccessFX  Auto  

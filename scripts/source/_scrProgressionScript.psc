@@ -14,6 +14,7 @@ GlobalVariable Property CSFAvailablePerkCount Auto
 
 Quest Property TutorialQuest  Auto  
 Actor Property Player Auto
+Sound Property LevelUpSFX  Auto  
 
 Function AdvInscription(int iExp)
 	int iCurrentXP = InscriptionExp.GetValueInt() + Math.Ceiling(iExp * InscriptionExpMultiplier.GetValue())
@@ -21,7 +22,7 @@ Function AdvInscription(int iExp)
 	int iCurrentLvl =  InscriptionLevel.GetValueInt();
 	bool bLevelUp = false
 	
-	while iCurrentXP >= iToNextLvl && InscriptionLevel.GetValueInt() < 200
+	while iCurrentXP >= iToNextLvl && InscriptionLevel.GetValueInt() < 100
 		bLevelUp = true
 		iCurrentLvl += 1
 		iCurrentXP -= iToNextLvl
@@ -41,16 +42,20 @@ Function AdvInscription(int iExp)
 EndFunction
 
 float Function CalculateExpForLevel(float nextLevel)
-	return 150+10*nextLevel+Math.Pow(500, nextLevel/150)
+	return 150+10*nextLevel+Math.Pow(500, nextLevel/90)
 endfunction
 
 int perksAtQuestStart
 Function NotifyRankMaybe(int iValue)
 	if iValue % 20 == 0
-		int iLevel = iValue / 20
+		int iLevel = iValue / 10
 		
-		Debug.Notification("Inscription perk gained! Use the Scroll Crafting ability to view skills.")
+		Debug.Notification("Inscription perk gained!")
+		if !Game.IsPluginInstalled("metaSkillMenu.esp")
+			Debug.Notification("Use the Scroll Crafting ability to view skills.")
+		endif
 		CSFAvailablePerkCount.SetValueInt(CSFAvailablePerkCount.GetValueInt() + 1)
+		LevelUpSFX.Play(Player)
 		
 		if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(10)
 			TutorialQuest.SetStage(10)

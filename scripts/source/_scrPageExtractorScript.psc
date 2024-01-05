@@ -8,8 +8,13 @@ FormList Property ExtractedResults  Auto
 GlobalVariable Property InscriptionLevel Auto
 Quest Property TutorialQuest  Auto  
 
+; Animation
+Idle Property IdleStart Auto
+Idle Property IdleStop Auto
+
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
+		PlayerRef.PlayIdle(IdleStart)
 		; wait for player to leave menu
 		while(! Game.IsLookingControlsEnabled()) 
 			Utility.Wait(0.5)
@@ -21,6 +26,7 @@ EndEvent
 Event OnUpdate()
 	int itemCount = ThisContainer.GetNumItems()
 	if itemCount == 0
+		PlayerRef.PlayIdle(IdleStop)
 		return
 	endif
 
@@ -37,7 +43,7 @@ Event OnUpdate()
 				if product
 					int count = ThisContainer.GetItemCount(itm)
 					int level = InscriptionLevel.GetValueInt()
-					int finalCount = count * Math.Ceiling(25 + (level * level) / 625) 
+					int finalCount = count * CalculateProductCount(level) ; old Math.Ceiling(25 + (level * level) / 625) 
 					ExtractedResults.AddForm(product)
 					ThisContainer.AddItem(product, finalCount)
 					ThisContainer.RemoveItem(itm, count)
@@ -46,6 +52,8 @@ Event OnUpdate()
 					Debug.Notification("Extraction successful")
 					
 					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 2 )
+					
+					ExtractSoundFX.Play(PlayerRef)
 					
 					if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(40)
 						TutorialQuest.SetStage(40)
@@ -64,4 +72,8 @@ Event OnUpdate()
 	ThisContainer.Activate(PlayerRef)
 EndEvent
 
+int function CalculateProductCount(int currentLevel)
+	return 25 + Math.Ceiling( Math.Pow(currentLevel, 2)/500 + Math.Pow(currentLevel - 25, 2)/500 )
+endfunction
 
+Sound Property ExtractSoundFX  Auto  

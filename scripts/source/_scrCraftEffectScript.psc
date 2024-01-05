@@ -16,7 +16,7 @@ GlobalVariable Property PaperPerBook Auto
 int[] iConversionList
 int[] iConversionListFilled
 int[] iConversionListBook
-int dustOnHand
+;int dustOnHand
 bool bCleanup = false
 
 ; Animation
@@ -33,7 +33,7 @@ FormList Property PerkList Auto
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	if !Game.GetPlayer().IsInCombat()
-		if CSFAvailablePerkCount.GetValueInt() > 0 && HasLearnedAllPerks() == false
+		if (CSFAvailablePerkCount.GetValueInt() > 0) && (HasLearnedAllPerks() == false) && !Game.IsPluginInstalled("metaSkillMenu.esp")
 			CFSOpenSkillsMenu.SetValueInt(1)
 			return
 		endif
@@ -82,7 +82,7 @@ Function Disassemble()
 	iConversionList = new int[6]
 	iConversionListFilled = new int[6]
 	iConversionListBook = new int[3]
-	dustOnHand = Game.GetPlayer().GetItemCount(ArcaneDust)
+	;dustOnHand = Game.GetPlayer().GetItemCount(ArcaneDust)
 	int i = 0
 	
 	int dustReceived = 0
@@ -147,7 +147,7 @@ Function Reassemble()
 	int dustRemoved = 0
 	int paperRemoved = 0 
 	; recombine dust to gems
-	int iDustRemains = PlayerRef.GetItemCount(ArcaneDust) - dustOnHand
+	int iDustRemains = PlayerRef.GetItemCount(ArcaneDust)
 	if iDustRemains > DustPerGemRank.GetValueInt()
 		i = iConversionList.Length - 1
 		while i >= 0 
