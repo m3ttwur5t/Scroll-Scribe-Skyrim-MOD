@@ -36,8 +36,9 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 			
 			ProgressScript.AdvInscription( Math.Floor(akBaseItem.GetGoldValue() * aiItemCount) )
 			
-			if Player.HasPerk(LuckyScribePerk) && Utility.RandomInt() > 50
-				Player.AddItem(akBaseItem, 1)
+			if Player.HasPerk(LuckyScribePerk) 
+				int bonus = m3Helper.RoundToInt(Utility.RandomFloat() * aiItemCount)
+				Player.AddItem(akBaseItem, bonus)
 			endif
 		EndIf
 	EndIf

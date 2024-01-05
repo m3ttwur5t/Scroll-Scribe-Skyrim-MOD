@@ -42,7 +42,8 @@ Function AdvInscription(int iExp)
 EndFunction
 
 float Function CalculateExpForLevel(float nextLevel)
-	return 150+10*nextLevel+Math.Pow(500, nextLevel/90)
+	return 15+5*nextLevel*(nextLevel/(200-nextLevel))
+	; old return 150+10*nextLevel+Math.Pow(500, nextLevel/90)
 endfunction
 
 int perksAtQuestStart

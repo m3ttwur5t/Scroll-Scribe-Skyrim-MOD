@@ -23,3 +23,7 @@ float Function LN(float afVal) Global
 		return (afVal - 1.0) * Math.sqrt( 2.0 / ((afVal + 1.0) * Math.sqrt(afVal)) )
 	EndIf
 EndFunction
+
+int Function RoundToInt(float a) Global
+	return Math.Floor(a + 0.5)
+EndFunction
