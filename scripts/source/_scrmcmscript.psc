@@ -126,7 +126,7 @@ event OnOptionHighlight(int option)
 	ElseIf ( option == dusttogemFilled_S)
 		SetInfoText("By default only empty Soul Gems will be used for Arcane Dust conversion. Enabling this will convert filled Soul Gems as well.") 
 	ElseIf ( option == toggleKnownOnly_S)
-		SetInfoText("Only allow crafting of spells you have learned.") 
+		SetInfoText("Only allow crafting of spells you have learned. If unchecked, the selection of Scrolls will be determined by your Inscription level.") 
 	EndIf
 endEvent
 
