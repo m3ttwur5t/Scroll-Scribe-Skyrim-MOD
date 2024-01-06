@@ -9,6 +9,7 @@ Actor Property Player Auto
 Perk Property LuckyScribePerk  Auto  
 
 bool bCrafting = false
+bool luckyBlock = false
 
 Event OnInit()
     RegisterForMenu("Crafting Menu")
@@ -27,19 +28,26 @@ Event OnMenuClose(String OpenedMenu)
 EndEvent
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
-	if bCrafting 
-		if akSourceContainer == None && akBaseItem.HasKeyword(ListenKeyword)
-			if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(0)
-				TutorialQuest.SetObjectiveCompleted(0, true)
-				TutorialQuest.SetObjectiveDisplayed(10)
-			endif
-			
-			ProgressScript.AdvInscription( Math.Floor(akBaseItem.GetGoldValue() * aiItemCount) )
-			
-			if Player.HasPerk(LuckyScribePerk) 
-				int bonus = m3Helper.RoundToInt(Utility.RandomFloat() * aiItemCount)
-				Player.AddItem(akBaseItem, bonus)
-			endif
-		EndIf
+	if !bCrafting
+		return
+	endif
+	if luckyBlock
+		luckyBlock = false
+		return
+	endif
+	
+	if akSourceContainer == None && akBaseItem.HasKeyword(ListenKeyword)
+		if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(0)
+			TutorialQuest.SetObjectiveCompleted(0, true)
+			TutorialQuest.SetObjectiveDisplayed(10)
+		endif
+		
+		ProgressScript.AdvInscription( Math.Floor(akBaseItem.GetGoldValue() * aiItemCount) )
+		
+		if Player.HasPerk(LuckyScribePerk) 
+			luckyBlock = true
+			int bonus = m3Helper.RoundToInt(Utility.RandomFloat() * aiItemCount)
+			Player.AddItem(akBaseItem, bonus)
+		endif
 	EndIf
 EndEvent
