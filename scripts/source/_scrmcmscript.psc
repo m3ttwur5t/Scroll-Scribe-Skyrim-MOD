@@ -25,6 +25,7 @@ int toggleAdept_S
 int toggleExpert_S
 int toggleMaster_S
 int toggleStrange_S
+int toggleKnownOnly_S
 
 event OnPageReset(string page)
 	SetCursorFillMode(TOP_TO_BOTTOM)
@@ -47,6 +48,7 @@ event OnPageReset(string page)
 		toggleExpert_S 		= AddToggleOption("Expert Scrolls", 	CraftingFilterExpert.GetValueInt())
 		toggleMaster_S 		= AddToggleOption("Master Scrolls", 	CraftingFilterMaster.GetValueInt())
 		toggleStrange_S		= AddToggleOption("Strange Scrolls", 	CraftingFilterStrange.GetValueInt())
+		toggleKnownOnly_S		= AddToggleOption("Only Learned Spells",CraftingFilterKnown.GetValueInt())
 	endIf
 endEvent
 
@@ -70,6 +72,9 @@ event OnOptionSelect(int option)
 	elseif (option == toggleStrange_S)
 		value = (CraftingFilterStrange.GetValueInt() + 1) % 2
 		CraftingFilterStrange.SetValue(value)
+	elseif (option == toggleKnownOnly_S)
+		value = (CraftingFilterKnown.GetValueInt() + 1) % 2
+		CraftingFilterKnown.SetValue(value)
 	elseif (option == dusttogemFilled_S)
 		value = (EnableFilledSoulGems.GetValueInt() + 1) % 2
 		EnableFilledSoulGems.SetValue(value)
@@ -111,14 +116,18 @@ endEvent
 
 event OnOptionHighlight(int option) 
 	If (option == expMULT_S) 
-		SetInfoText("A flat multiplier to the EXP you get from crafting.") 
+		SetInfoText("A flat multiplier to the Inscription experience you get from crafting.") 
 	elseIf (option == dusttogem_S) 
-		SetInfoText("How much dust should the smallest Soul Gem give?") 
+		SetInfoText("How much dust should a Petty Soulgem give? Lesser give twice as much, Greater three times, and Grand Soulgems give five times as much.") 
 	elseIf (option == papertobook_S) 
 		SetInfoText("How much paper should Burned Books and Ruined Books yield?") 
 	ElseIf ( option == toggleNovice_S || option == toggleApprentice_S || option == toggleAdept_S || option == toggleExpert_S || option == toggleMaster_S )
 		SetInfoText("Show or hide scrolls of this level in the crafting menu. 'Strange' scrolls should probably stay hidden.") 
 	ElseIf ( option == dusttogemFilled_S)
 		SetInfoText("By default only empty Soul Gems will be used for Arcane Dust conversion. Enabling this will convert filled Soul Gems as well.") 
+	ElseIf ( option == toggleKnownOnly_S)
+		SetInfoText("Only allow crafting of spells you have learned.") 
 	EndIf
 endEvent
+
+GlobalVariable Property CraftingFilterKnown  Auto  
