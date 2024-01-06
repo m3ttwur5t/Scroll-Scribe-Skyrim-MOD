@@ -5,7 +5,7 @@ Has the following changes:
 - Now comes with a small tutorial/introduction "quest"
 - Finally added that perk tree I promised six years ago, integrated into Custom Skills Menu
 - (MCM) Option to use filled Soulgems for crafting purposes, because there's too many useless filled Petty Soulgems in my inventory
-- (MCM) Option to only allow scribing spells you have learned
+- (MCM) Option to only allow scribing spells you have learned (this is the default)
 - Two new toys in the form of Scroll Extraction and Scroll Fusion abilities
   - Extraction allows turning Spell Tomes directly into their Scroll-ified version
   - Fusion does what the name suggests
