@@ -2,11 +2,11 @@
 ;NEXT FRAGMENT INDEX 10
 Scriptname QF__scrTutorialQuest_06036C05 Extends Quest Hidden
 
-;BEGIN FRAGMENT Fragment_7
-Function Fragment_7()
+;BEGIN FRAGMENT Fragment_0
+Function Fragment_0()
 ;BEGIN CODE
-SetObjectiveCompleted(50, true)
-SetObjectiveDisplayed(55)
+SetStage(0)
+SetObjectiveDisplayed(0)
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -29,11 +29,11 @@ SetObjectiveDisplayed(40)
 EndFunction
 ;END FRAGMENT
 
-;BEGIN FRAGMENT Fragment_0
-Function Fragment_0()
+;BEGIN FRAGMENT Fragment_4
+Function Fragment_4()
 ;BEGIN CODE
-SetStage(0)
-SetObjectiveDisplayed(0)
+SetObjectiveCompleted(20, true)
+SetObjectiveDisplayed(30)
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -42,6 +42,7 @@ EndFunction
 Function Fragment_8()
 ;BEGIN CODE
 SetObjectiveCompleted(55, true)
+CSFAvailablePerkCount.SetValueInt(CSFAvailablePerkCount.GetValueInt() + 1)
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -55,13 +56,15 @@ SetObjectiveDisplayed(20)
 EndFunction
 ;END FRAGMENT
 
-;BEGIN FRAGMENT Fragment_4
-Function Fragment_4()
+;BEGIN FRAGMENT Fragment_7
+Function Fragment_7()
 ;BEGIN CODE
-SetObjectiveCompleted(20, true)
-SetObjectiveDisplayed(30)
+SetObjectiveCompleted(50, true)
+SetObjectiveDisplayed(55)
 ;END CODE
 EndFunction
 ;END FRAGMENT
 
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
+
+GlobalVariable Property CSFAvailablePerkCount  Auto  

@@ -20,6 +20,7 @@ This should not cause issues, but obviously means you will need to re-craft them
 - [Address Library](https://www.nexusmods.com/skyrimspecialedition/mods/32444)
 - [Custom Skills Framework](https://www.nexusmods.com/skyrimspecialedition/mods/41780)
 - [Actor Value Generator](https://www.nexusmods.com/skyrimspecialedition/mods/84743)
+- [Spell Extender](https://www.nexusmods.com/skyrimspecialedition/mods/85968)
 
 Highly Recommended:
 - [Custom Skills Menu](https://www.nexusmods.com/skyrimspecialedition/mods/62423)

@@ -75,7 +75,7 @@ Node1.X = 0
 Node1.Y = 0
 Node1.GridX = 3
 Node1.GridY = 0
-Node1.Links = "2 3"
+Node1.Links = "2 3 10"
 
 # 2 Dust Discount
 Node2.Enable = true
@@ -152,3 +152,12 @@ Node9.X = 0
 Node9.Y = 0
 Node9.GridX = 3
 Node9.GridY = 4
+
+# 10 Concentrated Power
+Node10.Enable = true
+Node10.PerkFile = "Scribe.esp"
+Node10.PerkId = 0x8118A
+Node10.X = 0
+Node10.Y = 0
+Node10.GridX = 4
+Node10.GridY = 0
