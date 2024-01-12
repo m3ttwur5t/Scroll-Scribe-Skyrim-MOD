@@ -2,6 +2,7 @@ Scriptname _scrScrollCastListener extends ReferenceAlias
 
 GlobalVariable Property InscriptionLevel  Auto  
 Perk Property ConcPowerPerk  Auto  
+Perk Property ScalingPerk  Auto  
 
 _scrProgressionScript Property ProgressScript  Auto  
 
@@ -10,7 +11,7 @@ Scroll[] UsedScroll
 Spell[] GivenSpell
 Int[] Slot
 Float[] Timer
-bool Active = false
+bool Updating = false
 Float BaseDuration = 5.0
 
 Event OnInit()
@@ -19,52 +20,65 @@ Event OnInit()
 	GivenSpell = new Spell[2]
 	Slot = new Int[2]
 	Timer = new Float[2]
-    RegisterForModEvent("ConcScrollCast", "OnScrollCast")
+    RegisterForModEvent("ConcScrollCast", "OnConcScrollCast")
+	RegisterForModEvent("FFScrollCast", "OnFFScrollCast")
 endEvent
 
-Event OnScrollCast(string eventName, string strArg, float numArg, Form sender)
-	ProgressScript.AdvInscription( m3Helper.Max(1, sender.GetGoldValue() / 4) )
+Event OnFFScrollCast(string eventName, string strArg, float numArg, Form sender)
+	if Player.HasPerk(ScalingPerk)
+		ProgressScript.AdvInscription( m3Helper.Max(1, sender.GetGoldValue() / 4) )
+	endif
+EndEvent
+
+Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sender)
+	if Player.HasPerk(ScalingPerk)
+		ProgressScript.AdvInscription( m3Helper.Max(1, sender.GetGoldValue() / 4) )
+	endif
 	
 	int Index
-	if Timer[0] <= 0.0
+	if !GivenSpell[0]
 		Index = 0
-	elseif Timer[1] <= 0.0
+	elseif !GivenSpell[1]
 		Index = 1
 	else
 		return
 	endif
-  
-   UsedScroll[Index] = sender as Scroll
-   if UsedScroll[Index]
-	Player.UnequipItem(UsedScroll[Index], true, true)
 	
-	Slot[Index] = 0
-	if Player.GetEquippedItemType(1) == 0
-		Slot[Index] = 1
+	Scroll castScroll = sender as Scroll
+	if !castScroll
+		return
 	endif
 	
-	Spell theSpell = ScrollScribeExtender.GetSpellFromScroll(UsedScroll[Index])
+	UsedScroll[Index] = castScroll
+	Player.UnequipItem(castScroll, false, true)
+	
+	int emptyHand = 0
+	if Player.GetEquippedObject(0)
+		emptyHand = 1
+	endif
+	Slot[Index] = emptyHand
+	
+	Spell theSpell = ScrollScribeExtender.GetSpellFromScroll(castScroll)
 	GivenSpell[Index] = ScrollScribeExtender.GetZeroCostCopy(theSpell)
-
-	Player.EquipSpell(GivenSpell[Index], Slot[Index])
+	Player.EquipSpell(GivenSpell[Index], emptyHand)
+	
 	Timer[Index] = BaseDuration
 	if Player.HasPerk(ConcPowerPerk)
 		Timer[Index] = Timer[Index] + InscriptionLevel.GetValueInt() / 20
 	endif
 	
-	if !Active
-		Active = true
+	if !Updating
+		Updating = true
 		RegisterForSingleUpdate(1.0)
 	endif
-   endif
 endEvent
 
 Event OnUpdate()
 	int i = 0
 	while i < 2
-		if Timer[i] > 0.0 
-		Timer[i] = Timer[i] - 1.0
-			if Timer[i] <= 0.0 && Player.GetEquippedSpell(Slot[i]) == GivenSpell[i]
+		if GivenSpell[i]
+			Timer[i] = Timer[i] - 1.0
+			if Timer[i] <= 0.0
 				Player.UnequipSpell(GivenSpell[i], Slot[i])
 				if Player.GetItemCount(UsedScroll[i]) > 0
 					Player.EquipItemEx(UsedScroll[i], 2 - Slot[i], false, true)
@@ -73,26 +87,24 @@ Event OnUpdate()
 		endif
 		i += 1
 	endWhile
-	if (Timer[0] + Timer[1]) > 0.0
+	if Timer[0] > 0.0 || Timer[1] > 0.0
 		RegisterForSingleUpdate(1.0)
 	else
-		Active = false
+		GivenSpell[0] = none
+		GivenSpell[1] = none
+		Updating = false
 	endif
 EndEvent
 
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
-	if !Active
-		return
-	endif
-	
 	Spell asSpell = akBaseObject as Spell
 	if !asSpell
 		return
 	endif
 	
 	if asSpell == GivenSpell[0]
-		Timer[0] = 0.0
+		GivenSpell[0] = none
 	elseif asSpell == GivenSpell[1]
-		Timer[1] = 0.0
+		GivenSpell[1] = none
 	endif
 endEvent
