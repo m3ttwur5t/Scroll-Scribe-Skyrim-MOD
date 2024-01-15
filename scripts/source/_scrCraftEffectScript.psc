@@ -184,13 +184,17 @@ Function Reassemble()
 	EndIf
 	
 	; recombine paper to books
+	int bonusPaper = 0
+	if PlayerRef.HasPerk(PaperHarvesterPerk)
+		bonusPaper = 5
+	endif
 	int iPaperRemains = PlayerRef.GetItemCount(PaperRoll)
 	if iPaperRemains > PaperPerBook.GetValueInt()
 		i = iConversionListBook.Length - 1
 		while i >= 0 
 			if iConversionListBook[i] > 0
 				int iBooksReturned = m3Helper.Min( iConversionListBook[i], Math.Floor(iPaperRemains / PaperPerBook.GetValueInt()) )
-				int iPaperConsumed = iBooksReturned * PaperPerBook.GetValueInt()
+				int iPaperConsumed = iBooksReturned * (PaperPerBook.GetValueInt() + bonusPaper)
 				iPaperRemains -= iPaperConsumed
 
 				paperRemoved += iPaperConsumed
