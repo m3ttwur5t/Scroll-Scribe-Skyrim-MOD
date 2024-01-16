@@ -35,8 +35,8 @@ ShowMenuId = 0x340F3
 # Optional! This should point to a global variable that contains the current perk points amount for this specific skill.
 # This can be used to have custom amount of perk points just for this skill. If this is not set then it will default to using
 # player's regular perk points for skills.
-PerkPointsFile = "Scribe.esp"
-PerkPointsId = 0x33B91
+#PerkPointsFile = "Scribe.esp"
+#PerkPointsId = 0x33B91
 
 # Optional! This should point to a global variable that contains the count of how many times this skill has been legendaried.
 # If this is not set then the skill can not be made legendary at all.

@@ -19,7 +19,7 @@ Event OnActivate(ObjectReference akActionRef)
 		while(! Game.IsLookingControlsEnabled()) 
 			Utility.Wait(0.5)
 		EndWhile
-		RegisterForSingleUpdate(0.1)
+		RegisterForSingleUpdate(1.5)
 	endif
 EndEvent
 

@@ -5,14 +5,14 @@ GlobalVariable Property InscriptionLevel Auto
 GlobalVariable Property InscriptionExpTNL Auto
 GlobalVariable Property InscriptionExpMultiplier Auto
 
+GlobalVariable Property CraftOnlyKnownScrolls Auto
+
 bool bCrafting = false
 
 ; Custom Skills Framework
 GlobalVariable Property CSFRatioToNextLevel Auto  
 GlobalVariable Property CSFSkillIncrease Auto 
-GlobalVariable Property CSFAvailablePerkCount Auto  
 
-Quest Property TutorialQuest  Auto  
 Actor Property Player Auto
 Sound Property LevelUpSFX  Auto  
 
@@ -22,13 +22,15 @@ Function AdvInscription(int iExp)
 	int iCurrentLvl =  InscriptionLevel.GetValueInt();
 	bool bLevelUp = false
 	
+	int rankBefore = iCurrentLvl / 25
 	while iCurrentXP >= iToNextLvl && InscriptionLevel.GetValueInt() < 100
 		bLevelUp = true
 		iCurrentLvl += 1
 		iCurrentXP -= iToNextLvl
 		iToNextLvl = Math.Ceiling(CalculateExpForLevel( (iCurrentLvl+1.0) as float))
-		NotifyRankMaybe(iCurrentLvl)
 	EndWhile
+	int rankAfter = iCurrentLvl / 25
+	
 	InscriptionExp.SetValue(iCurrentXP)
 	InscriptionExpTNL.SetValueInt(iToNextLvl)
 	
@@ -38,6 +40,12 @@ Function AdvInscription(int iExp)
 		InscriptionLevel.SetValueInt(iCurrentLvl)
 		Player.SetActorValue("Inscription", iCurrentLvl)
 		CSFSkillIncrease.SetValueInt(iCurrentLvl)
+		
+		if rankAfter > rankBefore && CraftOnlyKnownScrolls.GetValueInt() == 0
+			Debug.Notification("Inscription rank gained! New Scrolls are available to craft.")
+			LevelUpSFX.Play(Player)
+		EndIf
+		SendModEvent("_scrInscriptionLevelChanged", "Inscription", iCurrentLvl as float)
 	EndIf
 EndFunction
 
@@ -45,31 +53,3 @@ float Function CalculateExpForLevel(float nextLevel)
 	return 15+10*nextLevel*(nextLevel/(200-nextLevel))
 	; old return 150+10*nextLevel+Math.Pow(500, nextLevel/90)
 endfunction
-
-int perksAtQuestStart
-Function NotifyRankMaybe(int iValue)
-	if iValue % 10 == 0
-		int iLevel = iValue / 10
-		
-		Debug.Notification("Inscription perk gained!")
-		if !Game.IsPluginInstalled("metaSkillMenu.esp")
-			Debug.Notification("Use the Scroll Crafting ability to view skills.")
-		endif
-		CSFAvailablePerkCount.SetValueInt(CSFAvailablePerkCount.GetValueInt() + 1)
-		LevelUpSFX.Play(Player)
-		
-		if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(10)
-			TutorialQuest.SetStage(10)
-			perksAtQuestStart = CSFAvailablePerkCount.GetValueInt()
-			RegisterForSingleUpdate(1)
-		endif
-	EndIf
-EndFunction
-
-Event OnUpdate()
-	if CSFAvailablePerkCount.GetValueInt() != perksAtQuestStart
-		TutorialQuest.SetStage(20)
-	else
-		RegisterForSingleUpdate(5)
-	endif
-EndEvent

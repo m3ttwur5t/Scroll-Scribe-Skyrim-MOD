@@ -2,7 +2,6 @@ ScriptName _scrCraftListenerScript Extends ReferenceAlias
 
 _scrProgressionScript Property ProgressScript  Auto  
 
-Quest Property TutorialQuest  Auto  
 Keyword Property ListenKeyword Auto
 Actor Property Player Auto
 
@@ -37,11 +36,6 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 	endif
 	
 	if akSourceContainer == None && akBaseItem.HasKeyword(ListenKeyword)
-		if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(0)
-			TutorialQuest.SetObjectiveCompleted(0, true)
-			TutorialQuest.SetObjectiveDisplayed(10)
-		endif
-		
 		ProgressScript.AdvInscription( Math.Floor(akBaseItem.GetGoldValue() * aiItemCount) )
 		
 		if Player.HasPerk(LuckyScribePerk) 

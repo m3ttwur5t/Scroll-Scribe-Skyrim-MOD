@@ -26,18 +26,8 @@ Idle Property IdleStop Auto
 ; Settings
 GlobalVariable Property ConvertFilledGemsEnabled Auto
 
-; Custom Skills Framework
-GlobalVariable Property CSFAvailablePerkCount  Auto  
-GlobalVariable Property CFSOpenSkillsMenu  Auto  
-FormList Property PerkList Auto
-
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	if !Game.GetPlayer().IsInCombat()
-		if (CSFAvailablePerkCount.GetValueInt() > 0) && (HasLearnedAllPerks() == false) && !Game.IsPluginInstalled("metaSkillMenu.esp")
-			CFSOpenSkillsMenu.SetValueInt(1)
-			return
-		endif
-		
 		; play nifty animation!
 		if PlayerRef.IsWeaponDrawn()
 			Game.DisablePlayerControls()
@@ -65,18 +55,6 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 		Debug.Notification("Cannot be used in combat.")
 	endif
 EndEvent
-
-bool Function HasLearnedAllPerks()
-	int i = PerkList.GetSize() - 1
-	while i >= 0
-		Perk p = PerkList.GetAt(i) as Perk
-		if !PlayerRef.HasPerk(p)
-			return false
-		endif
-		i -= 1
-	endwhile
-	return true
-EndFunction
 
 Function Disassemble()
 	iConversionList = new int[6]
@@ -122,7 +100,7 @@ Function Disassemble()
 	; break books into paper
 	int bonusPaper = 0
 	if PlayerRef.HasPerk(PaperHarvesterPerk)
-		bonusPaper = 5
+		bonusPaper = 10
 	endif
 	i = 0
 	while i < PaperBookList.GetSize()
@@ -186,7 +164,7 @@ Function Reassemble()
 	; recombine paper to books
 	int bonusPaper = 0
 	if PlayerRef.HasPerk(PaperHarvesterPerk)
-		bonusPaper = 5
+		bonusPaper = 10
 	endif
 	int iPaperRemains = PlayerRef.GetItemCount(PaperRoll)
 	if iPaperRemains > PaperPerBook.GetValueInt()
