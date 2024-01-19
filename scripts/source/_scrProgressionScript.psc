@@ -19,11 +19,11 @@ Sound Property LevelUpSFX  Auto
 Function AdvInscription(int iExp)
 	int iCurrentXP = InscriptionExp.GetValueInt() + Math.Ceiling(iExp * InscriptionExpMultiplier.GetValue())
 	int iToNextLvl = InscriptionExpTNL.GetValueInt()
-	int iCurrentLvl =  InscriptionLevel.GetValueInt();
+	int iCurrentLvl =  InscriptionLevel.GetValueInt()
 	bool bLevelUp = false
 	
 	int rankBefore = iCurrentLvl / 25
-	while iCurrentXP >= iToNextLvl && InscriptionLevel.GetValueInt() < 100
+	while iCurrentXP >= iToNextLvl && iCurrentLvl < 100
 		bLevelUp = true
 		iCurrentLvl += 1
 		iCurrentXP -= iToNextLvl

@@ -55,7 +55,7 @@ Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sende
 	
 	float timer = BaseDuration
 	if Player.HasPerk(ConcPowerPerk)
-		timer += InscriptionLevel.GetValue() / 20.0
+		timer += InscriptionLevel.GetValue() / 15.0
 	endif
 	
 	RegisterForSingleUpdate(timer)
