@@ -128,8 +128,8 @@ Node6.GridY = 2
 Node7.Enable = true
 Node7.PerkFile = "Scribe.esp"
 Node7.PerkId = 0x36141
-Node7.X = 0
-Node7.Y = 0
+Node7.X = -0-5
+Node7.Y = -0.25
 Node7.GridX = 4
 Node7.GridY = 2
 
@@ -141,7 +141,7 @@ Node8.X = 0
 Node8.Y = 0
 Node8.GridX = 3
 Node8.GridY = 3
-Node8.Links = "9"
+Node8.Links = "9 11"
 
 # 9 Fusion
 Node9.Enable = true
@@ -160,3 +160,12 @@ Node10.X = 0
 Node10.Y = 0
 Node10.GridX = 4
 Node10.GridY = 0
+
+# 11 Disenchanter
+Node11.Enable = true
+Node11.PerkFile = "Scribe.esp"
+Node11.PerkId = 0xA42F3
+Node11.X = 0
+Node11.Y = 0.5
+Node11.GridX = 4
+Node11.GridY = 3

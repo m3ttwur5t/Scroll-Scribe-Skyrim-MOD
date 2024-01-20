@@ -2,7 +2,10 @@ Scriptname _scrFusionBagScript extends ObjectReference
 
 Actor Property PlayerRef Auto
 ObjectReference Property ThisContainer Auto
-FormList Property FusedResults  Auto  
+ObjectReference Property TempStorage  Auto  
+
+Explosion Property SuccessFX  Auto  
+Quest Property TutorialQuest  Auto  
 
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
@@ -33,7 +36,7 @@ Event OnUpdate()
 		int i = 0
 		while i < ThisContainer.GetNumItems()
 			Scroll itm = ThisContainer.GetNthForm(i) as Scroll
-			if itm && !FusedResults.HasForm(itm)
+			if itm 
 				if !firstScroll
 					firstScroll = itm
 				elseif itm != firstScroll
@@ -41,8 +44,7 @@ Event OnUpdate()
 						int countFuse = m3Helper.Min(ThisContainer.GetItemCount(firstScroll), ThisContainer.GetItemCount(itm))
 						
 						Scroll fusedScroll = ScrollScribeExtender.FuseAndCreate(firstScroll, itm)
-						FusedResults.AddForm(fusedScroll)
-						ThisContainer.AddItem(fusedScroll, countFuse)
+						TempStorage.AddItem(fusedScroll, countFuse)
 						ThisContainer.RemoveItem(firstScroll, countFuse)
 						ThisContainer.RemoveItem(itm, countFuse)
 						Utility.Wait(0.1)
@@ -66,12 +68,8 @@ Event OnUpdate()
 			TutorialQuest.SetStage(100)
 		endif
 	endif
-	FusedResults.Revert()
-	Utility.Wait(0.5)
+	Utility.Wait(0.1)
 	
+	TempStorage.RemoveAllItems(ThisContainer)
 	ThisContainer.Activate(PlayerRef)
 EndEvent
-
-Explosion Property SuccessFX  Auto  
-
-Quest Property TutorialQuest  Auto  
