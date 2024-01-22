@@ -12,6 +12,10 @@ MiscObject Property ArcaneDust Auto
 
 Perk Property DisenchantPerk  Auto  
 
+FormList Property SoulGemList Auto
+FormList Property FilledSoulGemList  Auto 
+GlobalVariable Property DustPerGemRank Auto 
+
 ; Animation
 Idle Property IdleStart Auto
 Idle Property IdleStop Auto
@@ -51,7 +55,7 @@ Event OnUpdate()
 					int finalCount = count * CalculateProductCount(level)
 					TempStorage.AddItem(product, finalCount)
 					ThisContainer.RemoveItem(itm, count)
-					Utility.Wait(0.1)
+					
 					extractionSuccess = true
 					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 5 )
 					
@@ -62,24 +66,46 @@ Event OnUpdate()
 					Debug.Notification("Extraction failed. Invalid Spell Book: " + itm.GetName())
 				endif
 			elseif PlayerRef.HasPerk(DisenchantPerk) 
+				int count = ThisContainer.GetItemCount(theForm)
 				if theForm as Scroll
 					Scroll itm = theForm as Scroll
-					int count = ThisContainer.GetItemCount(itm)
 					int finalCount = count * itm.GetGoldValue() / 8
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					ThisContainer.RemoveItem(itm, count)
-					Utility.Wait(0.1)
 					extractionSuccess = true
 					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 20 )
 				elseif (theForm as Weapon || theForm as Armor) && ((theForm as Weapon).GetEnchantment() || (theForm as Armor).GetEnchantment())					
 					int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
-					int count = ThisContainer.GetItemCount(theForm)
 					int finalCount = (count * val) / 5
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					ThisContainer.RemoveItem(theForm, count)
-					Utility.Wait(0.1)
+					
 					extractionSuccess = true
 					ProgressScript.AdvInscription( finalCount / 10 )
+				elseif theForm as SoulGem
+					int j = 0
+					bool break = false
+					while j < SoulGemList.GetSize() && !break
+						if SoulGemList.GetAt(j) == theForm
+							int finalCount = count * DustPerGemRank.GetValueInt() * (1+j)
+							TempStorage.AddItem(ArcaneDust, finalCount)
+							ThisContainer.RemoveItem(theForm, count)
+							break = true
+						endif
+						j += 1
+					EndWhile
+					
+					j = 0
+					while j < FilledSoulGemList.GetSize() && !break
+						if FilledSoulGemList.GetAt(j) == theForm
+							int finalCount = count * DustPerGemRank.GetValueInt() * (1+j)
+							TempStorage.AddItem(ArcaneDust, finalCount)
+							ThisContainer.RemoveItem(theForm, count)
+							break = true
+						endif
+						j += 1
+					EndWhile
+					extractionSuccess = true
 				endif
 			endif
 			i += 1

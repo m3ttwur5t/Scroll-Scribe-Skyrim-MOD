@@ -179,3 +179,13 @@ Node12.X = -0.5
 Node12.Y = 0.5
 Node12.GridX = 2
 Node12.GridY = 0
+Node12.Links = "13"
+
+# 13 Unlimited Power
+Node13.Enable = true
+Node13.PerkFile = "Scribe.esp"
+Node13.PerkId = 0xB2CE8
+Node13.X = -0.5
+Node13.Y = -0.35
+Node13.GridX = 1
+Node13.GridY = 1

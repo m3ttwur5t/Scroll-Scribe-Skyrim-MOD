@@ -1,9 +1,12 @@
 Scriptname _scrScrollCastListener extends ReferenceAlias  
+import PO3_SKSEFunctions
 
 GlobalVariable Property InscriptionLevel  Auto  
 Perk Property ConcPowerPerk  Auto  
+Perk Property ConcMasterPerk  Auto  
 Perk Property ScalingPerk  Auto  
 SPELL Property UnleashedConcentrationSpell  Auto  
+MiscObject Property ArcaneDust Auto
 
 _scrProgressionScript Property ProgressScript  Auto  
 
@@ -13,7 +16,8 @@ Spell Property GivenSpell Auto
 Int Slot
 Scroll UsedScroll
 Float BaseDuration = 5.5
-
+Float MaxDuration
+Int ExtensionStage = 0
 
 Event OnInit()
 	;Player = Game.GetPlayer()
@@ -64,14 +68,28 @@ Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sende
 	GivenSpell = ScrollScribeExtender.GetZeroCostCopy(theSpell)
 	Player.EquipSpell(GivenSpell, emptyHand)
 	
-	float timer = BaseDuration
+	MaxDuration = BaseDuration
+	ExtensionStage = 0
 	if Player.HasPerk(ConcPowerPerk)
-		timer += InscriptionLevel.GetValue() / 15.0
+		MaxDuration += InscriptionLevel.GetValue() / 20.0
 	endif
-	RegisterForSingleUpdate(timer)
+	RegisterForSingleUpdate(MaxDuration)
 endEvent
 
 Event OnUpdate()
+	if Player.HasPerk(ConcMasterPerk) && (GivenSpell != none) && PO3_SKSEFunctions.IsCasting(Player, GivenSpell)
+		int dustInventory = Player.GetItemCount(ArcaneDust)
+		int extensionCost = (100 * Math.Pow(2, ExtensionStage)) as int
+		if dustInventory >= extensionCost
+			ExtensionStage += 1
+			Player.RemoveItem(ArcaneDust, extensionCost, true)
+			RegisterForSingleUpdate(MaxDuration)
+			Debug.Notification("Consumed " + extensionCost + " Arcane Dust to extend " + GivenSpell.GetName())
+			return
+		else
+			;Debug.Notification("Not enough Arcane Dust to maintain " + GivenSpell.GetName())
+		endif
+	endif
 	Player.UnequipSpell(GivenSpell, Slot)
 	if Player.GetItemCount(UsedScroll) > 0
 		Player.EquipItemEx(UsedScroll, 2 - Slot, false, true)
@@ -91,3 +109,5 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	endif
 	
 endEvent
+
+
