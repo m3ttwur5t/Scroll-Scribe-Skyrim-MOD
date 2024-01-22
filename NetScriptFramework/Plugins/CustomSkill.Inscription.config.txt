@@ -152,14 +152,15 @@ Node9.Y = 0
 Node9.GridX = 3
 Node9.GridY = 4
 
-# 10 Concentrated Power
+# 10 Focus (Conc extenion)
 Node10.Enable = true
 Node10.PerkFile = "Scribe.esp"
 Node10.PerkId = 0x8118A
-Node10.X = 0
-Node10.Y = 0
-Node10.GridX = 4
+Node10.X = 0.15
+Node10.Y = 0.2
+Node10.GridX = 2
 Node10.GridY = 0
+Node10.Links = "12"
 
 # 11 Disenchanter
 Node11.Enable = true
@@ -169,3 +170,12 @@ Node11.X = 0
 Node11.Y = 0.5
 Node11.GridX = 4
 Node11.GridY = 3
+
+# 12 Concentrated Power
+Node12.Enable = true
+Node12.PerkFile = "Scribe.esp"
+Node12.PerkId = 0xA71BC
+Node12.X = -0.5
+Node12.Y = 0.5
+Node12.GridX = 2
+Node12.GridY = 0

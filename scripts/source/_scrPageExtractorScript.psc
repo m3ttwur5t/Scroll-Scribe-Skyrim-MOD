@@ -46,7 +46,7 @@ Event OnUpdate()
 				if product
 					int count = ThisContainer.GetItemCount(itm)
 					int level = InscriptionLevel.GetValueInt()
-					int finalCount = count * CalculateProductCount(level) ; old Math.Ceiling(25 + (level * level) / 625) 
+					int finalCount = count * CalculateProductCount(level)
 					TempStorage.AddItem(product, finalCount)
 					ThisContainer.RemoveItem(itm, count)
 					Utility.Wait(0.1)
@@ -59,15 +59,28 @@ Event OnUpdate()
 				else
 					Debug.Notification("Extraction failed. Invalid Spell Book: " + itm.GetName())
 				endif
-			elseif PlayerRef.HasPerk(DisenchantPerk) && theForm as Scroll
-				Scroll itm = theForm as Scroll
-				int count = ThisContainer.GetItemCount(itm)
-				int finalCount = count * itm.GetGoldValue() / 8
-				TempStorage.AddItem(ArcaneDust, finalCount)
-				ThisContainer.RemoveItem(itm, count)
-				Utility.Wait(0.1)
-				extractionSuccess = true
-				ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 24 )
+			elseif PlayerRef.HasPerk(DisenchantPerk) 
+				if theForm as Scroll
+					Scroll itm = theForm as Scroll
+					int count = ThisContainer.GetItemCount(itm)
+					int finalCount = count * itm.GetGoldValue() / 8
+					TempStorage.AddItem(ArcaneDust, finalCount)
+					ThisContainer.RemoveItem(itm, count)
+					Utility.Wait(0.1)
+					extractionSuccess = true
+					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 24 )
+				elseif theForm as Weapon || theForm as Armor
+					int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
+					;Debug.Notification(val)
+					
+					int count = ThisContainer.GetItemCount(theForm)
+					int finalCount = (count * val) / 4
+					TempStorage.AddItem(ArcaneDust, finalCount)
+					ThisContainer.RemoveItem(theForm, count)
+					Utility.Wait(0.1)
+					extractionSuccess = true
+					ProgressScript.AdvInscription( finalCount / 24 )
+				endif
 			endif
 			i += 1
 		endwhile

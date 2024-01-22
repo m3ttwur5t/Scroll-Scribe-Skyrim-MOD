@@ -21,6 +21,7 @@ This should not cause issues, but obviously means you will need to re-craft them
 - [Custom Skills Framework](https://www.nexusmods.com/skyrimspecialedition/mods/41780)
 - [Actor Value Generator](https://www.nexusmods.com/skyrimspecialedition/mods/84743)
 - [Custom Skills Menu](https://www.nexusmods.com/skyrimspecialedition/mods/62423)
+- [Papyrus Extender](https://www.nexusmods.com/skyrimspecialedition/mods/22854)
 
 
 Attributions & Credits:

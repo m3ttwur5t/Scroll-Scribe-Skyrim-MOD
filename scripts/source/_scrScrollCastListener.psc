@@ -3,19 +3,30 @@ Scriptname _scrScrollCastListener extends ReferenceAlias
 GlobalVariable Property InscriptionLevel  Auto  
 Perk Property ConcPowerPerk  Auto  
 Perk Property ScalingPerk  Auto  
+SPELL Property UnleashedConcentrationSpell  Auto  
 
 _scrProgressionScript Property ProgressScript  Auto  
 
-Actor Player
-Scroll UsedScroll
-Spell GivenSpell
+Actor Property Player Auto
+Spell Property GivenSpell Auto
+
 Int Slot
-Float BaseDuration = 5.0
+Scroll UsedScroll
+Float BaseDuration = 5.5
+
 
 Event OnInit()
-	Player = Game.GetPlayer()
+	;Player = Game.GetPlayer()
     RegisterForModEvent("ConcScrollCast", "OnConcScrollCast")
 	RegisterForModEvent("FFScrollCast", "OnFFScrollCast")
+endEvent
+
+Event OnSpellCast(Form akSpell)
+  if !GivenSpell || GivenSpell != akSpell
+	return
+  endif
+  
+  UnleashedConcentrationSpell.Cast(Player, Player)
 endEvent
 
 Event OnFFScrollCast(string eventName, string strArg, float numArg, Form sender)
@@ -57,7 +68,6 @@ Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sende
 	if Player.HasPerk(ConcPowerPerk)
 		timer += InscriptionLevel.GetValue() / 15.0
 	endif
-	
 	RegisterForSingleUpdate(timer)
 endEvent
 

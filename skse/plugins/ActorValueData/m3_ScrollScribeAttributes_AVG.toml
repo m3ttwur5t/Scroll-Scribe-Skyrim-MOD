@@ -2,5 +2,11 @@
 type = "Adaptive"
 alias = "Confidence"
 default.formula = "15"
+
+[ScrollPower]
+type = "Adaptive"
+alias = "Variable01"
+default.formula = "0"
+
 [Include]
-"Scribe.esp" = ["Inscription"]
+"Scribe.esp" = ["Inscription", "ScrollPower"]
