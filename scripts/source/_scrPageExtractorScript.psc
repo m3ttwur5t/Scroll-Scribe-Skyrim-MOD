@@ -10,6 +10,8 @@ GlobalVariable Property InscriptionLevel Auto
 Quest Property TutorialQuest  Auto  
 MiscObject Property ArcaneDust Auto
 
+Perk Property DisenchantPerk  Auto  
+
 ; Animation
 Idle Property IdleStart Auto
 Idle Property IdleStop Auto
@@ -69,7 +71,8 @@ Event OnUpdate()
 					Utility.Wait(0.1)
 					extractionSuccess = true
 					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 24 )
-				elseif theForm as Weapon || theForm as Armor
+				elseif (theForm as Weapon || theForm as Armor) && ((theForm as Weapon).GetEnchantment() || (theForm as Armor).GetEnchantment())
+					
 					int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
 					;Debug.Notification(val)
 					
@@ -79,7 +82,7 @@ Event OnUpdate()
 					ThisContainer.RemoveItem(theForm, count)
 					Utility.Wait(0.1)
 					extractionSuccess = true
-					ProgressScript.AdvInscription( finalCount / 24 )
+					ProgressScript.AdvInscription( finalCount / 16 )
 				endif
 			endif
 			i += 1
@@ -94,5 +97,3 @@ EndEvent
 int function CalculateProductCount(int currentLevel)
 	return 25 + Math.Ceiling( Math.Pow(currentLevel, 2)/500 + Math.Pow(currentLevel - 25, 2)/500 )
 endfunction
-
-Perk Property DisenchantPerk  Auto  
