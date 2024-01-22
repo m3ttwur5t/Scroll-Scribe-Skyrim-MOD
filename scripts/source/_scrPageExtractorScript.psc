@@ -23,7 +23,7 @@ Event OnActivate(ObjectReference akActionRef)
 		while(! Game.IsLookingControlsEnabled()) 
 			Utility.Wait(0.5)
 		EndWhile
-		RegisterForSingleUpdate(1.5)
+		RegisterForSingleUpdate(0.5)
 	endif
 EndEvent
 
@@ -53,7 +53,7 @@ Event OnUpdate()
 					ThisContainer.RemoveItem(itm, count)
 					Utility.Wait(0.1)
 					extractionSuccess = true
-					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 4 )
+					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 5 )
 					
 					if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(40)
 						TutorialQuest.SetStage(40)
@@ -70,19 +70,16 @@ Event OnUpdate()
 					ThisContainer.RemoveItem(itm, count)
 					Utility.Wait(0.1)
 					extractionSuccess = true
-					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 24 )
-				elseif (theForm as Weapon || theForm as Armor) && ((theForm as Weapon).GetEnchantment() || (theForm as Armor).GetEnchantment())
-					
+					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 20 )
+				elseif (theForm as Weapon || theForm as Armor) && ((theForm as Weapon).GetEnchantment() || (theForm as Armor).GetEnchantment())					
 					int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
-					;Debug.Notification(val)
-					
 					int count = ThisContainer.GetItemCount(theForm)
-					int finalCount = (count * val) / 4
+					int finalCount = (count * val) / 5
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					ThisContainer.RemoveItem(theForm, count)
 					Utility.Wait(0.1)
 					extractionSuccess = true
-					ProgressScript.AdvInscription( finalCount / 16 )
+					ProgressScript.AdvInscription( finalCount / 10 )
 				endif
 			endif
 			i += 1
@@ -95,5 +92,5 @@ Event OnUpdate()
 EndEvent
 
 int function CalculateProductCount(int currentLevel)
-	return 25 + Math.Ceiling( Math.Pow(currentLevel, 2)/500 + Math.Pow(currentLevel - 25, 2)/500 )
+	return 15 + Math.Ceiling( Math.Pow(currentLevel, 2)/500 + Math.Pow(currentLevel - 25, 2)/500 )
 endfunction

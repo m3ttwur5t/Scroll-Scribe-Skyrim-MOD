@@ -32,7 +32,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 		if PlayerRef.IsWeaponDrawn()
 			Game.DisablePlayerControls()
 			Game.EnablePlayerControls()
-			Utility.Wait(2)
+			Utility.Wait(1.5)
 		EndIf
 		
 		PlayerRef.PlayIdle(IdleStart)
@@ -44,7 +44,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 
 		; wait for player to leave crafting menu
 		while(!Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled()) 
-			Utility.WaitMenuMode(1.0)
+			Utility.WaitMenuMode(0.5)
 		EndWhile
 		
 		bCleanup = true
