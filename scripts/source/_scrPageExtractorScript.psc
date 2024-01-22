@@ -51,7 +51,7 @@ Event OnUpdate()
 					ThisContainer.RemoveItem(itm, count)
 					Utility.Wait(0.1)
 					extractionSuccess = true
-					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 2 )
+					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 4 )
 					
 					if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(40)
 						TutorialQuest.SetStage(40)
@@ -62,12 +62,12 @@ Event OnUpdate()
 			elseif PlayerRef.HasPerk(DisenchantPerk) && theForm as Scroll
 				Scroll itm = theForm as Scroll
 				int count = ThisContainer.GetItemCount(itm)
-				int finalCount = count * itm.GetGoldValue() / 4
+				int finalCount = count * itm.GetGoldValue() / 8
 				TempStorage.AddItem(ArcaneDust, finalCount)
 				ThisContainer.RemoveItem(itm, count)
 				Utility.Wait(0.1)
 				extractionSuccess = true
-				ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 8 )
+				ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 24 )
 			endif
 			i += 1
 		endwhile

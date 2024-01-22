@@ -42,7 +42,7 @@ Function AdvInscription(int iExp)
 		CSFSkillIncrease.SetValueInt(iCurrentLvl)
 		
 		if rankAfter > rankBefore && CraftOnlyKnownScrolls.GetValueInt() == 0
-			Debug.Notification("Inscription rank gained! New Scrolls are available to craft.")
+			Debug.Notification("Inscription rank gained! New Scrolls become available for crafting.")
 			LevelUpSFX.Play(Player)
 		EndIf
 		SendModEvent("_scrInscriptionLevelChanged", "Inscription", iCurrentLvl as float)
@@ -50,6 +50,5 @@ Function AdvInscription(int iExp)
 EndFunction
 
 float Function CalculateExpForLevel(float nextLevel)
-	return 15+10*nextLevel*(nextLevel/(200-nextLevel))
-	; old return 150+10*nextLevel+Math.Pow(500, nextLevel/90)
+	return 15+15*nextLevel*(nextLevel/(190-nextLevel))
 endfunction
