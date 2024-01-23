@@ -118,5 +118,5 @@ Event OnUpdate()
 EndEvent
 
 int function CalculateProductCount(int currentLevel)
-	return 15 + Math.Ceiling( Math.Pow(currentLevel, 2)/500 + Math.Pow(currentLevel - 25, 2)/500 )
+	return 25 + Math.Ceiling( 0.2 * currentLevel )
 endfunction

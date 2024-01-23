@@ -3,6 +3,9 @@ Scriptname _scrFusionBagScript extends ObjectReference
 Actor Property PlayerRef Auto
 ObjectReference Property ThisContainer Auto
 ObjectReference Property TempStorage  Auto  
+Perk Property DoubleFusePerk Auto
+Keyword Property FusedKeyword  Auto  
+MiscObject Property ArcaneDust  Auto  
 
 Explosion Property SuccessFX  Auto  
 Quest Property TutorialQuest  Auto  
@@ -40,19 +43,37 @@ Event OnUpdate()
 				if !firstScroll
 					firstScroll = itm
 				elseif itm != firstScroll
-					if ScrollScribeExtender.CanFuse(firstScroll, itm)
-						int countFuse = m3Helper.Min(ThisContainer.GetItemCount(firstScroll), ThisContainer.GetItemCount(itm))
+					bool fuseRegular = ScrollScribeExtender.CanFuse(firstScroll, itm, false)
+					bool fuseDouble = ScrollScribeExtender.CanFuse(firstScroll, itm, PlayerRef.HasPerk(DoubleFusePerk))
+					
+					if fuseRegular || fuseDouble
+						int dustMult
+						if fuseRegular
+							dustMult = 100
+						else
+							dustMult = 1000
+						endif
 						
-						Scroll fusedScroll = ScrollScribeExtender.FuseAndCreate(firstScroll, itm)
-						TempStorage.AddItem(fusedScroll, countFuse)
-						ThisContainer.RemoveItem(firstScroll, countFuse)
-						ThisContainer.RemoveItem(itm, countFuse)
-						Utility.Wait(0.1)
-						fusionSuccess = true
-						fusedOnce = true
-						Debug.Notification("Fusion successful: " + fusedScroll.GetName())
-					else
-						Debug.Notification("Incompatible scrolls: " + firstScroll.GetName() + " and " + itm.GetName())
+						int countFuseDust = Math.Floor(ThisContainer.GetItemCount(ArcaneDust) / dustMult)
+						int countFuseScrolls = m3Helper.Min(ThisContainer.GetItemCount(firstScroll), ThisContainer.GetItemCount(itm))
+						int maxCount = m3Helper.Min(countFuseDust, countFuseScrolls)
+						
+						if maxCount == 0
+							Debug.Notification("Fusion failed: not enough Arcane Dust.")
+						else
+							Scroll fusedScroll = ScrollScribeExtender.FuseAndCreate(firstScroll, itm)
+							TempStorage.AddItem(fusedScroll, maxCount)
+							TempStorage.AddItem(firstScroll, ThisContainer.GetItemCount(firstScroll) - maxCount)
+							TempStorage.AddItem(itm, ThisContainer.GetItemCount(itm) - maxCount)
+							
+							ThisContainer.RemoveItem(firstScroll, ThisContainer.GetItemCount(firstScroll))
+							ThisContainer.RemoveItem(itm, ThisContainer.GetItemCount(itm))
+							ThisContainer.RemoveItem(ArcaneDust, maxCount * dustMult)
+							Utility.Wait(0.1)
+							fusionSuccess = true
+							fusedOnce = true
+							Debug.Notification("Fusion successful: " + fusedScroll.GetName())
+						endif
 					endif
 				endif
 			endif
@@ -73,3 +94,5 @@ Event OnUpdate()
 	TempStorage.RemoveAllItems(ThisContainer)
 	ThisContainer.Activate(PlayerRef)
 EndEvent
+
+

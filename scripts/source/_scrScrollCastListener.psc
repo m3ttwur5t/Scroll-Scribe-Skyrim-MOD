@@ -84,7 +84,7 @@ Event OnUpdate()
 			ExtensionStage += 1
 			Player.RemoveItem(ArcaneDust, extensionCost, true)
 			RegisterForSingleUpdate(MaxDuration)
-			Debug.Notification("Consumed " + extensionCost + " Arcane Dust to extend " + GivenSpell.GetName())
+			Debug.Notification("Consumed " + extensionCost + " Arcane Dust to extend concentration.")
 			return
 		else
 			;Debug.Notification("Not enough Arcane Dust to maintain " + GivenSpell.GetName())

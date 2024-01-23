@@ -151,6 +151,7 @@ Node9.X = 0
 Node9.Y = 0
 Node9.GridX = 3
 Node9.GridY = 4
+Node9.Links = "14"
 
 # 10 Focus (Conc extenion)
 Node10.Enable = true
@@ -189,3 +190,12 @@ Node13.X = -0.5
 Node13.Y = -0.35
 Node13.GridX = 1
 Node13.GridY = 1
+
+# 14 Double Fusion
+Node14.Enable = true
+Node14.PerkFile = "Scribe.esp"
+Node14.PerkId = 0xB5BB5
+Node14.X = 0
+Node14.Y = -0.25
+Node14.GridX = 3
+Node14.GridY = 5
