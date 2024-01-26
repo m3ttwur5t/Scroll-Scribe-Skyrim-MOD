@@ -2,7 +2,8 @@ Scriptname _scrScrollCastListener extends ReferenceAlias
 import PO3_SKSEFunctions
 
 GlobalVariable Property InscriptionLevel  Auto  
-Perk Property ConcPowerPerk  Auto  
+Perk Property ConcFocusPerk  Auto  
+Perk Property ConcBoostPerk  Auto  
 Perk Property ConcMasterPerk  Auto  
 Perk Property ScalingPerk  Auto  
 SPELL Property UnleashedConcentrationSpell  Auto  
@@ -26,7 +27,7 @@ Event OnInit()
 endEvent
 
 Event OnSpellCast(Form akSpell)
-  if !GivenSpell || GivenSpell != akSpell
+  if !GivenSpell || GivenSpell != akSpell || !Player.HasPerk(ConcBoostPerk)
 	return
   endif
   
@@ -70,7 +71,7 @@ Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sende
 	
 	MaxDuration = BaseDuration
 	ExtensionStage = 0
-	if Player.HasPerk(ConcPowerPerk)
+	if Player.HasPerk(ConcFocusPerk)
 		MaxDuration += InscriptionLevel.GetValue() / 20.0
 	endif
 	RegisterForSingleUpdate(MaxDuration)
@@ -109,5 +110,3 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	endif
 	
 endEvent
-
-
