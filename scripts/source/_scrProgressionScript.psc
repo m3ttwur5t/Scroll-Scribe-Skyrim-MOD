@@ -50,5 +50,5 @@ Function AdvInscription(int iExp)
 EndFunction
 
 float Function CalculateExpForLevel(float nextLevel)
-	return 15+15*nextLevel*(nextLevel/(150-nextLevel))
+	return 25+50*nextLevel*(nextLevel/(300-nextLevel))
 endfunction

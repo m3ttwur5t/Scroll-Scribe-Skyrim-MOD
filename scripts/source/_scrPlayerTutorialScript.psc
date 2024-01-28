@@ -5,7 +5,9 @@ Keyword Property ListenKeyword Auto
 Keyword Property ListenConcKeyword Auto
 
 Event OnPlayerLoadGame()
-	RegisterForModEvent("_scrInscriptionLevelChanged", "OnScribelevelChanged")
+	if !TutorialQuest.IsObjectiveCompleted(10)
+		RegisterForModEvent("_scrInscriptionLevelChanged", "OnScribelevelChanged")
+	endif
 EndEvent
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)

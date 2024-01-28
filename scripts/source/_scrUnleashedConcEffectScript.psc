@@ -18,5 +18,3 @@ Event OnEffectFinish(Actor akTarget, Actor akCaster)
 	SelfSpell.SetNthEffectMagnitude(0, ConcPowerMagnitudeBoost.GetValue())
   endif
 endEvent
-
-

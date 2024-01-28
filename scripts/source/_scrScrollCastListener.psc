@@ -13,6 +13,8 @@ _scrProgressionScript Property ProgressScript  Auto
 
 Actor Property Player Auto
 Spell Property GivenSpell Auto
+VisualEffect Property ConcVisualEffect Auto
+VisualEffect Property ConcVisualEffectMaster Auto
 
 Int Slot
 Scroll UsedScroll
@@ -30,7 +32,7 @@ Event OnSpellCast(Form akSpell)
   if !GivenSpell || GivenSpell != akSpell || !Player.HasPerk(ConcBoostPerk)
 	return
   endif
-  
+
   UnleashedConcentrationSpell.Cast(Player, Player)
 endEvent
 
@@ -72,8 +74,15 @@ Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sende
 	MaxDuration = BaseDuration
 	ExtensionStage = 0
 	if Player.HasPerk(ConcFocusPerk)
-		MaxDuration += InscriptionLevel.GetValue() / 20.0
+		MaxDuration += InscriptionLevel.GetValueInt() / 20.0
 	endif
+	
+	if Player.HasPerk(ConcMasterPerk)
+		ConcVisualEffectMaster.Play(Player)
+	else
+		ConcVisualEffect.Play(Player)
+	endif
+	
 	RegisterForSingleUpdate(MaxDuration)
 endEvent
 
@@ -96,6 +105,8 @@ Event OnUpdate()
 		Player.EquipItemEx(UsedScroll, 2 - Slot, false, true)
 	Endif
 	GivenSpell = none
+	ConcVisualEffect.Stop(Player)
+	ConcVisualEffectMaster.Stop(Player)
 EndEvent
 
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
@@ -106,6 +117,8 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	
 	if asSpell == GivenSpell
 		GivenSpell = none
+		ConcVisualEffect.Stop(Player)
+		ConcVisualEffectMaster.Stop(Player)
 		UnRegisterForUpdate()
 	endif
 	
