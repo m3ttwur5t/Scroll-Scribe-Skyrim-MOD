@@ -6,13 +6,17 @@ Activator property AshPileObject auto
 MiscObject Property ArcaneDust auto
 
 Actor thisActor
-int dustAdded
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
   thisActor = akTarget
 endEvent
 
 Event OnDying(Actor Killer)
+	float healthPct = thisActor.GetActorValuePercentage("Health")
+	if healthPct > -0.5
+		return
+	endif
+		
 	bool isImmune
 	if ImmunityList == none
 		isImmune = False
@@ -30,12 +34,11 @@ Event OnDying(Actor Killer)
 	endif
 
 	if isImmune == False
-		float healthPct = thisActor.GetActorValuePercentage("Health")
 		float curHealth = thisActor.GetActorValue("Health")
 		float maxHealth = Math.Ceiling(curHealth / healthPct)
-		float diffHealth = Math.Ceiling( curHealth - maxHealth * 0.2)
+		float diffHealth = Math.Ceiling( curHealth - maxHealth * 0.5)
 		;Debug.Notification("Cur: " + curHealth + ", Max: " + maxHealth + ", Diff: " + diffHealth + ", Pct: " + healthPct)
-		dustAdded = m3Helper.Min(maxHealth as int, -1 * diffHealth as int)
+		int dustAdded = m3Helper.Min( (maxHealth/2) as int, -1 * diffHealth as int)
 		thisActor.AddItem(ArcaneDust, dustAdded, true)
 		
 		thisActor.SetCriticalStage(thisActor.CritStage_DisintegrateStart)
