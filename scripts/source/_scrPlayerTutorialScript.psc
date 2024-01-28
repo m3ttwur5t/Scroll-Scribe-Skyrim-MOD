@@ -1,44 +1,42 @@
-Scriptname _scrPlayerTutorialScript  extends ReferenceAlias  
+Scriptname _scrPlayerTutorialScript extends ReferenceAlias  
 
 Quest Property TutorialQuest  Auto
 Keyword Property ListenKeyword Auto
+Keyword Property ListenConcKeyword Auto
 
-Event OnInit()
-	GoToState("ListenForItem")
+Event OnPlayerLoadGame()
+	RegisterForModEvent("_scrInscriptionLevelChanged", "OnScribelevelChanged")
 EndEvent
 
-State ListenForItem
-	Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
-		if akSourceContainer == None && akBaseItem.HasKeyword(ListenKeyword)
-			if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(0)
-				TutorialQuest.SetObjectiveCompleted(0, true)
-				TutorialQuest.SetObjectiveDisplayed(10)
-				GoToState("ListenForLevel")
-			endif
-		EndIf
-	EndEvent
-EndState
-
-State ListenForLevel
-	Event OnBeginState()
-		RegisterForModEvent("_scrInscriptionLevelChanged", "OnScribelevelChanged")
-	EndEvent
+Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
+	if akSourceContainer != None || !akBaseItem.HasKeyword(ListenKeyword) || TutorialQuest.IsObjectiveCompleted(5)
+		return
+	endif
 	
-	Event OnScribelevelChanged(string eventName, string strArg, float numArg, Form sender)
-		if numArg < 20
-			return
-		endif
-		
-		if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(10)
-			TutorialQuest.SetStage(10)
-			GoToState("NoListen")
-		endif
-	EndEvent
-EndState
-
-State NoListen
+	TutorialQuest.SetObjectiveCompleted(0, true)
 	
-EndState
+	if akBaseItem.HasKeyword(ListenConcKeyword)
+		if !TutorialQuest.IsObjectiveCompleted(5)
+			TutorialQuest.SetStage(5)
+			RegisterForModEvent("ConcScrollCast", "OnConcScrollCast")
+		endif
+	EndIf
+	
+	TutorialQuest.SetObjectiveDisplayed(10)
+EndEvent
 
 Event OnScribelevelChanged(string eventName, string strArg, float numArg, Form sender)
+	if numArg < 20
+		return
+	endif
+	
+	if !TutorialQuest.IsObjectiveCompleted(10)
+		TutorialQuest.SetStage(10)
+		UnRegisterForModEvent("_scrInscriptionLevelChanged")
+	endif
+EndEvent
+
+Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sender)
+	TutorialQuest.SetObjectiveCompleted(5, true)
+	UnRegisterForModEvent("ConcScrollCast")
 EndEvent
