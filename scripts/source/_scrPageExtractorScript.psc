@@ -24,7 +24,7 @@ Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
 		PlayerRef.PlayIdle(IdleStart)
 		; wait for player to leave menu
-		while(! Game.IsLookingControlsEnabled()) 
+		while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
 			Utility.Wait(0.5)
 		EndWhile
 		RegisterForSingleUpdate(0.5)

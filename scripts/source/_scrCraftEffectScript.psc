@@ -43,7 +43,7 @@ Event OnEffectStart(Actor akTarget, Actor akCaster)
 		CraftStation.Activate(PlayerRef);
 
 		; wait for player to leave crafting menu
-		while(!Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled()) 
+		while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("Crafting Menu") 
 			Utility.WaitMenuMode(0.5)
 		EndWhile
 		
