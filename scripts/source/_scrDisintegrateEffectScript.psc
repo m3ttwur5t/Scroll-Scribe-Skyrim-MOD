@@ -38,7 +38,7 @@ Event OnDying(Actor Killer)
 		float maxHealth = Math.Ceiling(curHealth / healthPct)
 		float diffHealth = Math.Ceiling( curHealth - maxHealth * 0.5)
 		;Debug.Notification("Cur: " + curHealth + ", Max: " + maxHealth + ", Diff: " + diffHealth + ", Pct: " + healthPct)
-		int dustAdded = m3Helper.Min( (maxHealth/2) as int, -1 * diffHealth as int)
+		int dustAdded = m3Helper.Min( (maxHealth/8) as int, -1 * diffHealth as int)
 		thisActor.AddItem(ArcaneDust, dustAdded, true)
 		
 		thisActor.SetCriticalStage(thisActor.CritStage_DisintegrateStart)

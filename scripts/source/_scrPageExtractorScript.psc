@@ -57,7 +57,7 @@ Event OnUpdate()
 					ThisContainer.RemoveItem(itm, count)
 					
 					extractionSuccess = true
-					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 5 )
+					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 10 )
 					
 					if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(40)
 						TutorialQuest.SetStage(40)
@@ -73,7 +73,7 @@ Event OnUpdate()
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					ThisContainer.RemoveItem(itm, count)
 					extractionSuccess = true
-					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 20 )
+					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 40 )
 				elseif (theForm as Weapon || theForm as Armor) && ((theForm as Weapon).GetEnchantment() || (theForm as Armor).GetEnchantment())					
 					int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
 					int finalCount = (count * val) / 5
@@ -81,7 +81,7 @@ Event OnUpdate()
 					ThisContainer.RemoveItem(theForm, count)
 					
 					extractionSuccess = true
-					ProgressScript.AdvInscription( finalCount / 10 )
+					ProgressScript.AdvInscription( finalCount / 20 )
 				elseif theForm as SoulGem
 					int j = 0
 					bool break = false
