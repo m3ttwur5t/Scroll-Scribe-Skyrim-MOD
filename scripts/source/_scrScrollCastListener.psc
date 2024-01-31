@@ -94,14 +94,17 @@ endEvent
 
 Event OnUpdate()
 	if ConcState > 0
-		if Player.HasPerk(ConcMasterPerk) && (GivenSpell != none) && PO3_SKSEFunctions.IsCasting(Player, GivenSpell)
-			int dustInventory = Player.GetItemCount(ArcaneDust)
-			int extensionCost = (100 * Math.Pow(2, ExtensionStage)) as int
-			if dustInventory >= extensionCost
-				if ConcState == 2
-					ConcVisualEffectExpire.Play(Player, ExpireWarnOffset * 2)
-				else
-					ConcState += 1
+		if Player.HasPerk(ConcMasterPerk) && (GivenSpell != none)
+			if ConcState == 2
+				ConcVisualEffectExpire.Play(Player, ExpireWarnOffset)
+				ConcState = 1
+				RegisterForSingleUpdate(ExpireWarnOffset)
+				return
+			elseif PO3_SKSEFunctions.IsCasting(Player, GivenSpell)
+				int dustInventory = Player.GetItemCount(ArcaneDust)
+				int extensionCost = (100 * Math.Pow(2, ExtensionStage)) as int
+				if dustInventory >= extensionCost
+					ConcState = 2
 					ExtensionStage += 1
 					Player.RemoveItem(ArcaneDust, extensionCost, true)
 					RegisterForSingleUpdate(MaxDuration - ExpireWarnOffset)
@@ -110,18 +113,15 @@ Event OnUpdate()
 				endif
 			endif
 		endif
-		
-		ConcState -= 1
-		RegisterForSingleUpdate(ExpireWarnOffset)
-	else
-		Player.UnequipSpell(GivenSpell, Slot)
-		if Player.GetItemCount(UsedScroll) > 0
-			Player.EquipItemEx(UsedScroll, 2 - Slot, false, true)
-		Endif
-		GivenSpell = none
-		ConcVisualEffect.Stop(Player)
-		ConcVisualEffectMaster.Stop(Player)
 	endif
+	
+	Player.UnequipSpell(GivenSpell, Slot)
+	if Player.GetItemCount(UsedScroll) > 0
+		Player.EquipItemEx(UsedScroll, 2 - Slot, false, true)
+	Endif
+	GivenSpell = none
+	ConcVisualEffect.Stop(Player)
+	ConcVisualEffectMaster.Stop(Player)
 EndEvent
 
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
