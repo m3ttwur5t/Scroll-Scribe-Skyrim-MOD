@@ -15,11 +15,14 @@ Actor Property Player Auto
 Spell Property GivenSpell Auto
 VisualEffect Property ConcVisualEffect Auto
 VisualEffect Property ConcVisualEffectMaster Auto
+VisualEffect Property ConcVisualEffectExpire Auto
 
 Int Slot
 Scroll UsedScroll
 Float BaseDuration = 5.5
 Float MaxDuration
+Float ExpireWarnOffset = 0.0
+Int ConcState
 Int ExtensionStage = 0
 
 Event OnInit()
@@ -78,35 +81,47 @@ Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sende
 	endif
 	
 	if Player.HasPerk(ConcMasterPerk)
+		ConcState = 2
 		ConcVisualEffectMaster.Play(Player)
+		ExpireWarnOffset = MaxDuration * 0.20
+		RegisterForSingleUpdate(MaxDuration - ExpireWarnOffset)
 	else
+		ConcState = 0
 		ConcVisualEffect.Play(Player)
+		RegisterForSingleUpdate(MaxDuration)
 	endif
-	
-	RegisterForSingleUpdate(MaxDuration)
 endEvent
 
 Event OnUpdate()
-	if Player.HasPerk(ConcMasterPerk) && (GivenSpell != none) && PO3_SKSEFunctions.IsCasting(Player, GivenSpell)
-		int dustInventory = Player.GetItemCount(ArcaneDust)
-		int extensionCost = (100 * Math.Pow(2, ExtensionStage)) as int
-		if dustInventory >= extensionCost
-			ExtensionStage += 1
-			Player.RemoveItem(ArcaneDust, extensionCost, true)
-			RegisterForSingleUpdate(MaxDuration)
-			Debug.Notification("Consumed " + extensionCost + " Arcane Dust to extend concentration.")
-			return
-		else
-			;Debug.Notification("Not enough Arcane Dust to maintain " + GivenSpell.GetName())
+	if ConcState > 0
+		if Player.HasPerk(ConcMasterPerk) && (GivenSpell != none) && PO3_SKSEFunctions.IsCasting(Player, GivenSpell)
+			int dustInventory = Player.GetItemCount(ArcaneDust)
+			int extensionCost = (100 * Math.Pow(2, ExtensionStage)) as int
+			if dustInventory >= extensionCost
+				if ConcState == 2
+					ConcVisualEffectExpire.Play(Player, ExpireWarnOffset * 2)
+				else
+					ConcState += 1
+					ExtensionStage += 1
+					Player.RemoveItem(ArcaneDust, extensionCost, true)
+					RegisterForSingleUpdate(MaxDuration - ExpireWarnOffset)
+					Debug.Notification("Consumed " + extensionCost + " Arcane Dust to extend concentration.")
+					return
+				endif
+			endif
 		endif
+		
+		ConcState -= 1
+		RegisterForSingleUpdate(ExpireWarnOffset)
+	else
+		Player.UnequipSpell(GivenSpell, Slot)
+		if Player.GetItemCount(UsedScroll) > 0
+			Player.EquipItemEx(UsedScroll, 2 - Slot, false, true)
+		Endif
+		GivenSpell = none
+		ConcVisualEffect.Stop(Player)
+		ConcVisualEffectMaster.Stop(Player)
 	endif
-	Player.UnequipSpell(GivenSpell, Slot)
-	if Player.GetItemCount(UsedScroll) > 0
-		Player.EquipItemEx(UsedScroll, 2 - Slot, false, true)
-	Endif
-	GivenSpell = none
-	ConcVisualEffect.Stop(Player)
-	ConcVisualEffectMaster.Stop(Player)
 EndEvent
 
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
