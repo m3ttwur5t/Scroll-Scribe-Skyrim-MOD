@@ -40,7 +40,7 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 		
 		if Player.HasPerk(LuckyScribePerk) 
 			luckyBlock = true
-			int bonus = m3Helper.RoundToInt(Utility.RandomFloat() * aiItemCount)
+			int bonus = m3Helper.RoundToInt(Utility.RandomFloat(0.0, 0.33) * aiItemCount)
 			Player.AddItem(akBaseItem, bonus)
 		endif
 	EndIf

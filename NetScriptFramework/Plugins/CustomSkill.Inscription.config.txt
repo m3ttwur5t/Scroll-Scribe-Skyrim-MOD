@@ -95,7 +95,7 @@ Node3.X = -1
 Node3.Y = 0
 Node3.GridX = 4
 Node3.GridY = 1
-Node3.Links = "7 8"
+Node3.Links = "7 8 17"
 
 # 4 Enchanted Scrolls
 Node4.Enable = true
@@ -210,7 +210,6 @@ Node15.Y = 0.0
 Node15.GridX = 2
 Node15.GridY = 0
 
-
 # 16 Disintegrate
 Node16.Enable = true
 Node16.PerkFile = "Scribe.esp"
@@ -219,3 +218,12 @@ Node16.X = -1
 Node16.Y = -0.5
 Node16.GridX = 3
 Node16.GridY = 2
+
+# 17 Paper Cut
+Node17.Enable = true
+Node17.PerkFile = "Scribe.esp"
+Node17.PerkId = 0xEA5DA
+Node17.X = -0.5
+Node17.Y = 0.35
+Node17.GridX = 4
+Node17.GridY = 1

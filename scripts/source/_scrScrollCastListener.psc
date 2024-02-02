@@ -77,7 +77,7 @@ Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sende
 	MaxDuration = BaseDuration
 	ExtensionStage = 0
 	if Player.HasPerk(ConcFocusPerk)
-		MaxDuration += InscriptionLevel.GetValueInt() / 20.0
+		MaxDuration += InscriptionLevel.GetValueInt() / 25.0
 	endif
 	
 	if Player.HasPerk(ConcMasterPerk)

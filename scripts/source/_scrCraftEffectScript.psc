@@ -100,7 +100,7 @@ Function Disassemble()
 	; break books into paper
 	int bonusPaper = 0
 	if PlayerRef.HasPerk(PaperHarvesterPerk)
-		bonusPaper = 10
+		bonusPaper = PaperPerBook.GetValueInt()
 	endif
 	i = 0
 	while i < PaperBookList.GetSize()
@@ -164,7 +164,7 @@ Function Reassemble()
 	; recombine paper to books
 	int bonusPaper = 0
 	if PlayerRef.HasPerk(PaperHarvesterPerk)
-		bonusPaper = 10
+		bonusPaper = PaperPerBook.GetValueInt()
 	endif
 	int iPaperRemains = PlayerRef.GetItemCount(PaperRoll)
 	if iPaperRemains > PaperPerBook.GetValueInt()

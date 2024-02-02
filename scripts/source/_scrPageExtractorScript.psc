@@ -69,19 +69,19 @@ Event OnUpdate()
 				int count = ThisContainer.GetItemCount(theForm)
 				if theForm as Scroll
 					Scroll itm = theForm as Scroll
-					int finalCount = count * itm.GetGoldValue() / 8
+					int finalCount = count * itm.GetGoldValue() / 5
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					ThisContainer.RemoveItem(itm, count)
 					extractionSuccess = true
-					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 40 )
+					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 20 )
 				elseif (theForm as Weapon || theForm as Armor) && ((theForm as Weapon).GetEnchantment() || (theForm as Armor).GetEnchantment())					
 					int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
-					int finalCount = (count * val) / 5
+					int finalCount = (count * val) / 3
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					ThisContainer.RemoveItem(theForm, count)
 					
 					extractionSuccess = true
-					ProgressScript.AdvInscription( finalCount / 20 )
+					ProgressScript.AdvInscription( finalCount / 10 )
 				elseif theForm as SoulGem
 					int j = 0
 					bool break = false
@@ -118,5 +118,5 @@ Event OnUpdate()
 EndEvent
 
 int function CalculateProductCount(int currentLevel)
-	return 25 + Math.Ceiling( 0.2 * currentLevel )
+	return 15 + Math.Ceiling( 0.5 * currentLevel )
 endfunction
