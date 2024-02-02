@@ -14,6 +14,8 @@ SkydomeNormalNif = true
 # This should point to a global variable that contains the current level of skill. Must be set!
 LevelFile = "Scribe.esp"
 LevelId = 0x182C
+#LevelFile = ""
+#LevelId = 0
 
 # This should point to a global variable that contains the ratio of level up of skill (how close to leveling
 # up is skill). Value must be between 0 and 1 always. Set float type on global variable when creating. Must be set!
