@@ -1,0 +1,41 @@
+{
+	"$schema": "https://raw.githubusercontent.com/Exit-9B/CraftingCategories/main/docs/CraftingCategories.schema.json",
+	"sections": {
+		"Scrolls": {
+		  "priority": 1,
+		  "keywords": [
+			"_scrKeywordScrollCustom"
+		  ],
+		  "icon": {
+			"source": "skyui/icons_item_psychosteve.swf",
+			"label": "default_scroll"
+		  }
+		},
+	},
+	"categories": {
+		"Alteration": {
+		  "section": "Scrolls",
+		  "keywords": [ "_scrSchoolAlteration" ]
+		},
+		"Conjuration": {
+		  "section": "Scrolls",
+		  "keywords": [ "_scrSchoolConjuration" ]
+		},
+		"Destruction": {
+		  "section": "Scrolls",
+		  "keywords": [ "_scrSchoolDestruction" ]
+		},
+		"Illusion": {
+		  "section": "Scrolls",
+		  "keywords": [ "_scrSchoolIllusion" ]
+		},
+		"Restoration": {
+		  "section": "Scrolls",
+		  "keywords": [ "_scrSchoolRestoration" ]
+		},
+		"Strange": {
+		  "section": "Scrolls",
+		  "keywords": [ "_scrStrangeSpell" ]
+		},
+	}   
+}

@@ -56,8 +56,8 @@ ColorId = 0
 # "set myglobalname to 1" close console and now all the skill configuration files have been reloaded so you can open the perks menu
 # again and see how the nodes changed. This is not recommended for normal play! It creates a memory leak or worse. Remember that
 # perks menu must be closed when reloading the files.
-DebugReloadFile = ""
-DebugReloadId = 0
+DebugReloadFile = "Scribe.esp"
+DebugReloadId = 0xF6101
 
 # Node0 is the root node, this should not have coordinates or a perk assigned to it. This must exist even if you don't want to have any perks.
 # Use Node0.Links to point to first perk(s). If you don't want any perks then remove the links line or set to ""
@@ -77,64 +77,72 @@ Node1.X = -1
 Node1.Y = -0.25
 Node1.GridX = 3
 Node1.GridY = 0
-Node1.Links = "2 3 6 10 15"
+Node1.Links = "2 3 6 4 5"
 
 # 2 Dust Discount
 Node2.Enable = true
 Node2.PerkFile = "Scribe.esp"
 Node2.PerkId = 0x3613D
 Node2.X = -1
-Node2.Y = 0
+Node2.Y = -0.3
 Node2.GridX = 2
 Node2.GridY = 1
-Node2.Links = "4 5 8"
 
 # 3 Paper Harvester
 Node3.Enable = true
 Node3.PerkFile = "Scribe.esp"
 Node3.PerkId = 0x36140
 Node3.X = -1
-Node3.Y = 0
+Node3.Y = -0.6
 Node3.GridX = 4
 Node3.GridY = 1
-Node3.Links = "7 8 17"
+Node3.Links = "7 17"
+
+# 7 Lucky Scribe
+Node7.Enable = true
+Node7.PerkFile = "Scribe.esp"
+Node7.PerkId = 0x36141
+Node7.X = -0.25
+Node7.Y = -0.15
+Node7.GridX = 4
+Node7.GridY = 1
+
+# 17 Paper Cut
+Node17.Enable = true
+Node17.PerkFile = "Scribe.esp"
+Node17.PerkId = 0xEA5DA
+Node17.X = -1.20
+Node17.Y = -0.05
+Node17.GridX = 4
+Node17.GridY = 1
 
 # 4 Enchanted Scrolls
 Node4.Enable = true
 Node4.PerkFile = "Scribe.esp"
 Node4.PerkId = 0x3613E
-Node4.X = -1
-Node4.Y = 0
+Node4.X = -0
+Node4.Y = 0.15
 Node4.GridX = 1
-Node4.GridY = 2
+Node4.GridY = 0
 
 # 5 Attuned Scrolls
 Node5.Enable = true
 Node5.PerkFile = "Scribe.esp"
 Node5.PerkId = 0x3613F
-Node5.X = -1
-Node5.Y = 0
-Node5.GridX = 0
-Node5.GridY = 2
+Node5.X = -0.85
+Node5.Y = 0.15
+Node5.GridX = 1
+Node5.GridY = 0
 
 # 6 To Dust
 Node6.Enable = true
 Node6.PerkFile = "Scribe.esp"
 Node6.PerkId = 0x1E08B
 Node6.X = -1
-Node6.Y = -1.35
+Node6.Y = -0.3
 Node6.GridX = 3
-Node6.GridY = 2
-Node6.Links = "16"
-
-# 7 Lucky Scribe
-Node7.Enable = true
-Node7.PerkFile = "Scribe.esp"
-Node7.PerkId = 0x36141
-Node7.X = -0.5
-Node7.Y = -0.30
-Node7.GridX = 4
-Node7.GridY = 2
+Node6.GridY = 1
+Node6.Links = "8 14 16"
 
 # 8 Rip and Tear
 Node8.Enable = true
@@ -143,46 +151,55 @@ Node8.PerkId = 0x3362F
 Node8.X = -1
 Node8.Y = -0.65
 Node8.GridX = 3
-Node8.GridY = 3
+Node8.GridY = 2
 Node8.Links = "9 11"
+
+# 11 Disenchanter
+Node11.Enable = true
+Node11.PerkFile = "Scribe.esp"
+Node11.PerkId = 0xA42F3
+Node11.X = -1.15
+Node11.Y = -1.25
+Node11.GridX = 4
+Node11.GridY = 3
 
 # 9 Fusion
 Node9.Enable = true
 Node9.PerkFile = "Scribe.esp"
 Node9.PerkId = 0x3362E
 Node9.X = -1
-Node9.Y = -0.65
+Node9.Y = -0.95
 Node9.GridX = 3
-Node9.GridY = 4
+Node9.GridY = 3
 Node9.Links = "14"
+
+# 14 Double Fusion
+Node14.Enable = true
+Node14.PerkFile = "Scribe.esp"
+Node14.PerkId = 0xB5BB5
+Node14.X = -1
+Node14.Y = -1.05
+Node14.GridX = 3
+Node14.GridY = 4
 
 # 10 Focus (Conc extenion)
 Node10.Enable = true
 Node10.PerkFile = "Scribe.esp"
 Node10.PerkId = 0x8118A
 Node10.X = -1.0
-Node10.Y = 0.25
+Node10.Y = 0.15
 Node10.GridX = 2
-Node10.GridY = 0
-Node10.Links = "12"
-
-# 11 Disenchanter
-Node11.Enable = true
-Node11.PerkFile = "Scribe.esp"
-Node11.PerkId = 0xA42F3
-Node11.X = -1
-Node11.Y = -0.15
-Node11.GridX = 4
-Node11.GridY = 3
+Node10.GridY = 1
+Node10.Links = "12 15"
 
 # 12 Concentrated Power
 Node12.Enable = true
 Node12.PerkFile = "Scribe.esp"
 Node12.PerkId = 0xA71BC
 Node12.X = -1.7
-Node12.Y = 0.65
+Node12.Y = 0.55
 Node12.GridX = 2
-Node12.GridY = 0
+Node12.GridY = 1
 Node12.Links = "13"
 
 # 13 Unlimited Power
@@ -190,25 +207,16 @@ Node13.Enable = true
 Node13.PerkFile = "Scribe.esp"
 Node13.PerkId = 0xB2CE8
 Node13.X = -1.5
-Node13.Y = 0
+Node13.Y = -0.1
 Node13.GridX = 1
 Node13.GridY = 1
-
-# 14 Double Fusion
-Node14.Enable = true
-Node14.PerkFile = "Scribe.esp"
-Node14.PerkId = 0xB5BB5
-Node14.X = -1
-Node14.Y = -0.9
-Node14.GridX = 3
-Node14.GridY = 5
 
 # 15 Zap!
 Node15.Enable = true
 Node15.PerkFile = "Scribe.esp"
 Node15.PerkId = 0xB8A7E
 Node15.X = -1.5
-Node15.Y = 0.0
+Node15.Y = -0.1
 Node15.GridX = 2
 Node15.GridY = 0
 
@@ -217,15 +225,7 @@ Node16.Enable = true
 Node16.PerkFile = "Scribe.esp"
 Node16.PerkId = 0xD8D1E
 Node16.X = -1
-Node16.Y = -0.5
-Node16.GridX = 3
+Node16.Y = -0.85
+Node16.GridX = 2
 Node16.GridY = 2
 
-# 17 Paper Cut
-Node17.Enable = true
-Node17.PerkFile = "Scribe.esp"
-Node17.PerkId = 0xEA5DA
-Node17.X = 0.20
-Node17.Y = 0.25
-Node17.GridX = 4
-Node17.GridY = 1

@@ -10,8 +10,16 @@ MiscObject Property ArcaneDust  Auto
 Explosion Property SuccessFX  Auto  
 Quest Property TutorialQuest  Auto  
 
+_scrProgressionScript Property ProgressScript Auto
+bool isDisassembled = false
+
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
+		if !isDisassembled
+			ProgressScript.Disassemble(PlayerRef, soulgems = true, books = false)
+			isDisassembled = true
+		endif
+	
 		; wait for player to leave menu
 		while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
 			Utility.Wait(0.5)
@@ -23,6 +31,10 @@ EndEvent
 Event OnUpdate()
 	int itemCount = ThisContainer.GetNumItems()
 	if itemCount == 0
+		if isDisassembled
+			ProgressScript.Reassemble(PlayerRef, soulgems = true, books = false)
+			isDisassembled = false
+		endif
 		return
 	elseif itemCount < 2
 		Debug.Notification("Scroll fusion requires at least two ingredients.")
