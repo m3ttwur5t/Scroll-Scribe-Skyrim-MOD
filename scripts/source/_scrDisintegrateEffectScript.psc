@@ -13,7 +13,7 @@ endEvent
 
 Event OnDying(Actor Killer)
 	float healthPct = thisActor.GetActorValuePercentage("Health")
-	if healthPct > -0.5
+	if healthPct > -0.25
 		return
 	endif
 		
@@ -36,9 +36,9 @@ Event OnDying(Actor Killer)
 	if isImmune == False
 		float curHealth = thisActor.GetActorValue("Health")
 		float maxHealth = Math.Ceiling(curHealth / healthPct)
-		float diffHealth = Math.Ceiling( curHealth - maxHealth * 0.5)
+		float diffHealth = Math.Ceiling( curHealth - maxHealth * 0.25)
 		;Debug.Notification("Cur: " + curHealth + ", Max: " + maxHealth + ", Diff: " + diffHealth + ", Pct: " + healthPct)
-		int dustAdded = m3Helper.Min( (maxHealth/8) as int, -1 * diffHealth as int)
+		int dustAdded = m3Helper.Min( (maxHealth/5) as int, -1 * diffHealth as int)
 		thisActor.AddItem(ArcaneDust, dustAdded, true)
 		
 		thisActor.SetCriticalStage(thisActor.CritStage_DisintegrateStart)
