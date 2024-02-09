@@ -102,8 +102,8 @@ Node3.Links = "7 17"
 Node7.Enable = true
 Node7.PerkFile = "Scribe.esp"
 Node7.PerkId = 0x36141
-Node7.X = -0.25
-Node7.Y = -0.15
+Node7.X = -0.05
+Node7.Y = -0.25
 Node7.GridX = 4
 Node7.GridY = 1
 
@@ -111,8 +111,8 @@ Node7.GridY = 1
 Node17.Enable = true
 Node17.PerkFile = "Scribe.esp"
 Node17.PerkId = 0xEA5DA
-Node17.X = -1.20
-Node17.Y = -0.05
+Node17.X = -0.80
+Node17.Y = -0.15
 Node17.GridX = 4
 Node17.GridY = 1
 
@@ -142,7 +142,7 @@ Node6.X = -1
 Node6.Y = -0.3
 Node6.GridX = 3
 Node6.GridY = 1
-Node6.Links = "8 14 16"
+Node6.Links = "8 10 14 16"
 
 # 8 Rip and Tear
 Node8.Enable = true
@@ -206,26 +206,26 @@ Node12.Links = "13"
 Node13.Enable = true
 Node13.PerkFile = "Scribe.esp"
 Node13.PerkId = 0xB2CE8
-Node13.X = -1.5
-Node13.Y = -0.1
+Node13.X = -0.70
+Node13.Y = -0.75
 Node13.GridX = 1
-Node13.GridY = 1
+Node13.GridY = 3
 
 # 15 Zap!
 Node15.Enable = true
 Node15.PerkFile = "Scribe.esp"
 Node15.PerkId = 0xB8A7E
-Node15.X = -1.5
-Node15.Y = -0.1
+Node15.X = -0.65
+Node15.Y = 0.55
 Node15.GridX = 2
-Node15.GridY = 0
+Node15.GridY = 1
 
 # 16 Disintegrate
 Node16.Enable = true
 Node16.PerkFile = "Scribe.esp"
 Node16.PerkId = 0xD8D1E
-Node16.X = -1
-Node16.Y = -0.85
-Node16.GridX = 2
+Node16.X = -1.1
+Node16.Y = -0.75
+Node16.GridX = 4
 Node16.GridY = 2
 
