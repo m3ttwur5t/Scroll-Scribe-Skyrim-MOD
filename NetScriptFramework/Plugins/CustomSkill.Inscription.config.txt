@@ -96,14 +96,14 @@ Node3.X = -1
 Node3.Y = -0.6
 Node3.GridX = 4
 Node3.GridY = 1
-Node3.Links = "7 17"
+Node3.Links = "7 17 18"
 
 # 7 Lucky Scribe
 Node7.Enable = true
 Node7.PerkFile = "Scribe.esp"
 Node7.PerkId = 0x36141
-Node7.X = -0.05
-Node7.Y = -0.25
+Node7.X = 0.15
+Node7.Y = -0.15
 Node7.GridX = 4
 Node7.GridY = 1
 
@@ -111,7 +111,7 @@ Node7.GridY = 1
 Node17.Enable = true
 Node17.PerkFile = "Scribe.esp"
 Node17.PerkId = 0xEA5DA
-Node17.X = -0.80
+Node17.X = -1.00
 Node17.Y = -0.15
 Node17.GridX = 4
 Node17.GridY = 1
@@ -229,3 +229,11 @@ Node16.Y = -0.75
 Node16.GridX = 4
 Node16.GridY = 2
 
+# 18 Paper Armor
+Node18.Enable = true
+Node18.PerkFile = "Scribe.esp"
+Node18.PerkId = 0xF8FD3
+Node18.X = -0.50
+Node18.Y = -0.1
+Node18.GridX = 4
+Node18.GridY = 1
