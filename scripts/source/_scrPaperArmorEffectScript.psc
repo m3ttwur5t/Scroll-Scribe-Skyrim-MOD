@@ -62,7 +62,7 @@ EndFunction
 
 float Function CalcMagnitude(int n)
 	float asFloat = n as float
-	float ret = 500.0 * (asFloat / (asFloat + 200.0))
+	float ret = 666.0 * (asFloat / (asFloat + 166.0))
 	return ret
 EndFunction
 

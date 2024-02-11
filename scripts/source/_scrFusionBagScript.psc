@@ -101,7 +101,7 @@ Event OnUpdate()
 			TutorialQuest.SetStage(100)
 		endif
 	endif
-	Utility.Wait(0.25)
+	Utility.Wait(1.25)
 	
 	TempStorage.RemoveAllItems(ThisContainer)
 	ThisContainer.Activate(PlayerRef)
