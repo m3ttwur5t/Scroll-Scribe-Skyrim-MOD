@@ -21,8 +21,10 @@ Idle Property IdleStart Auto
 Idle Property IdleStop Auto
 
 
-Furniture Property Marker Auto
-ObjectReference MarkerRef
+Furniture Property Fountain Auto
+ObjectReference FountainRef
+Static Property StickyMarker Auto
+ObjectReference StickyMarkerRef
 Activator Property MarkerEffectSummon Auto
 Activator Property MarkerEffectBanish Auto
 VisualEffect Property MarkerEffectWait Auto
@@ -61,7 +63,7 @@ Event OnUpdate()
 	endif
 
 	
-	if !MarkerRef
+	if !FountainRef
 		DroppedDustList = new ObjectReference[32] ; MAX_DROPS
 		
 		PlayerX = PlayerRef.X
@@ -71,13 +73,16 @@ Event OnUpdate()
 		SpawnOffsetX = SpawnDistance * math.sin(SpawnAngleZ)
 		SpawnOffsetY = SpawnDistance * math.cos(SpawnAngleZ)
 	
-		MarkerRef = PlayerRef.PlaceAtMe(Marker,1,FALSE,true)
-		MarkerRef.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ)
-		MarkerRef.SetAngle(0.0, 0.0, SpawnAngleZ)
-		MarkerRef.EnableNoWait(True)
-		MarkerRef.PlaceAtMe(MarkerEffectSummon,1,FALSE,false)
+		FountainRef = PlayerRef.PlaceAtMe(Fountain,1,FALSE,true)
+		FountainRef.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ)
+		FountainRef.SetAngle(0.0, 0.0, SpawnAngleZ)
+		FountainRef.EnableNoWait(True)
+		FountainRef.PlaceAtMe(MarkerEffectSummon,1,FALSE,false)
+		
+		StickyMarkerRef = PlayerRef.PlaceAtMe(StickyMarker,1,FALSE,false)
+		StickyMarkerRef.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ - 256.0)
 		Utility.Wait(2.0)
-		MarkerEffectWait.Play(MarkerRef)
+		MarkerEffectWait.Play(FountainRef)
 	endif
 
 	bool extractionSuccess = false
@@ -188,24 +193,17 @@ endfunction
 
 ObjectReference Function Display(Form theForm)
 	ObjectReference Obj
-	Obj = self.PlayerRef.PlaceAtMe(theForm,1,false,true)
-	Obj.SetScale(0.75)
+	Obj = StickyMarkerRef.PlaceAtMe(theForm, 1, false, false)
+	Utility.Wait(0.1)
 	Obj.BlockActivation()
+	Obj.SetScale(0.5)
+	Obj.SetMotionType(4)
+	SetLocalAngle(Obj, 45, 0, SpawnAngleZ + 180)
+	Obj.Disable()
+	Obj.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ + 145.0)
+	Obj.Enable()
 	
-	Obj.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ + 135.0)
-	
-	Obj.EnableNoWait(true)
-	Obj.SetMotionType(5)
-	Obj.SetAngle(90.0, 0.0, 180.0)
-	Obj.DisableNoWait()
-	
-	Utility.Wait(0.10)
-	if Obj.IsDisabled()
-		Obj.EnableNoWait(true)
-		Utility.Wait(0.10)
-	endif
-	
-	ExtractSFX.Play(MarkerRef)
+	ExtractSFX.Play(FountainRef)
 	MarkerEffectDestroyItem.Play(Obj)
 	return Obj
 EndFunction
@@ -216,8 +214,8 @@ Function Destroy (ObjectReference ref)
 	ref.Delete()
 EndFunction
 
-Function Drop(Form ItemForm, int count, float scale = 0.25)
-	int n = m3Helper.Max(count/6, 1)
+Function Drop(Form ItemForm, int count, float scale = 0.30)
+	int n = m3Helper.Max(count/8, 1)
 	while count > 0
 		if DroppedDustListIndex >= MAX_DROPS
 			DroppedDustListIndex = 0
@@ -227,13 +225,13 @@ Function Drop(Form ItemForm, int count, float scale = 0.25)
 			DroppedDustList[DroppedDustListIndex].Delete()
 		endif
 		ObjectReference Obj
-		Obj = self.PlayerRef.PlaceAtMe(ItemForm,1,FALSE,TRUE)
-		Obj.SetPosition(PlayerX + SpawnOffsetX + Utility.RandomFloat(-10.0, 10.0), PlayerY + SpawnOffsetY + Utility.RandomFloat(-10.0, 10.0), PlayerZ + 75.0)
-		Obj.SetScale(scale)
-		Obj.BlockActivation()
-		Obj.EnableNoWait(true)
+		Obj = StickyMarkerRef.PlaceAtMe(ItemForm, 1, FALSE, false)
 		Utility.Wait(0.1)
-		Obj.ApplyHavokImpulse(0.0, 0.0, 1.0, 1.0 + Obj.GetMass())
+		Obj.BlockActivation()
+		Obj.SetScale(scale)
+		Obj.Disable()
+		Obj.SetPosition(PlayerX + SpawnOffsetX + Utility.RandomFloat(-10.0, 10.0), PlayerY + SpawnOffsetY + Utility.RandomFloat(-10.0, 10.0), PlayerZ + 130.0)
+		Obj.Enable()
 
 		DroppedDustList[DroppedDustListIndex] = Obj
 		DroppedDustListIndex += 1
@@ -252,11 +250,20 @@ Function ClearDroppedItems()
 		endif
 		i += 1
 	endwhile
-	if MarkerRef
-		MarkerEffectWait.Stop(MarkerRef)
-		MarkerRef.PlaceAtMe(MarkerEffectBanish,1,FALSE,false)
-		MarkerRef.DisableNoWait(true)
-		MarkerRef.Delete()
-		MarkerRef = none
+	if FountainRef
+		MarkerEffectWait.Stop(FountainRef)
+		FountainRef.PlaceAtMe(MarkerEffectBanish,1,FALSE,false)
+		FountainRef.DisableNoWait(true)
+		FountainRef.Delete()
+		FountainRef = none
+		StickyMarkerRef.DisableNoWait(true)
+		StickyMarkerRef.Delete()
+		StickyMarkerRef = none
 	endif
+EndFunction
+
+Function SetLocalAngle(ObjectReference MyObject, Float LocalX, Float LocalY, Float LocalZ)
+	float AngleX = LocalX * Math.Cos(LocalZ) + LocalY * Math.Sin(LocalZ)
+	float AngleY = LocalY * Math.Cos(LocalZ) - LocalX * Math.Sin(LocalZ)
+	MyObject.SetAngle(AngleX, AngleY, LocalZ)
 EndFunction
