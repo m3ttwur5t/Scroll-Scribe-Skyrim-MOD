@@ -26,16 +26,20 @@ ObjectReference MarkerRef
 Activator Property MarkerEffectSummon Auto
 Activator Property MarkerEffectBanish Auto
 VisualEffect Property MarkerEffectWait Auto
+VisualEffect Property MarkerEffectDestroyItem Auto
 Sound Property ExtractSFX Auto
 
 ObjectReference[] DroppedDustList
 int DroppedDustListIndex = 0
-int MAX_DROPS = 64
+int MAX_DROPS = 32
 
-float SpawnDistance = 50.0
+float SpawnDistance = 80.0
 float SpawnAngleZ
 float SpawnOffsetX
 float SpawnOffsetY
+float PlayerX
+float PlayerY
+float PlayerZ
 
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef == Game.GetPlayer()
@@ -55,22 +59,24 @@ Event OnUpdate()
 		PlayerRef.PlayIdle(IdleStop)
 		return
 	endif
-	
-	if DroppedDustListIndex == 0
-		DroppedDustList = new ObjectReference[64] ; MAX_DROPS
-	endif
-	
-	SpawnAngleZ = PlayerRef.GetAngleZ() + 0 ;or +90 for right, -90 for left, 0 for in front
-	SpawnOffsetX = SpawnDistance * math.sin(SpawnAngleZ)
-	SpawnOffsetY = SpawnDistance * math.cos(SpawnAngleZ)
+
 	
 	if !MarkerRef
+		DroppedDustList = new ObjectReference[32] ; MAX_DROPS
+		
+		PlayerX = PlayerRef.X
+		PlayerY = PlayerRef.Y
+		PlayerZ = PlayerRef.Z
+		SpawnAngleZ = PlayerRef.GetAngleZ() + 0 ;or +90 for right, -90 for left, 0 for in front
+		SpawnOffsetX = SpawnDistance * math.sin(SpawnAngleZ)
+		SpawnOffsetY = SpawnDistance * math.cos(SpawnAngleZ)
+	
 		MarkerRef = PlayerRef.PlaceAtMe(Marker,1,FALSE,true)
-		MarkerRef.SetPosition(PlayerRef.X + SpawnOffsetX, PlayerRef.Y + SpawnOffsetY, PlayerRef.Z)
+		MarkerRef.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ)
 		MarkerRef.SetAngle(0.0, 0.0, SpawnAngleZ)
-		MarkerRef.Enable()
+		MarkerRef.EnableNoWait(True)
 		MarkerRef.PlaceAtMe(MarkerEffectSummon,1,FALSE,false)
-		Utility.Wait(2.5)
+		Utility.Wait(2.0)
 		MarkerEffectWait.Play(MarkerRef)
 	endif
 
@@ -92,7 +98,9 @@ Event OnUpdate()
 					TempStorage.AddItem(product, finalCount)
 					ThisContainer.RemoveItem(itm, count)
 					
+					ObjectReference disp = Display(theForm)
 					Drop(product, finalCount)
+					Destroy(disp)
 					
 					extractionSuccess = true
 					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 10 )
@@ -111,7 +119,9 @@ Event OnUpdate()
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					ThisContainer.RemoveItem(itm, count)
 					
+					ObjectReference disp = Display(theForm)
 					Drop(ArcaneDust, finalCount)
+					Destroy(disp)
 					
 					extractionSuccess = true
 					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 20 )
@@ -121,7 +131,9 @@ Event OnUpdate()
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					ThisContainer.RemoveItem(theForm, count)
 					
+					ObjectReference disp = Display(theForm)
 					Drop(ArcaneDust, finalCount)
+					Destroy(disp)
 					
 					extractionSuccess = true
 					ProgressScript.AdvInscription( finalCount / 10 )
@@ -134,7 +146,9 @@ Event OnUpdate()
 							TempStorage.AddItem(ArcaneDust, finalCount)
 							ThisContainer.RemoveItem(theForm, count)
 							
+							ObjectReference disp = Display(theForm)
 							Drop(ArcaneDust, finalCount)
+							Destroy(disp)
 							
 							break = true
 						endif
@@ -148,7 +162,9 @@ Event OnUpdate()
 							TempStorage.AddItem(ArcaneDust, finalCount)
 							ThisContainer.RemoveItem(theForm, count)
 							
+							ObjectReference disp = Display(theForm)
 							Drop(ArcaneDust, finalCount)
+							Destroy(disp)
 							
 							break = true
 						endif
@@ -170,8 +186,38 @@ int function CalculateProductCount(int currentLevel)
 	return 15 + Math.Ceiling( 0.5 * currentLevel )
 endfunction
 
-Function Drop(Form ItemForm, int count, float scale = 0.35)
+ObjectReference Function Display(Form theForm)
+	ObjectReference Obj
+	Obj = self.PlayerRef.PlaceAtMe(theForm,1,false,true)
+	Obj.SetScale(0.75)
+	Obj.BlockActivation()
+	
+	Obj.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ + 135.0)
+	
+	Obj.EnableNoWait(true)
+	Obj.SetMotionType(5)
+	Obj.SetAngle(90.0, 0.0, 180.0)
+	Obj.DisableNoWait()
+	
+	Utility.Wait(0.10)
+	if Obj.IsDisabled()
+		Obj.EnableNoWait(true)
+		Utility.Wait(0.10)
+	endif
+	
 	ExtractSFX.Play(MarkerRef)
+	MarkerEffectDestroyItem.Play(Obj)
+	return Obj
+EndFunction
+
+Function Destroy (ObjectReference ref)
+	ref.Disable()
+	MarkerEffectDestroyItem.Stop(ref)
+	ref.Delete()
+EndFunction
+
+Function Drop(Form ItemForm, int count, float scale = 0.25)
+	int n = m3Helper.Max(count/6, 1)
 	while count > 0
 		if DroppedDustListIndex >= MAX_DROPS
 			DroppedDustListIndex = 0
@@ -182,17 +228,17 @@ Function Drop(Form ItemForm, int count, float scale = 0.35)
 		endif
 		ObjectReference Obj
 		Obj = self.PlayerRef.PlaceAtMe(ItemForm,1,FALSE,TRUE)
-		Obj.SetPosition(PlayerRef.X + SpawnOffsetX + Utility.RandomFloat(-10.0, 10.0), PlayerRef.Y + SpawnOffsetY + Utility.RandomFloat(-10.0, 10.0), PlayerRef.Z + 70.0)
+		Obj.SetPosition(PlayerX + SpawnOffsetX + Utility.RandomFloat(-10.0, 10.0), PlayerY + SpawnOffsetY + Utility.RandomFloat(-10.0, 10.0), PlayerZ + 75.0)
 		Obj.SetScale(scale)
 		Obj.BlockActivation()
 		Obj.EnableNoWait(true)
-		Utility.Wait(0.01)
-		Obj.ApplyHavokImpulse(0.0, 0.0, 1.0, 2.0 + 10.0 * Obj.GetWeight())
+		Utility.Wait(0.1)
+		Obj.ApplyHavokImpulse(0.0, 0.0, 1.0, 1.0 + Obj.GetMass())
 
 		DroppedDustList[DroppedDustListIndex] = Obj
 		DroppedDustListIndex += 1
 		
-		count = count - Math.Ceiling(count * 0.333)
+		count -= n
 	endwhile
 EndFunction
 

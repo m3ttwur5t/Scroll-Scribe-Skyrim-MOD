@@ -3,7 +3,7 @@ Name = "Inscription"
 
 # Description of skill will appear in custom perks menu under the name and level, set "" to clear it
 # if you don't want to show anything
-Description = "The ability to create enchanted spell scrolls."
+Description = "The ability to create enchanted Spell Scrolls."
 
 # Custom background nif, INTVampirePerkSkydome.nif is showing the werewolf background, if you use custom
 # nif you made it must have some nodes and images, recommended is to edit this nif instead of creating
@@ -13,32 +13,32 @@ SkydomeNormalNif = true
 
 # This should point to a global variable that contains the current level of skill. Must be set!
 LevelFile = "Scribe.esp"
-LevelId = 0x182C
+LevelId = 0x800
 #LevelFile = ""
 #LevelId = 0
 
 # This should point to a global variable that contains the ratio of level up of skill (how close to leveling
 # up is skill). Value must be between 0 and 1 always. Set float type on global variable when creating. Must be set!
 RatioFile = "Scribe.esp"
-RatioId = 0x32B6A
+RatioId = 0x827
 
 # This should point to a global variable that is set to 0, when you change this global variable to any other number
 # then the game will display "SkillName has increased to X" where X is the value you set in this global variable, the
 # game will also immediately set the global variable value back to 0. This must be set!
 ShowLevelupFile = "Scribe.esp"
-ShowLevelupId = 0x32B6B
+ShowLevelupId = 0x828
 
 # This should point to a global variable that is set to 0, if you change it to 1 then the custom perks menu for this skill
 # will be opened immediately (as long as menu controls are enabled and game is not paused). Once that happens the game will
 # also immediately set the value back to 0. This is how you control when to open the perks menu for skill. This must be set!
 ShowMenuFile = "Scribe.esp"
-ShowMenuId = 0x340F3
+ShowMenuId = 0x82B
 
 # Optional! This should point to a global variable that contains the current perk points amount for this specific skill.
 # This can be used to have custom amount of perk points just for this skill. If this is not set then it will default to using
 # player's regular perk points for skills.
 #PerkPointsFile = "Scribe.esp"
-#PerkPointsId = 0x33B91
+#PerkPointsId = 0x0
 
 # Optional! This should point to a global variable that contains the count of how many times this skill has been legendaried.
 # If this is not set then the skill can not be made legendary at all.
@@ -57,7 +57,7 @@ ColorId = 0
 # again and see how the nodes changed. This is not recommended for normal play! It creates a memory leak or worse. Remember that
 # perks menu must be closed when reloading the files.
 DebugReloadFile = "Scribe.esp"
-DebugReloadId = 0xF6101
+DebugReloadId = 0x854
 
 # Node0 is the root node, this should not have coordinates or a perk assigned to it. This must exist even if you don't want to have any perks.
 # Use Node0.Links to point to first perk(s). If you don't want any perks then remove the links line or set to ""
@@ -72,7 +72,7 @@ Node0.Links = "1"
 # 1 Scaling Perk
 Node1.Enable = true
 Node1.PerkFile = "Scribe.esp"
-Node1.PerkId = 0x9905
+Node1.PerkId = 0x811
 Node1.X = -1
 Node1.Y = -0.25
 Node1.GridX = 3
@@ -82,7 +82,7 @@ Node1.Links = "2 3 6 4 5"
 # 2 Dust Discount
 Node2.Enable = true
 Node2.PerkFile = "Scribe.esp"
-Node2.PerkId = 0x3613D
+Node2.PerkId = 0x82D
 Node2.X = -1
 Node2.Y = -0.3
 Node2.GridX = 2
@@ -91,7 +91,7 @@ Node2.GridY = 1
 # 3 Paper Harvester
 Node3.Enable = true
 Node3.PerkFile = "Scribe.esp"
-Node3.PerkId = 0x36140
+Node3.PerkId = 0x830
 Node3.X = -1
 Node3.Y = -0.6
 Node3.GridX = 4
@@ -101,7 +101,7 @@ Node3.Links = "7 17 18"
 # 7 Lucky Scribe
 Node7.Enable = true
 Node7.PerkFile = "Scribe.esp"
-Node7.PerkId = 0x36141
+Node7.PerkId = 0x831
 Node7.X = 0.15
 Node7.Y = -0.15
 Node7.GridX = 4
@@ -110,7 +110,7 @@ Node7.GridY = 1
 # 17 Paper Cut
 Node17.Enable = true
 Node17.PerkFile = "Scribe.esp"
-Node17.PerkId = 0xEA5DA
+Node17.PerkId = 0x84D
 Node17.X = -1.00
 Node17.Y = -0.15
 Node17.GridX = 4
@@ -119,7 +119,7 @@ Node17.GridY = 1
 # 4 Enchanted Scrolls
 Node4.Enable = true
 Node4.PerkFile = "Scribe.esp"
-Node4.PerkId = 0x3613E
+Node4.PerkId = 0x82E
 Node4.X = -0
 Node4.Y = 0.15
 Node4.GridX = 1
@@ -128,7 +128,7 @@ Node4.GridY = 0
 # 5 Attuned Scrolls
 Node5.Enable = true
 Node5.PerkFile = "Scribe.esp"
-Node5.PerkId = 0x3613F
+Node5.PerkId = 0x82F
 Node5.X = -0.85
 Node5.Y = 0.15
 Node5.GridX = 1
@@ -137,17 +137,17 @@ Node5.GridY = 0
 # 6 To Dust
 Node6.Enable = true
 Node6.PerkFile = "Scribe.esp"
-Node6.PerkId = 0x1E08B
+Node6.PerkId = 0x812
 Node6.X = -1
 Node6.Y = -0.3
 Node6.GridX = 3
 Node6.GridY = 1
 Node6.Links = "8 10 14 16"
 
-# 8 Rip and Tear
+# 8 Rip and Tear / Arcane Extractor
 Node8.Enable = true
 Node8.PerkFile = "Scribe.esp"
-Node8.PerkId = 0x3362F
+Node8.PerkId = 0x82A
 Node8.X = -1
 Node8.Y = -0.65
 Node8.GridX = 3
@@ -157,7 +157,7 @@ Node8.Links = "9 11"
 # 11 Disenchanter
 Node11.Enable = true
 Node11.PerkFile = "Scribe.esp"
-Node11.PerkId = 0xA42F3
+Node11.PerkId = 0x839
 Node11.X = -1.15
 Node11.Y = -1.25
 Node11.GridX = 4
@@ -166,7 +166,7 @@ Node11.GridY = 3
 # 9 Fusion
 Node9.Enable = true
 Node9.PerkFile = "Scribe.esp"
-Node9.PerkId = 0x3362E
+Node9.PerkId = 0x829
 Node9.X = -1
 Node9.Y = -0.95
 Node9.GridX = 3
@@ -176,7 +176,7 @@ Node9.Links = "14"
 # 14 Double Fusion
 Node14.Enable = true
 Node14.PerkFile = "Scribe.esp"
-Node14.PerkId = 0xB5BB5
+Node14.PerkId = 0x841
 Node14.X = -1
 Node14.Y = -1.05
 Node14.GridX = 3
@@ -185,7 +185,7 @@ Node14.GridY = 4
 # 10 Focus (Conc extenion)
 Node10.Enable = true
 Node10.PerkFile = "Scribe.esp"
-Node10.PerkId = 0x8118A
+Node10.PerkId = 0x836
 Node10.X = -1.0
 Node10.Y = 0.15
 Node10.GridX = 2
@@ -195,7 +195,7 @@ Node10.Links = "12 15"
 # 12 Concentrated Power
 Node12.Enable = true
 Node12.PerkFile = "Scribe.esp"
-Node12.PerkId = 0xA71BC
+Node12.PerkId = 0x83A
 Node12.X = -1.7
 Node12.Y = 0.55
 Node12.GridX = 2
@@ -205,7 +205,7 @@ Node12.Links = "13"
 # 13 Unlimited Power
 Node13.Enable = true
 Node13.PerkFile = "Scribe.esp"
-Node13.PerkId = 0xB2CE8
+Node13.PerkId = 0x83D
 Node13.X = -0.70
 Node13.Y = -0.75
 Node13.GridX = 1
@@ -214,7 +214,7 @@ Node13.GridY = 3
 # 15 Zap!
 Node15.Enable = true
 Node15.PerkFile = "Scribe.esp"
-Node15.PerkId = 0xB8A7E
+Node15.PerkId = 0x842
 Node15.X = -0.65
 Node15.Y = 0.55
 Node15.GridX = 2
@@ -223,7 +223,7 @@ Node15.GridY = 1
 # 16 Disintegrate
 Node16.Enable = true
 Node16.PerkFile = "Scribe.esp"
-Node16.PerkId = 0xD8D1E
+Node16.PerkId = 0x848
 Node16.X = -1.1
 Node16.Y = -0.75
 Node16.GridX = 4
@@ -232,7 +232,7 @@ Node16.GridY = 2
 # 18 Paper Armor
 Node18.Enable = true
 Node18.PerkFile = "Scribe.esp"
-Node18.PerkId = 0xF8FD3
+Node18.PerkId = 0x85B
 Node18.X = -0.50
 Node18.Y = -0.1
 Node18.GridX = 4
