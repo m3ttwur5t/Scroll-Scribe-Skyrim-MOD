@@ -5,6 +5,7 @@ GlobalVariable Property PaperPerBook Auto
 GlobalVariable Property EnableFilledSoulGems Auto
 
 GlobalVariable Property InscriptionExpMultiplier Auto
+GlobalVariable Property InscriptionLevel Auto
 
 GlobalVariable Property CraftingFilterNovice Auto
 GlobalVariable Property CraftingFilterApprentice Auto
@@ -27,10 +28,16 @@ int toggleMaster_S
 int toggleStrange_S
 int toggleKnownOnly_S
 
+int[] Property TogglePerkList Auto Hidden
+Perk[] Property PerkList Auto
+Quest Property TutorialQuest Auto
+int inscriptionLevelSlider
+int finishTutorialButton
+
 event OnPageReset(string page)
 	SetCursorFillMode(TOP_TO_BOTTOM)
 	
-	if (page == "" || page == "Settings")
+	if (page == "" || page == Pages[0])
 		AddHeaderOption("Experience")
 		expMULT_S 			= AddSliderOption("Experience Multiplier", InscriptionExpMultiplier.GetValue(), "{2}x")
 		
@@ -48,12 +55,29 @@ event OnPageReset(string page)
 		toggleExpert_S 		= AddToggleOption("Expert Scrolls", 	CraftingFilterExpert.GetValueInt())
 		toggleMaster_S 		= AddToggleOption("Master Scrolls", 	CraftingFilterMaster.GetValueInt())
 		toggleStrange_S		= AddToggleOption("Strange Scrolls", 	CraftingFilterStrange.GetValueInt())
-		toggleKnownOnly_S		= AddToggleOption("Only Learned Spells",CraftingFilterKnown.GetValueInt())
+		toggleKnownOnly_S	= AddToggleOption("Only Learned Spells",CraftingFilterKnown.GetValueInt())
+	elseif (page == Pages[1])
+		TogglePerkList = new Int[32]
+		Actor PlayerRef = Game.GetPlayer()
+		
+		SetCursorPosition(0)
+		AddHeaderOption("Perks")
+		
+		int i = 0
+		while i < PerkList.Length
+			TogglePerkList[i] = AddToggleOption(PerkList[i].GetName(), 	PlayerRef.HasPerk(PerkList[i]))
+			i += 1
+		endwhile
+		
+		SetCursorPosition(1)
+		AddHeaderOption("Other")
+		inscriptionLevelSlider = AddSliderOption("Inscription Level", InscriptionLevel.GetValueInt(), "{0}")
+		finishTutorialButton = AddToggleOption("Complete Tutorial", TutorialQuest.IsCompleted())
 	endIf
 endEvent
 
 event OnOptionSelect(int option)
-	int value = 0;
+	int value = 0
 	if (option == toggleNovice_S)
 		value = (CraftingFilterNovice.GetValueInt() + 1) % 2
 		CraftingFilterNovice.SetValue(value)
@@ -78,6 +102,25 @@ event OnOptionSelect(int option)
 	elseif (option == dusttogemFilled_S)
 		value = (EnableFilledSoulGems.GetValueInt() + 1) % 2
 		EnableFilledSoulGems.SetValue(value)
+	elseif (option == finishTutorialButton)
+		if !TutorialQuest.IsCompleted()
+			TutorialQuest.CompleteQuest()
+		endif
+		value = TutorialQuest.IsCompleted() as int
+	else
+		Actor PlayerRef = Game.GetPlayer()
+		int i = 0
+		while i < PerkList.Length
+			if option == TogglePerkList[i]
+				if PlayerRef.HasPerk(PerkList[i])
+					PlayerRef.RemovePerk(PerkList[i])
+				else
+					PlayerRef.AddPerk(PerkList[i])
+				endif
+				value = PlayerRef.HasPerk(PerkList[i]) as int
+			endIf
+			i += 1
+		endwhile
 	EndIf
 	SetToggleOptionValue(option, value)
 EndEvent
@@ -98,6 +141,11 @@ event OnOptionSliderOpen(int option)
 		SetSliderDialogDefaultValue(10)
 		SetSliderDialogRange(5, 15)
 		SetSliderDialogInterval(1)
+	elseIf (option == inscriptionLevelSlider)
+		SetSliderDialogStartValue(InscriptionLevel.GetValueInt())
+		SetSliderDialogDefaultValue(15)
+		SetSliderDialogRange(1, 100)
+		SetSliderDialogInterval(1)
 	endIf
 endEvent
 
@@ -111,6 +159,12 @@ event OnOptionSliderAccept(int option, float value)
 	elseIf (option == papertobook_S)
 		PaperPerBook.SetValueInt(value as Int)
 		SetSliderOptionValue(papertobook_S, PaperPerBook.GetValueInt(), "{0}")
+	elseIf (option == inscriptionLevelSlider)
+		Actor PlayerRef = Game.GetPlayer()
+		
+		InscriptionLevel.SetValueInt(value as Int)
+		PlayerRef.SetAv("Inscription", value)
+		SetSliderOptionValue(inscriptionLevelSlider, InscriptionLevel.GetValueInt(), "{0}")
 	endIf
 endEvent
 

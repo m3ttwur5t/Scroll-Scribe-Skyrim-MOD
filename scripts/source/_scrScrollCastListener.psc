@@ -25,10 +25,18 @@ Float ExpireWarnOffset = 0.0
 Int ConcState
 Int ExtensionStage = 0
 
+Event OnPlayerLoadGame()
+	RegisterForModEvent("ConcScrollCast", "OnConcScrollCast")
+	RegisterForModEvent("FFScrollCast", "OnFFScrollCast")
+	; sync AV with global (just put this here)
+	InscriptionLevel.SetValue(Player.GetAv("Inscription"))
+EndEvent
+
 Event OnInit()
 	;Player = Game.GetPlayer()
     RegisterForModEvent("ConcScrollCast", "OnConcScrollCast")
 	RegisterForModEvent("FFScrollCast", "OnFFScrollCast")
+	InscriptionLevel.SetValue(Player.GetAv("Inscription"))
 endEvent
 
 Event OnSpellCast(Form akSpell)
