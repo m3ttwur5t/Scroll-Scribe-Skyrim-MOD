@@ -21,5 +21,5 @@ Function RefreshSpell(float mag)
 EndFunction
 
 float Function CalcMagnitude(float n)
-	return 150.0 * (n / (150.0 - n))
+	return 166.6 * (n / (166.6 - n))
 EndFunction
