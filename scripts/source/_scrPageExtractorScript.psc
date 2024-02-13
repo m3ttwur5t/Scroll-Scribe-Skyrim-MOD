@@ -80,8 +80,8 @@ Event OnUpdate()
 		FountainRef.PlaceAtMe(MarkerEffectSummon,1,FALSE,false)
 		
 		StickyMarkerRef = PlayerRef.PlaceAtMe(StickyMarker,1,FALSE,false)
-		StickyMarkerRef.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ - 256.0)
-		Utility.Wait(2.0)
+		StickyMarkerRef.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ + 1337.0)
+		Utility.Wait(1.75)
 		MarkerEffectWait.Play(FountainRef)
 	endif
 
@@ -200,9 +200,11 @@ ObjectReference Function Display(Form theForm)
 	Obj.SetMotionType(4)
 	SetLocalAngle(Obj, 45, 0, SpawnAngleZ + 180)
 	Obj.Disable()
-	Obj.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ + 145.0)
-	Obj.Enable()
 	
+	Obj.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ + 135.0)
+	Obj.Enable()
+	Utility.Wait(0.1)
+	Obj.SetMotionType(4)
 	ExtractSFX.Play(FountainRef)
 	MarkerEffectDestroyItem.Play(Obj)
 	return Obj
@@ -214,7 +216,7 @@ Function Destroy (ObjectReference ref)
 	ref.Delete()
 EndFunction
 
-Function Drop(Form ItemForm, int count, float scale = 0.30)
+Function Drop(Form ItemForm, int count, float scale = 0.20)
 	int n = m3Helper.Max(count/8, 1)
 	while count > 0
 		if DroppedDustListIndex >= MAX_DROPS
@@ -230,8 +232,8 @@ Function Drop(Form ItemForm, int count, float scale = 0.30)
 		Obj.BlockActivation()
 		Obj.SetScale(scale)
 		Obj.Disable()
-		Obj.SetPosition(PlayerX + SpawnOffsetX + Utility.RandomFloat(-10.0, 10.0), PlayerY + SpawnOffsetY + Utility.RandomFloat(-10.0, 10.0), PlayerZ + 130.0)
-		Obj.Enable()
+		Obj.SetPosition(PlayerX + SpawnOffsetX + Utility.RandomFloat(-10.0, 10.0), PlayerY + SpawnOffsetY + Utility.RandomFloat(-10.0, 10.0), PlayerZ + 120.0)
+		Obj.EnableNoWait(true)
 
 		DroppedDustList[DroppedDustListIndex] = Obj
 		DroppedDustListIndex += 1

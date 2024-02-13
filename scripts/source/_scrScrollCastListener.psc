@@ -24,10 +24,9 @@ Float MaxDuration
 Float ExpireWarnOffset = 0.0
 Int ConcState
 Int ExtensionStage = 0
+bool IsReset = true
 
 Event OnPlayerLoadGame()
-	RegisterForModEvent("ConcScrollCast", "OnConcScrollCast")
-	RegisterForModEvent("FFScrollCast", "OnFFScrollCast")
 	; sync AV with global (just put this here)
 	InscriptionLevel.SetValue(Player.GetAv("Inscription"))
 EndEvent
@@ -59,7 +58,7 @@ Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sende
 		return
 	endif
 	
-	if GivenSpell
+	if GivenSpell && !IsReset
 		Debug.Notification("Spell fizzled: Unable to maintain more than one concentration Scroll.")
 		return
 	endif
@@ -81,6 +80,7 @@ Event OnConcScrollCast(string eventName, string strArg, float numArg, Form sende
 
 	GivenSpell = ScrollScribeExtender.GetZeroCostCopy(theSpell)
 	Player.EquipSpell(GivenSpell, emptyHand)
+	IsReset = false
 	
 	MaxDuration = BaseDuration
 	ExtensionStage = 0
@@ -132,6 +132,19 @@ Event OnUpdate()
 	ConcVisualEffectMaster.Stop(Player)
 EndEvent
 
+Event OnObjectEquipped(Form akBaseObject, ObjectReference akReference)
+	Spell asSpell = akBaseObject as Spell
+	if !asSpell || !IsReset || !GivenSpell || (asSpell != GivenSpell)
+		return
+	endif
+	; safety measure
+	Player.UnequipSpell(GivenSpell, Slot)
+	if Player.GetItemCount(UsedScroll) > 0
+		Player.EquipItemEx(UsedScroll, 2 - Slot, false, true)
+	Endif
+	GivenSpell = none
+EndEvent
+
 Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	Spell asSpell = akBaseObject as Spell
 	if !asSpell
@@ -139,7 +152,8 @@ Event OnObjectUnequipped(Form akBaseObject, ObjectReference akReference)
 	endif
 	
 	if asSpell == GivenSpell
-		GivenSpell = none
+		;GivenSpell = none
+		IsReset = true
 		ConcVisualEffect.Stop(Player)
 		ConcVisualEffectMaster.Stop(Player)
 		UnRegisterForUpdate()
