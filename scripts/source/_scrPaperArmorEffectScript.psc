@@ -11,16 +11,17 @@ bool IsProcessing = false
 
 Event OnEffectStart(Actor akTarget, Actor akCaster)
 	ThisActor = akTarget
-	ScrollItemList = AddItemsOfTypeToArray(ThisActor, 23, abNoEquipped = true, abNoFavorited = true, abNoQuestItem = true)
+	ScrollItemList = AddItemsOfTypeToArray(ThisActor, 23, abNoEquipped = false, abNoFavorited = false, abNoQuestItem = true)
 	if ScrollItemList.Length == 0
 		Debug.Notification("No Scrolls to maintain Paper Armor")
 		Self.Dispel()
 		return
 	endif
 	
+	LastValidIndex = ScrollItemList.Length - 1
 	Randomize(ScrollItemList)
 	ScrollCount = Count(ScrollItemList)
-	LastValidIndex = ScrollItemList.Length - 1
+	
 	RefreshSpell(CalcMagnitude(ScrollCount))
 endEvent
 
@@ -33,7 +34,7 @@ Event OnHit(ObjectReference akAggressor, Form akSource, Projectile akProjectile,
 		return
 	endif
 	IsProcessing = true
-	RegisterForSingleUpdate(1.0)
+	RegisterForSingleUpdate(2.0)
 EndEvent
 
 Event OnUpdate()
@@ -45,6 +46,7 @@ Event OnUpdate()
 	endif
 	RemoveScroll(destroyedItem)
 	RefreshSpell(CalcMagnitude(ScrollCount))
+	Randomize(ScrollItemList)
 	IsProcessing = false
 EndEvent
 
@@ -92,13 +94,10 @@ EndFunction
 int Function Randomize(Form[] myArray)
     int i = 0
 	int j = 0
-    int arraySize
     Form tempForm
 
-    arraySize = myArray.Length
-
-    while i < arraySize
-        j = Utility.RandomInt(0, arraySize - 1)
+    while i < LastValidIndex
+        j = Utility.RandomInt(0, LastValidIndex)
 
         tempForm = myArray[i]
         myArray[i] = myArray[j]
