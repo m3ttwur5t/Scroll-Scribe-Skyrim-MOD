@@ -67,7 +67,7 @@ Function AdvInscription(int iExp)
 EndFunction
 
 float Function CalculateExpForLevel(float nextLevel)
-	return 25+50*nextLevel*(nextLevel/(300-nextLevel))
+	return 25+60*nextLevel*(nextLevel/(300-nextLevel))
 endfunction
 
 Function Disassemble(Actor user, bool soulgems = true, bool books = true)

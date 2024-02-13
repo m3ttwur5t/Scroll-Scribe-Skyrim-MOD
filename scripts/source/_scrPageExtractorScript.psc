@@ -216,7 +216,7 @@ Function Destroy (ObjectReference ref)
 	ref.Delete()
 EndFunction
 
-Function Drop(Form ItemForm, int count, float scale = 0.20)
+Function Drop(Form ItemForm, int count, float scale = 0.33)
 	int n = m3Helper.Max(count/8, 1)
 	while count > 0
 		if DroppedDustListIndex >= MAX_DROPS
