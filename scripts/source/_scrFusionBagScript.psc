@@ -1,7 +1,5 @@
 Scriptname _scrFusionBagScript extends ObjectReference  
 
-Actor Property PlayerRef Auto
-ObjectReference Property ThisContainer Auto
 ObjectReference Property TempStorage  Auto  
 Perk Property DoubleFusePerk Auto
 Keyword Property FusedKeyword  Auto  
@@ -10,35 +8,45 @@ MiscObject Property ArcaneDust  Auto
 Explosion Property SuccessFX  Auto  
 Quest Property TutorialQuest  Auto  
 
-_scrProgressionScript Property ProgressScript Auto
+Actor ThisActor
+
+_scrWorkstationManagerScript Property WorkstationScript Auto
 bool isDisassembled = false
 
 Event OnActivate(ObjectReference akActionRef)
-	if akActionRef == Game.GetPlayer()
-		if !isDisassembled
-			ProgressScript.Disassemble(PlayerRef, soulgems = true, books = false)
-			isDisassembled = true
-		endif
-	
-		; wait for player to leave menu
-		while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
-			Utility.Wait(0.5)
-		EndWhile
-		RegisterForSingleUpdate(0.1)
+	if akActionRef != Game.GetPlayer()
+		return
 	endif
+	
+	ThisActor = akActionRef as Actor
+	
+	if !isDisassembled
+		WorkstationScript.Disassemble(ThisActor, soulgems = true, books = false)
+		isDisassembled = true
+	endif
+
+	; wait for player to leave menu
+	WorkstationScript.IsBusy = true
+	Utility.Wait(0.5)
+	while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
+		Utility.Wait(0.5)
+	EndWhile
+	
+	RegisterForSingleUpdate(0.5)
 EndEvent
 
 Event OnUpdate()
-	int itemCount = ThisContainer.GetNumItems()
+	int itemCount = self.GetNumItems()
 	if itemCount == 0
 		if isDisassembled
-			ProgressScript.Reassemble(PlayerRef, soulgems = true, books = false)
+			WorkstationScript.Reassemble(ThisActor, soulgems = true, books = false)
 			isDisassembled = false
 		endif
+		WorkstationScript.IsBusy = false
 		return
 	elseif itemCount < 2
 		Debug.Notification("Scroll fusion requires at least two ingredients.")
-		ThisContainer.Activate(PlayerRef)
+		self.Activate(ThisActor)
 		return
 	endif
 	
@@ -49,14 +57,14 @@ Event OnUpdate()
 		Scroll firstScroll = none
 		fusionSuccess = false
 		int i = 0
-		while i < ThisContainer.GetNumItems()
-			Scroll itm = ThisContainer.GetNthForm(i) as Scroll
+		while i < self.GetNumItems()
+			Scroll itm = self.GetNthForm(i) as Scroll
 			if itm 
 				if !firstScroll
 					firstScroll = itm
 				elseif itm != firstScroll
 					bool fuseRegular = ScrollScribeExtender.CanFuse(firstScroll, itm, false)
-					bool fuseDouble = ScrollScribeExtender.CanFuse(firstScroll, itm, PlayerRef.HasPerk(DoubleFusePerk))
+					bool fuseDouble = ScrollScribeExtender.CanFuse(firstScroll, itm, ThisActor.HasPerk(DoubleFusePerk))
 					
 					if fuseRegular || fuseDouble
 						int dustMult
@@ -66,8 +74,8 @@ Event OnUpdate()
 							dustMult = 1000
 						endif
 						
-						int countFuseDust = Math.Floor(ThisContainer.GetItemCount(ArcaneDust) / dustMult)
-						int countFuseScrolls = m3Helper.Min(ThisContainer.GetItemCount(firstScroll), ThisContainer.GetItemCount(itm))
+						int countFuseDust = Math.Floor(self.GetItemCount(ArcaneDust) / dustMult)
+						int countFuseScrolls = m3Helper.Min(self.GetItemCount(firstScroll), self.GetItemCount(itm))
 						int maxCount = m3Helper.Min(countFuseDust, countFuseScrolls)
 						
 						if maxCount == 0
@@ -75,12 +83,12 @@ Event OnUpdate()
 						else
 							Scroll fusedScroll = ScrollScribeExtender.FuseAndCreate(firstScroll, itm)
 							TempStorage.AddItem(fusedScroll, maxCount)
-							TempStorage.AddItem(firstScroll, ThisContainer.GetItemCount(firstScroll) - maxCount)
-							TempStorage.AddItem(itm, ThisContainer.GetItemCount(itm) - maxCount)
+							TempStorage.AddItem(firstScroll, self.GetItemCount(firstScroll) - maxCount)
+							TempStorage.AddItem(itm, self.GetItemCount(itm) - maxCount)
 							
-							ThisContainer.RemoveItem(firstScroll, ThisContainer.GetItemCount(firstScroll))
-							ThisContainer.RemoveItem(itm, ThisContainer.GetItemCount(itm))
-							ThisContainer.RemoveItem(ArcaneDust, maxCount * dustMult)
+							self.RemoveItem(firstScroll, self.GetItemCount(firstScroll))
+							self.RemoveItem(itm, self.GetItemCount(itm))
+							self.RemoveItem(ArcaneDust, maxCount * dustMult)
 							Utility.Wait(0.1)
 							fusionSuccess = true
 							fusedOnce = true
@@ -95,7 +103,7 @@ Event OnUpdate()
 	endwhile
 
 	if fusedOnce
-		PlayerRef.PlaceAtMe(SuccessFX)
+		ThisActor.PlaceAtMe(SuccessFX)
 		
 		if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(55)
 			TutorialQuest.SetStage(100)
@@ -103,8 +111,8 @@ Event OnUpdate()
 	endif
 	Utility.Wait(1.25)
 	
-	TempStorage.RemoveAllItems(ThisContainer)
-	ThisContainer.Activate(PlayerRef)
+	TempStorage.RemoveAllItems(self)
+	self.Activate(ThisActor)
 EndEvent
 
 

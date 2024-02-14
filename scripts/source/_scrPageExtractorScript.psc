@@ -1,9 +1,8 @@
 Scriptname _scrPageExtractorScript extends ObjectReference  
 
 _scrProgressionScript Property ProgressScript Auto
+_scrWorkstationManagerScript Property WorkstationScript Auto
 
-Actor Property PlayerRef Auto
-ObjectReference Property ThisContainer Auto
 ObjectReference Property TempStorage  Auto  
 
 GlobalVariable Property InscriptionLevel Auto
@@ -20,9 +19,6 @@ GlobalVariable Property DustPerGemRank Auto
 Idle Property IdleStart Auto
 Idle Property IdleStop Auto
 
-
-Furniture Property Fountain Auto
-ObjectReference FountainRef
 Static Property StickyMarker Auto
 ObjectReference StickyMarkerRef
 Activator Property MarkerEffectSummon Auto
@@ -31,6 +27,7 @@ VisualEffect Property MarkerEffectWait Auto
 VisualEffect Property MarkerEffectDestroyItem Auto
 Sound Property ExtractSFX Auto
 
+Actor ThisActor
 ObjectReference[] DroppedDustList
 int DroppedDustListIndex = 0
 int MAX_DROPS = 32
@@ -44,45 +41,38 @@ float PlayerY
 float PlayerZ
 
 Event OnActivate(ObjectReference akActionRef)
-	if akActionRef == Game.GetPlayer()
-		PlayerRef.PlayIdle(IdleStart)
-		; wait for player to leave menu
-		while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
-			Utility.Wait(0.5)
-		EndWhile
-		RegisterForSingleUpdate(0.5)
-	endif
-EndEvent
-
-Event OnUpdate()
-	int itemCount = ThisContainer.GetNumItems()
-	if itemCount == 0
-		ClearDroppedItems()
-		PlayerRef.PlayIdle(IdleStop)
+	if akActionRef != Game.GetPlayer()
 		return
 	endif
 
+	ThisActor = akActionRef as Actor
+	WorkstationScript.IsBusy = true
+	; wait for player to leave menu
+	Utility.Wait(0.5)
+	while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
+		Utility.Wait(0.5)
+	EndWhile
+	RegisterForSingleUpdate(0.5)
+EndEvent
+
+Event OnUpdate()
+	int itemCount = self.GetNumItems()
+	if itemCount == 0
+		ClearDroppedItems()
+		ThisActor.PlayIdle(IdleStop)
+		MarkerEffectWait.Stop(WorkstationScript.SummonedBenchExtract)
+		WorkstationScript.IsBusy = false
+		return
+	endif
+
+	ThisActor.PlayIdle(IdleStart)
 	
-	if !FountainRef
+	if !DroppedDustList
 		DroppedDustList = new ObjectReference[32] ; MAX_DROPS
-		
-		PlayerX = PlayerRef.X
-		PlayerY = PlayerRef.Y
-		PlayerZ = PlayerRef.Z
-		SpawnAngleZ = PlayerRef.GetAngleZ() + 0 ;or +90 for right, -90 for left, 0 for in front
-		SpawnOffsetX = SpawnDistance * math.sin(SpawnAngleZ)
-		SpawnOffsetY = SpawnDistance * math.cos(SpawnAngleZ)
-	
-		FountainRef = PlayerRef.PlaceAtMe(Fountain,1,FALSE,true)
-		FountainRef.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ)
-		FountainRef.SetAngle(0.0, 0.0, SpawnAngleZ)
-		FountainRef.EnableNoWait(True)
-		FountainRef.PlaceAtMe(MarkerEffectSummon,1,FALSE,false)
-		
-		StickyMarkerRef = PlayerRef.PlaceAtMe(StickyMarker,1,FALSE,false)
-		StickyMarkerRef.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ + 1337.0)
+		StickyMarkerRef = ThisActor.PlaceAtMe(StickyMarker,1,FALSE,false)
+		StickyMarkerRef.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 1337.0)
 		Utility.Wait(1.75)
-		MarkerEffectWait.Play(FountainRef)
+		MarkerEffectWait.Play(WorkstationScript.SummonedBenchExtract)
 	endif
 
 	bool extractionSuccess = false
@@ -92,16 +82,16 @@ Event OnUpdate()
 		extractionSuccess = false
 		int i = 0
 		while i < itemCount
-			Form theForm = ThisContainer.GetNthForm(i)
+			Form theForm = self.GetNthForm(i)
 			if theForm as Book
 				Book itm = theForm as Book
 				Scroll product = ScrollScribeExtender.GetScrollForBook(itm)
 				if product
-					int count = ThisContainer.GetItemCount(itm)
+					int count = self.GetItemCount(itm)
 					int level = InscriptionLevel.GetValueInt()
 					int finalCount = count * CalculateProductCount(level)
 					TempStorage.AddItem(product, finalCount)
-					ThisContainer.RemoveItem(itm, count)
+					self.RemoveItem(itm, count)
 					
 					ObjectReference disp = Display(theForm)
 					Drop(product, finalCount)
@@ -116,13 +106,13 @@ Event OnUpdate()
 				else
 					Debug.Notification("Extraction failed. Invalid Spell Book: " + itm.GetName())
 				endif
-			elseif PlayerRef.HasPerk(DisenchantPerk) 
-				int count = ThisContainer.GetItemCount(theForm)
+			elseif ThisActor.HasPerk(DisenchantPerk) 
+				int count = self.GetItemCount(theForm)
 				if theForm as Scroll
 					Scroll itm = theForm as Scroll
 					int finalCount = count * itm.GetGoldValue() / 5
 					TempStorage.AddItem(ArcaneDust, finalCount)
-					ThisContainer.RemoveItem(itm, count)
+					self.RemoveItem(itm, count)
 					
 					ObjectReference disp = Display(theForm)
 					Drop(ArcaneDust, finalCount)
@@ -134,7 +124,7 @@ Event OnUpdate()
 					int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
 					int finalCount = (count * val) / 3
 					TempStorage.AddItem(ArcaneDust, finalCount)
-					ThisContainer.RemoveItem(theForm, count)
+					self.RemoveItem(theForm, count)
 					
 					ObjectReference disp = Display(theForm)
 					Drop(ArcaneDust, finalCount)
@@ -149,7 +139,7 @@ Event OnUpdate()
 						if SoulGemList.GetAt(j) == theForm
 							int finalCount = count * DustPerGemRank.GetValueInt() * (1+j)
 							TempStorage.AddItem(ArcaneDust, finalCount)
-							ThisContainer.RemoveItem(theForm, count)
+							self.RemoveItem(theForm, count)
 							
 							ObjectReference disp = Display(theForm)
 							Drop(ArcaneDust, finalCount)
@@ -165,7 +155,7 @@ Event OnUpdate()
 						if FilledSoulGemList.GetAt(j) == theForm
 							int finalCount = count * DustPerGemRank.GetValueInt() * (1+j)
 							TempStorage.AddItem(ArcaneDust, finalCount)
-							ThisContainer.RemoveItem(theForm, count)
+							self.RemoveItem(theForm, count)
 							
 							ObjectReference disp = Display(theForm)
 							Drop(ArcaneDust, finalCount)
@@ -183,8 +173,8 @@ Event OnUpdate()
 		ranOnce = true
 	endwhile
 	Utility.Wait(0.1)
-	TempStorage.RemoveAllItems(ThisContainer)
-	ThisContainer.Activate(PlayerRef)
+	TempStorage.RemoveAllItems(self)
+	self.Activate(ThisActor)
 EndEvent
 
 int function CalculateProductCount(int currentLevel)
@@ -201,11 +191,11 @@ ObjectReference Function Display(Form theForm)
 	SetLocalAngle(Obj, 45, 0, SpawnAngleZ + 180)
 	Obj.Disable()
 	
-	Obj.SetPosition(PlayerX + SpawnOffsetX, PlayerY + SpawnOffsetY, PlayerZ + 135.0)
+	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 135.0)
 	Obj.Enable()
 	Utility.Wait(0.1)
 	Obj.SetMotionType(4)
-	ExtractSFX.Play(FountainRef)
+	ExtractSFX.Play(WorkstationScript.SummonedBenchExtract)
 	MarkerEffectDestroyItem.Play(Obj)
 	return Obj
 EndFunction
@@ -232,7 +222,7 @@ Function Drop(Form ItemForm, int count, float scale = 0.33)
 		Obj.BlockActivation()
 		Obj.SetScale(scale)
 		Obj.Disable()
-		Obj.SetPosition(PlayerX + SpawnOffsetX + Utility.RandomFloat(-10.0, 10.0), PlayerY + SpawnOffsetY + Utility.RandomFloat(-10.0, 10.0), PlayerZ + 120.0)
+		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 120.0)
 		Obj.EnableNoWait(true)
 
 		DroppedDustList[DroppedDustListIndex] = Obj
@@ -252,12 +242,8 @@ Function ClearDroppedItems()
 		endif
 		i += 1
 	endwhile
-	if FountainRef
-		MarkerEffectWait.Stop(FountainRef)
-		FountainRef.PlaceAtMe(MarkerEffectBanish,1,FALSE,false)
-		FountainRef.DisableNoWait(true)
-		FountainRef.Delete()
-		FountainRef = none
+	DroppedDustList = none
+	if StickyMarkerRef
 		StickyMarkerRef.DisableNoWait(true)
 		StickyMarkerRef.Delete()
 		StickyMarkerRef = none
