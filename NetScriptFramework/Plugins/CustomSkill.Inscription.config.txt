@@ -232,7 +232,7 @@ Node16.GridY = 2
 # 18 Paper Armor
 Node18.Enable = true
 Node18.PerkFile = "Scribe.esp"
-Node18.PerkId = 0x85B
+Node18.PerkId = 0x805
 Node18.X = -0.45
 Node18.Y = -0.2
 Node18.GridX = 4
