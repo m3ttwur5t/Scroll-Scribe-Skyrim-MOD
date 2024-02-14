@@ -48,7 +48,7 @@ Event OnActivate(ObjectReference akActionRef)
 	ThisActor = akActionRef as Actor
 	WorkstationScript.IsBusy = true
 	; wait for player to leave menu
-	Utility.Wait(0.5)
+	Utility.Wait(2.5)
 	while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
 		Utility.Wait(0.5)
 	EndWhile
