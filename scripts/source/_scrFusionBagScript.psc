@@ -27,12 +27,12 @@ Event OnActivate(ObjectReference akActionRef)
 
 	; wait for player to leave menu
 	WorkstationScript.IsBusy = true
-	Utility.Wait(2.5)
+	Utility.WaitMenuMode(2.5)
 	while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
 		Utility.Wait(0.5)
 	EndWhile
 	
-	RegisterForSingleUpdate(0.5)
+	RegisterForSingleUpdate(0.1)
 EndEvent
 
 Event OnUpdate()
@@ -103,7 +103,7 @@ Event OnUpdate()
 	endwhile
 
 	if fusedOnce
-		ThisActor.PlaceAtMe(SuccessFX)
+		WorkstationScript.SummonedBenchFusion.PlaceAtMe(SuccessFX)
 		
 		if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(55)
 			TutorialQuest.SetStage(100)

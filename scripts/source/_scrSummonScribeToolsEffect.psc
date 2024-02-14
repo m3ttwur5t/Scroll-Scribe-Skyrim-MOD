@@ -60,20 +60,20 @@ Function SummonBasicBench()
 EndFunction
 
 Function SummonExtractor()
-	float mySpawnOffsetX = WorkstationScript.SummonedBenchBase.X + 36 * math.cos(SpawnAngleZ) + 80 * math.sin(SpawnAngleZ)
-	float mySpawnOffsetY = WorkstationScript.SummonedBenchBase.Y + 80 * math.cos(SpawnAngleZ) - 36 * math.sin(SpawnAngleZ)
-	float mySpawnOffsetZ = WorkstationScript.SummonedBenchBase.Z + 30.0
+	float mySpawnOffsetX = WorkstationScript.SummonedBenchBase.X + 40 * math.cos(SpawnAngleZ) + 70 * math.sin(SpawnAngleZ)
+	float mySpawnOffsetY = WorkstationScript.SummonedBenchBase.Y + 70 * math.cos(SpawnAngleZ) - 40 * math.sin(SpawnAngleZ)
+	float mySpawnOffsetZ = WorkstationScript.SummonedBenchBase.Z + 35.0
 	
 	WorkstationScript.SummonedBenchExtract = WorkstationScript.SummonedBenchBase.PlaceAtMe(WorkbenchExtract,1,FALSE,true)
 	WorkstationScript.SummonedBenchExtract.SetPosition(mySpawnOffsetX, mySpawnOffsetY, mySpawnOffsetZ)
-	WorkstationScript.SummonedBenchFusion.SetScale(0.75)
+	WorkstationScript.SummonedBenchExtract.SetScale(0.70)
 	WorkstationScript.SummonedBenchExtract.SetAngle(0.0, 0.0, SpawnAngleZ + 30)
 	WorkstationScript.SummonedBenchExtract.EnableNoWait(True)
 EndFunction
 
 Function SummonFusionBox()
-	float mySpawnOffsetX = WorkstationScript.SummonedBenchBase.X - 36 * math.cos(SpawnAngleZ) + 80 * math.sin(SpawnAngleZ)
-	float mySpawnOffsetY = WorkstationScript.SummonedBenchBase.Y + 80 * math.cos(SpawnAngleZ) + 36 * math.sin(SpawnAngleZ)
+	float mySpawnOffsetX = WorkstationScript.SummonedBenchBase.X - 40 * math.cos(SpawnAngleZ) + 85 * math.sin(SpawnAngleZ)
+	float mySpawnOffsetY = WorkstationScript.SummonedBenchBase.Y + 85 * math.cos(SpawnAngleZ) + 40 * math.sin(SpawnAngleZ)
 	float mySpawnOffsetZ = WorkstationScript.SummonedBenchBase.Z + 66.0
 	
 	WorkstationScript.SummonedBenchFusion = WorkstationScript.SummonedBenchBase.PlaceAtMe(WorkbenchFusion,1,FALSE,true)
@@ -85,7 +85,7 @@ EndFunction
 
 Function BanishWorkbenches()
 	WorkstationScript.SummonedBenchBase.PlaceAtMe(EffectBanish,1,FALSE,false)
-	Utility.Wait(1.0)
+	Utility.Wait(0.5)
 	WorkstationScript.SummonedBenchBase.DisableNoWait(true)
 	WorkstationScript.SummonedBenchBase.Delete()
 	WorkstationScript.SummonedBenchBase = none

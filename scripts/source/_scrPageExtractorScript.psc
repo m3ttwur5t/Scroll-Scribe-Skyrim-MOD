@@ -48,11 +48,11 @@ Event OnActivate(ObjectReference akActionRef)
 	ThisActor = akActionRef as Actor
 	WorkstationScript.IsBusy = true
 	; wait for player to leave menu
-	Utility.Wait(2.5)
+	Utility.WaitMenuMode(2.5)
 	while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
 		Utility.Wait(0.5)
 	EndWhile
-	RegisterForSingleUpdate(0.5)
+	RegisterForSingleUpdate(0.1)
 EndEvent
 
 Event OnUpdate()
@@ -71,7 +71,7 @@ Event OnUpdate()
 		DroppedDustList = new ObjectReference[32] ; MAX_DROPS
 		StickyMarkerRef = ThisActor.PlaceAtMe(StickyMarker,1,FALSE,false)
 		StickyMarkerRef.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 1337.0)
-		Utility.Wait(1.75)
+		Utility.Wait(0.2)
 		MarkerEffectWait.Play(WorkstationScript.SummonedBenchExtract)
 	endif
 
@@ -110,7 +110,7 @@ Event OnUpdate()
 				int count = self.GetItemCount(theForm)
 				if theForm as Scroll
 					Scroll itm = theForm as Scroll
-					int finalCount = count * itm.GetGoldValue() / 5
+					int finalCount = count * itm.GetGoldValue() / 6
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					self.RemoveItem(itm, count)
 					
@@ -122,7 +122,7 @@ Event OnUpdate()
 					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 20 )
 				elseif (theForm as Weapon || theForm as Armor) && ((theForm as Weapon).GetEnchantment() || (theForm as Armor).GetEnchantment())					
 					int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
-					int finalCount = (count * val) / 3
+					int finalCount = (count * val) / 4
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					self.RemoveItem(theForm, count)
 					
@@ -191,7 +191,7 @@ ObjectReference Function Display(Form theForm)
 	SetLocalAngle(Obj, 45, 0, SpawnAngleZ + 180)
 	Obj.Disable()
 	
-	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 135.0)
+	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 120.0)
 	Obj.Enable()
 	Utility.Wait(0.1)
 	Obj.SetMotionType(4)
@@ -222,7 +222,7 @@ Function Drop(Form ItemForm, int count, float scale = 0.33)
 		Obj.BlockActivation()
 		Obj.SetScale(scale)
 		Obj.Disable()
-		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 120.0)
+		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 110.0)
 		Obj.EnableNoWait(true)
 
 		DroppedDustList[DroppedDustListIndex] = Obj

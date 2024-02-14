@@ -9,9 +9,9 @@ Event OnActivate(ObjectReference akActionRef)
 
 	WorkstationScript.Disassemble(akActionRef as Actor, soulgems = true, books = true)
 	
-	Utility.Wait(2.5)
+	Utility.WaitMenuMode(5.0)
 	while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("Crafting Menu") 
-		Utility.WaitMenuMode(0.5)
+		Utility.Wait(0.5)
 	EndWhile
 
 	WorkstationScript.Reassemble(akActionRef as Actor, soulgems = true, books = true)
