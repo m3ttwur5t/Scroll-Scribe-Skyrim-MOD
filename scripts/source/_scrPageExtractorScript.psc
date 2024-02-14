@@ -191,7 +191,7 @@ ObjectReference Function Display(Form theForm)
 	SetLocalAngle(Obj, 45, 0, SpawnAngleZ + 180)
 	Obj.Disable()
 	
-	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 120.0)
+	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 110.0)
 	Obj.Enable()
 	Utility.Wait(0.1)
 	Obj.SetMotionType(4)
@@ -222,7 +222,7 @@ Function Drop(Form ItemForm, int count, float scale = 0.33)
 		Obj.BlockActivation()
 		Obj.SetScale(scale)
 		Obj.Disable()
-		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 110.0)
+		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 100.0)
 		Obj.EnableNoWait(true)
 
 		DroppedDustList[DroppedDustListIndex] = Obj
