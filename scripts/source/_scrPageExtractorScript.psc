@@ -30,7 +30,7 @@ Sound Property ExtractSFX Auto
 Actor ThisActor
 ObjectReference[] DroppedDustList
 int DroppedDustListIndex = 0
-int MAX_DROPS = 32
+int MAX_DROPS = 64
 
 float SpawnAngleZ
 float LocalAngleX
@@ -70,9 +70,9 @@ Event OnUpdate()
 		LocalAngleX = 45 * Math.Cos(SpawnAngleZ)
 		LocalAngleY = -45 * Math.Sin(SpawnAngleZ)
 		
-		DroppedDustList = new ObjectReference[32] ; MAX_DROPS
+		DroppedDustList = new ObjectReference[64] ; MAX_DROPS
 		StickyMarkerRef = ThisActor.PlaceAtMe(StickyMarker,1,FALSE,false)
-		StickyMarkerRef.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 1337.0)
+		StickyMarkerRef.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z - 1000.0)
 		Utility.Wait(0.1)
 		MarkerEffectWait.Play(WorkstationScript.SummonedBenchExtract)
 	endif
@@ -183,16 +183,17 @@ EndEvent
 ObjectReference Function Display(Form theForm)
 	ObjectReference Obj
 	Obj = StickyMarkerRef.PlaceAtMe(theForm, 1, false, false)
-	Utility.Wait(0.1)
 	Obj.BlockActivation()
 	Obj.SetScale(0.5)
-	Obj.SetMotionType(4)
 	Obj.SetAngle(LocalAngleX, LocalAngleY, SpawnAngleZ)
-	Obj.Disable()
 	
-	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 110.0)
-	Obj.Enable()
 	Utility.Wait(0.1)
+	Obj.SetMotionType(4)
+	Obj.DisableNoWait()
+	
+	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 100.0)
+	Obj.EnableNoWait(true)
+	Utility.Wait(0.2)
 	Obj.SetMotionType(4)
 	ExtractSFX.Play(WorkstationScript.SummonedBenchExtract)
 	MarkerEffectDestroyItem.Play(Obj)
@@ -206,7 +207,7 @@ Function Destroy (ObjectReference ref)
 EndFunction
 
 Function Drop(Form ItemForm, int count, float scale = 0.33)
-	int n = m3Helper.Max(count/10, 1)
+	int n = m3Helper.Max(count/16, 1)
 	while count > 0
 		if DroppedDustListIndex >= MAX_DROPS
 			DroppedDustListIndex = 0
@@ -217,7 +218,7 @@ Function Drop(Form ItemForm, int count, float scale = 0.33)
 		endif
 		ObjectReference Obj
 		Obj = StickyMarkerRef.PlaceAtMe(ItemForm, 1, FALSE, false)
-		Utility.Wait(0.1)
+		Utility.Wait(0.01)
 		Obj.BlockActivation()
 		Obj.SetScale(scale)
 		Obj.Disable()
@@ -229,6 +230,7 @@ Function Drop(Form ItemForm, int count, float scale = 0.33)
 		
 		count -= n
 	endwhile
+	Utility.Wait(0.1)
 EndFunction
 
 Function ClearDroppedItems()
