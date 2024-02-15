@@ -30,7 +30,7 @@ Sound Property ExtractSFX Auto
 Actor ThisActor
 ObjectReference[] DroppedDustList
 int DroppedDustListIndex = 0
-int MAX_DROPS = 64
+int MAX_DROPS = 32
 
 float SpawnAngleZ
 float LocalAngleX
@@ -70,7 +70,7 @@ Event OnUpdate()
 		LocalAngleX = 45 * Math.Cos(SpawnAngleZ)
 		LocalAngleY = -45 * Math.Sin(SpawnAngleZ)
 		
-		DroppedDustList = new ObjectReference[64] ; MAX_DROPS
+		DroppedDustList = new ObjectReference[32] ; MAX_DROPS
 		StickyMarkerRef = ThisActor.PlaceAtMe(StickyMarker,1,FALSE,false)
 		StickyMarkerRef.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z - 1000.0)
 		Utility.Wait(0.1)
@@ -207,7 +207,7 @@ Function Destroy (ObjectReference ref)
 EndFunction
 
 Function Drop(Form ItemForm, int count, float scale = 0.33)
-	int n = m3Helper.Max(count/16, 1)
+	int n = m3Helper.Max(count/10, 1)
 	while count > 0
 		if DroppedDustListIndex >= MAX_DROPS
 			DroppedDustListIndex = 0
