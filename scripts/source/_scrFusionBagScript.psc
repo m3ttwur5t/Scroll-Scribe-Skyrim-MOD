@@ -2,7 +2,7 @@ Scriptname _scrFusionBagScript extends ObjectReference
 
 ObjectReference Property TempStorage  Auto  
 Perk Property DoubleFusePerk Auto
-Keyword Property FusedKeyword  Auto  
+Keyword Property DisallowFusionKeyword  Auto  
 MiscObject Property ArcaneDust  Auto  
 
 Explosion Property SuccessFX  Auto  
@@ -29,7 +29,7 @@ Event OnActivate(ObjectReference akActionRef)
 	WorkstationScript.IsBusy = true
 	Utility.WaitMenuMode(2.5)
 	while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
-		Utility.Wait(0.5)
+		Utility.Wait(0.25)
 	EndWhile
 	
 	RegisterForSingleUpdate(0.1)
@@ -50,6 +50,8 @@ Event OnUpdate()
 		return
 	endif
 	
+	Self.BlockActivation(abBlocked = True)
+
 	bool fusionSuccess = false
 	bool ranOnce = false
 	bool fusedOnce = false
@@ -59,7 +61,7 @@ Event OnUpdate()
 		int i = 0
 		while i < self.GetNumItems()
 			Scroll itm = self.GetNthForm(i) as Scroll
-			if itm 
+			if itm && !itm.HasKeyword(DisallowFusionKeyword)
 				if !firstScroll
 					firstScroll = itm
 				elseif itm != firstScroll
@@ -112,7 +114,6 @@ Event OnUpdate()
 	Utility.Wait(1.25)
 	
 	TempStorage.RemoveAllItems(self)
+	Self.BlockActivation(abBlocked = False)
 	self.Activate(ThisActor)
 EndEvent
-
-

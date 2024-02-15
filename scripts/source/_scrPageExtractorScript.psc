@@ -32,13 +32,9 @@ ObjectReference[] DroppedDustList
 int DroppedDustListIndex = 0
 int MAX_DROPS = 32
 
-float SpawnDistance = 80.0
 float SpawnAngleZ
-float SpawnOffsetX
-float SpawnOffsetY
-float PlayerX
-float PlayerY
-float PlayerZ
+float LocalAngleX
+float LocalAngleY
 
 Event OnActivate(ObjectReference akActionRef)
 	if akActionRef != Game.GetPlayer()
@@ -50,7 +46,7 @@ Event OnActivate(ObjectReference akActionRef)
 	; wait for player to leave menu
 	Utility.WaitMenuMode(2.5)
 	while !Game.IsLookingControlsEnabled() || !Game.IsMovementControlsEnabled() || UI.IsMenuOpen("ContainerMenu") 
-		Utility.Wait(0.5)
+		Utility.Wait(0.25)
 	EndWhile
 	RegisterForSingleUpdate(0.1)
 EndEvent
@@ -65,13 +61,19 @@ Event OnUpdate()
 		return
 	endif
 
+	Self.BlockActivation(abBlocked = True)
+	itemCount = self.GetNumItems() ; just in case
 	ThisActor.PlayIdle(IdleStart)
 	
 	if !DroppedDustList
+		SpawnAngleZ = WorkstationScript.SummonedBenchExtract.GetAngleZ() + 180
+		LocalAngleX = 45 * Math.Cos(SpawnAngleZ)
+		LocalAngleY = -45 * Math.Sin(SpawnAngleZ)
+		
 		DroppedDustList = new ObjectReference[32] ; MAX_DROPS
 		StickyMarkerRef = ThisActor.PlaceAtMe(StickyMarker,1,FALSE,false)
 		StickyMarkerRef.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 1337.0)
-		Utility.Wait(0.2)
+		Utility.Wait(0.1)
 		MarkerEffectWait.Play(WorkstationScript.SummonedBenchExtract)
 	endif
 
@@ -89,7 +91,7 @@ Event OnUpdate()
 				if product
 					int count = self.GetItemCount(itm)
 					int level = InscriptionLevel.GetValueInt()
-					int finalCount = count * CalculateProductCount(level)
+					int finalCount = count * (15 + Math.Ceiling( 0.5 * level ))
 					TempStorage.AddItem(product, finalCount)
 					self.RemoveItem(itm, count)
 					
@@ -174,12 +176,9 @@ Event OnUpdate()
 	endwhile
 	Utility.Wait(0.1)
 	TempStorage.RemoveAllItems(self)
+	Self.BlockActivation(abBlocked = False)
 	self.Activate(ThisActor)
 EndEvent
-
-int function CalculateProductCount(int currentLevel)
-	return 15 + Math.Ceiling( 0.5 * currentLevel )
-endfunction
 
 ObjectReference Function Display(Form theForm)
 	ObjectReference Obj
@@ -188,7 +187,7 @@ ObjectReference Function Display(Form theForm)
 	Obj.BlockActivation()
 	Obj.SetScale(0.5)
 	Obj.SetMotionType(4)
-	SetLocalAngle(Obj, 45, 0, SpawnAngleZ + 180)
+	Obj.SetAngle(LocalAngleX, LocalAngleY, SpawnAngleZ)
 	Obj.Disable()
 	
 	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 110.0)
@@ -207,7 +206,7 @@ Function Destroy (ObjectReference ref)
 EndFunction
 
 Function Drop(Form ItemForm, int count, float scale = 0.33)
-	int n = m3Helper.Max(count/8, 1)
+	int n = m3Helper.Max(count/10, 1)
 	while count > 0
 		if DroppedDustListIndex >= MAX_DROPS
 			DroppedDustListIndex = 0
@@ -248,10 +247,4 @@ Function ClearDroppedItems()
 		StickyMarkerRef.Delete()
 		StickyMarkerRef = none
 	endif
-EndFunction
-
-Function SetLocalAngle(ObjectReference MyObject, Float LocalX, Float LocalY, Float LocalZ)
-	float AngleX = LocalX * Math.Cos(LocalZ) + LocalY * Math.Sin(LocalZ)
-	float AngleY = LocalY * Math.Cos(LocalZ) - LocalX * Math.Sin(LocalZ)
-	MyObject.SetAngle(AngleX, AngleY, LocalZ)
 EndFunction
