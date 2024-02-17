@@ -13,7 +13,9 @@ GlobalVariable Property PaperPerBook Auto
 GlobalVariable Property ConvertFilledGemsEnabled Auto
 
 int[] iConversionList
+int iConversionListIndex
 int[] iConversionListFilled
+int iConversionListFilledIndex
 int[] iConversionListBook
 
 ObjectReference Property SummonedBenchBase Auto Hidden
@@ -22,10 +24,10 @@ ObjectReference Property SummonedBenchFusion Auto Hidden
 bool Property IsBusy Auto Hidden
 
 Function Disassemble(Actor user, bool soulgems = true, bool books = true)
-	iConversionList = new int[6]
-	iConversionListFilled = new int[6]
+	iConversionList = new int[32]
+	iConversionListFilled = new int[32]
 	iConversionListBook = new int[3]
-	;dustOnHand = Game.GetPlayer().GetItemCount(ArcaneDust)
+
 	int i = 0
 	
 	int dustReceived = 0
@@ -34,33 +36,35 @@ Function Disassemble(Actor user, bool soulgems = true, bool books = true)
 	if soulgems
 		; break gems into dust
 		while i < SoulGemList.GetSize()
-			Form iGem = SoulGemList.GetAt(i)
+			Soulgem iGem = SoulGemList.GetAt(i) as Soulgem
 			int iGemInventory = user.GetItemCount(iGem)
 			
-			iConversionList[i] = iGemInventory
-			
-			user.RemoveItem(iGem, iGemInventory, true)
-			dustReceived += iGemInventory * DustPerGemRank.GetValueInt() * (1+i)
-			;user.AddItem(ArcaneDust, iGemInventory * DustPerGemRank.GetValueInt() * (1+i), true)
-			
+			if iGemInventory > 0
+				iConversionList[i] = iGemInventory
+				
+				user.RemoveItem(iGem, iGemInventory, true)
+				dustReceived += iGemInventory * DustPerGemRank.GetValueInt() * iGem.GetGemSize()
+			endif
 			i += 1
 		EndWhile
+		iConversionListIndex = SoulGemList.GetSize() - 1
 		
 		; break filled gems into dust (if enabled)
 		i = 0
 		if ConvertFilledGemsEnabled.GetValueInt() != 0
 			while i < FilledSoulGemList.GetSize()
-				Form iGem = FilledSoulGemList.GetAt(i)
+				Soulgem iGem = FilledSoulGemList.GetAt(i) as Soulgem
 				int iGemInventory = user.GetItemCount(iGem)
-				
-				iConversionListFilled[i] = iGemInventory
-				
-				user.RemoveItem(iGem, iGemInventory, true)
-				dustReceived += iGemInventory * DustPerGemRank.GetValueInt() * (1+i)
-				;user.AddItem(ArcaneDust, iGemInventory * DustPerGemRank.GetValueInt() * (1+i), true)
-				
+				if iGemInventory > 0
+					iConversionListFilled[i] = iGemInventory
+					
+					user.RemoveItem(iGem, iGemInventory, true)
+					dustReceived += iGemInventory * DustPerGemRank.GetValueInt() * iGem.GetGemSize()
+				endif
 				i += 1
 			EndWhile
+			
+			iConversionListFilledIndex = FilledSoulGemList.GetSize() - 1
 		endif
 	endif
 	
@@ -79,8 +83,7 @@ Function Disassemble(Actor user, bool soulgems = true, bool books = true)
 			
 			user.RemoveItem(iBook, iBookInventory, true)
 			paperReceived += iBookInventory * (bonusPaper + PaperPerBook.GetValueInt())
-			;user.AddItem(PaperRoll, iBookInventory * (bonusPaper + PaperPerBook.GetValueInt()), true)
-			
+
 			i += 1
 		EndWhile
 	endif
@@ -98,16 +101,17 @@ Function Reassemble(Actor user, bool soulgems = true, bool books = true)
 	if soulgems
 		; recombine dust to gems
 		int iDustRemains = user.GetItemCount(ArcaneDust)
-		if iDustRemains > DustPerGemRank.GetValueInt()
-			i = iConversionList.Length - 1
+		if iDustRemains >= DustPerGemRank.GetValueInt()
+			i = iConversionListIndex
 			while i >= 0 
 				if iConversionList[i] > 0
-					int iGemsReturned = m3Helper.Min( iConversionList[i], Math.Floor(iDustRemains / (DustPerGemRank.GetValueInt()*(1+i))) )
-					int iDustConsumed = iGemsReturned * DustPerGemRank.GetValueInt()*(1+i)
+					Soulgem iGem = SoulGemList.GetAt(i) as Soulgem
+					
+					int iGemsReturned = m3Helper.Min( iConversionList[i], Math.Floor(iDustRemains / (DustPerGemRank.GetValueInt() * iGem.GetGemSize())) )
+					int iDustConsumed = iGemsReturned * DustPerGemRank.GetValueInt() * iGem.GetGemSize()
 					iDustRemains -= iDustConsumed
 
 					dustRemoved += iDustConsumed
-					;user.RemoveItem(ArcaneDust, iDustConsumed, true)
 					user.AddItem(SoulGemList.GetAt(i), iGemsReturned, true)
 				endif
 				
@@ -116,16 +120,16 @@ Function Reassemble(Actor user, bool soulgems = true, bool books = true)
 		EndIf
 		
 		; recombine dust to filled gems (if enabled)
-		if iDustRemains > DustPerGemRank.GetValueInt() && ConvertFilledGemsEnabled.GetValueInt() != 0
-			i = iConversionListFilled.Length - 1
+		if iDustRemains >= DustPerGemRank.GetValueInt() && ConvertFilledGemsEnabled.GetValueInt() != 0
+			i = iConversionListFilledIndex
 			while i >= 0 
 				if iConversionListFilled[i] > 0
-					int iGemsReturned = m3Helper.Min( iConversionListFilled[i], Math.Floor(iDustRemains / (DustPerGemRank.GetValueInt()*(1+i))) )
-					int iDustConsumed = iGemsReturned * DustPerGemRank.GetValueInt()*(1+i)
+					Soulgem iGem = FilledSoulGemList.GetAt(i) as Soulgem
+					int iGemsReturned = m3Helper.Min( iConversionListFilled[i], Math.Floor(iDustRemains / (DustPerGemRank.GetValueInt() * iGem.GetGemSize())) )
+					int iDustConsumed = iGemsReturned * DustPerGemRank.GetValueInt() * iGem.GetGemSize()
 					iDustRemains -= iDustConsumed
 
 					dustRemoved += iDustConsumed
-					;user.RemoveItem(ArcaneDust, iDustConsumed, true)
 					user.AddItem(FilledSoulGemList.GetAt(i), iGemsReturned, true)
 				endif
 				
