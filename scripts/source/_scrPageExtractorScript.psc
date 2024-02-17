@@ -218,11 +218,11 @@ Function Drop(Form ItemForm, int count, float scale = 0.33)
 		endif
 		ObjectReference Obj
 		Obj = StickyMarkerRef.PlaceAtMe(ItemForm, 1, FALSE, false)
-		Utility.Wait(0.01)
+		
 		Obj.BlockActivation()
 		Obj.SetScale(scale)
 		Obj.Disable()
-		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 100.0)
+		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 105.0)
 		Obj.EnableNoWait(true)
 
 		DroppedDustList[DroppedDustListIndex] = Obj
@@ -230,7 +230,7 @@ Function Drop(Form ItemForm, int count, float scale = 0.33)
 		
 		count -= n
 	endwhile
-	Utility.Wait(0.1)
+	Utility.Wait(0.5)
 EndFunction
 
 Function ClearDroppedItems()

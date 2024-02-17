@@ -55,6 +55,7 @@ Function SummonBasicBench()
 	WorkstationScript.SummonedBenchBase.SetPosition(ThisActor.X + SpawnOffsetX, ThisActor.Y + SpawnOffsetY, ThisActor.Z)
 	WorkstationScript.SummonedBenchBase.SetAngle(0.0, 0.0, SpawnAngleZ)
 	WorkstationScript.SummonedBenchBase.PlaceAtMe(EffectSummon,1,FALSE,false)
+	WorkstationScript.SummonedBenchBase.SetActorOwner(ThisActor.GetActorBase())
 	Utility.Wait(0.5)
 	WorkstationScript.SummonedBenchBase.EnableNoWait(True)
 EndFunction
@@ -68,6 +69,7 @@ Function SummonExtractor()
 	WorkstationScript.SummonedBenchExtract.SetPosition(mySpawnOffsetX, mySpawnOffsetY, mySpawnOffsetZ)
 	WorkstationScript.SummonedBenchExtract.SetScale(0.70)
 	WorkstationScript.SummonedBenchExtract.SetAngle(0.0, 0.0, SpawnAngleZ + 30)
+	WorkstationScript.SummonedBenchExtract.SetActorOwner(ThisActor.GetActorBase())
 	WorkstationScript.SummonedBenchExtract.EnableNoWait(True)
 EndFunction
 
@@ -80,6 +82,7 @@ Function SummonFusionBox()
 	WorkstationScript.SummonedBenchFusion.SetPosition(mySpawnOffsetX, mySpawnOffsetY, mySpawnOffsetZ)
 	WorkstationScript.SummonedBenchFusion.SetScale(0.3)
 	WorkstationScript.SummonedBenchFusion.SetAngle(0.0, 0.0, SpawnAngleZ + 45)
+	WorkstationScript.SummonedBenchFusion.SetActorOwner(ThisActor.GetActorBase())
 	WorkstationScript.SummonedBenchFusion.EnableNoWait(True)
 EndFunction
 
