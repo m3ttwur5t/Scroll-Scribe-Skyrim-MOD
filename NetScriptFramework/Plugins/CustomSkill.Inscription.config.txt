@@ -124,6 +124,7 @@ Node4.X = -0
 Node4.Y = 0.15
 Node4.GridX = 1
 Node4.GridY = 0
+Node4.Links = "19"
 
 # 5 Attuned Scrolls
 Node5.Enable = true
@@ -133,6 +134,7 @@ Node5.X = -0.85
 Node5.Y = 0.15
 Node5.GridX = 1
 Node5.GridY = 0
+Node5.Links = "19"
 
 # 6 To Dust
 Node6.Enable = true
@@ -237,3 +239,12 @@ Node18.X = -0.45
 Node18.Y = -0.2
 Node18.GridX = 4
 Node18.GridY = 1
+
+# 19 Enchantrix Amplificator aka Upscaler
+Node19.Enable = true
+Node19.PerkFile = "Scribe.esp"
+Node19.PerkId = 0x85C
+Node19.X = -0.75
+Node19.Y = 0.60
+Node19.GridX = 1
+Node19.GridY = 0

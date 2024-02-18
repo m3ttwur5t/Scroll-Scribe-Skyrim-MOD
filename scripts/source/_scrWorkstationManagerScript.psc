@@ -21,6 +21,7 @@ int[] iConversionListBook
 ObjectReference Property SummonedBenchBase Auto Hidden
 ObjectReference Property SummonedBenchExtract Auto Hidden
 ObjectReference Property SummonedBenchFusion Auto Hidden
+ObjectReference Property SummonedBenchUpscale Auto Hidden
 bool Property IsBusy Auto Hidden
 
 Function Disassemble(Actor user, bool soulgems = true, bool books = true)

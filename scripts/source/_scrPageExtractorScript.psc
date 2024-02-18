@@ -183,6 +183,7 @@ EndEvent
 ObjectReference Function Display(Form theForm)
 	ObjectReference Obj
 	Obj = StickyMarkerRef.PlaceAtMe(theForm, 1, false, false)
+	Obj.SetActorOwner(ThisActor.GetActorBase())
 	Obj.BlockActivation()
 	Obj.SetScale(0.5)
 	Obj.SetAngle(LocalAngleX, LocalAngleY, SpawnAngleZ)
@@ -191,7 +192,7 @@ ObjectReference Function Display(Form theForm)
 	Obj.SetMotionType(4)
 	Obj.DisableNoWait()
 	
-	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 100.0)
+	Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z + 90.0)
 	Obj.EnableNoWait(true)
 	Utility.Wait(0.2)
 	Obj.SetMotionType(4)
@@ -218,11 +219,11 @@ Function Drop(Form ItemForm, int count, float scale = 0.33)
 		endif
 		ObjectReference Obj
 		Obj = StickyMarkerRef.PlaceAtMe(ItemForm, 1, FALSE, false)
-		
+		Obj.SetActorOwner(ThisActor.GetActorBase())
 		Obj.BlockActivation()
 		Obj.SetScale(scale)
 		Obj.Disable()
-		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 105.0)
+		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 90.0)
 		Obj.EnableNoWait(true)
 
 		DroppedDustList[DroppedDustListIndex] = Obj

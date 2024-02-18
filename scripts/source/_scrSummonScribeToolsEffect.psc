@@ -4,12 +4,14 @@ _scrWorkstationManagerScript Property WorkstationScript Auto
 Furniture Property WorkbenchBase  Auto  
 Container Property WorkbenchExtract  Auto  
 Container Property WorkbenchFusion  Auto  
+Container Property WorkbenchUpscaler  Auto  
 
 Activator Property EffectSummon Auto
 Activator Property EffectBanish Auto
 
 Perk Property ExtractorPerk Auto
 Perk Property FusionPerk Auto
+Perk Property AmplifierPerk Auto
 
 Actor ThisActor
 
@@ -44,6 +46,9 @@ Function SummonWorkbenches()
 	endif
 	if ThisActor.HasPerk(FusionPerk)
 		SummonFusionBox()
+	endif
+	if ThisActor.HasPerk(AmplifierPerk)
+		SummonUpscaleBox()
 	endif
 EndFunction
 
@@ -86,6 +91,19 @@ Function SummonFusionBox()
 	WorkstationScript.SummonedBenchFusion.EnableNoWait(True)
 EndFunction
 
+Function SummonUpscaleBox()
+	float mySpawnOffsetX = WorkstationScript.SummonedBenchBase.X - 0 * math.cos(SpawnAngleZ) + 100 * math.sin(SpawnAngleZ)
+	float mySpawnOffsetY = WorkstationScript.SummonedBenchBase.Y + 100 * math.cos(SpawnAngleZ) + 0 * math.sin(SpawnAngleZ)
+	float mySpawnOffsetZ = WorkstationScript.SummonedBenchBase.Z + 66.0
+	
+	WorkstationScript.SummonedBenchUpscale = WorkstationScript.SummonedBenchBase.PlaceAtMe(WorkbenchUpscaler,1,FALSE,true)
+	WorkstationScript.SummonedBenchUpscale.SetPosition(mySpawnOffsetX, mySpawnOffsetY, mySpawnOffsetZ)
+	WorkstationScript.SummonedBenchUpscale.SetScale(0.08)
+	WorkstationScript.SummonedBenchUpscale.SetAngle(0.0, 0.0, SpawnAngleZ + 0)
+	WorkstationScript.SummonedBenchUpscale.SetActorOwner(ThisActor.GetActorBase())
+	WorkstationScript.SummonedBenchUpscale.EnableNoWait(True)
+EndFunction
+
 Function BanishWorkbenches()
 	WorkstationScript.SummonedBenchBase.PlaceAtMe(EffectBanish,1,FALSE,false)
 	Utility.Wait(0.5)
@@ -100,4 +118,8 @@ Function BanishWorkbenches()
 	WorkstationScript.SummonedBenchFusion.DisableNoWait(true)
 	WorkstationScript.SummonedBenchFusion.Delete()
 	WorkstationScript.SummonedBenchFusion = none
+	
+	WorkstationScript.SummonedBenchUpscale.DisableNoWait(true)
+	WorkstationScript.SummonedBenchUpscale.Delete()
+	WorkstationScript.SummonedBenchUpscale = none
 EndFunction
