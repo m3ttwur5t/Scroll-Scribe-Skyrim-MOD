@@ -16,6 +16,8 @@ Form[] dismantledGems
 int[] dismantledGemsCount
 Form[] dismantledBooks
 int[] dismantledBooksCount
+bool isDisassembledGems
+bool isDisassembledBooks
 
 ObjectReference Property SummonedBenchBase Auto Hidden
 ObjectReference Property SummonedBenchExtract Auto Hidden
@@ -27,7 +29,7 @@ Function Disassemble(Actor user, bool soulgems = true, bool books = true)
 	int dustReceived = 0
 	int paperReceived = 0
 
-	if soulgems
+	if soulgems && !isDisassembledGems
 		Form[] invGems = PO3_SKSEFunctions.AddItemsOfTypeToArray(user, \
 			aiFormType = 52, \
 			abNoEquipped = true, \
@@ -52,9 +54,10 @@ Function Disassemble(Actor user, bool soulgems = true, bool books = true)
 			i += 1
 		endwhile
 		user.AddItem(ArcaneDust, dustReceived, true)
+		isDisassembledGems = true
 	endif
 	
-	if books
+	if books && !isDisassembledBooks
 		dismantledBooks = Utility.CreateFormArray(PaperBookList.GetSize())
 		dismantledBooksCount = Utility.CreateIntArray(PaperBookList.GetSize())
 
@@ -77,6 +80,7 @@ Function Disassemble(Actor user, bool soulgems = true, bool books = true)
 			paperReceived = paperReceived * 2
 		endif
 		user.AddItem(PaperRoll, paperReceived, true)
+		isDisassembledBooks = true
 	endif
 EndFunction
 
@@ -84,7 +88,7 @@ Function Reassemble(Actor user, bool soulgems = true, bool books = true)
 	int dustRemoved = 0
 	int paperRemoved = 0 
 	
-	if soulgems
+	if soulgems && isDisassembledGems
 		int dustPerSize = DustPerGemRank.GetValueInt()
 		int dustInventory = user.GetItemCount(ArcaneDust)
 		int i = 0 ;dismantledGems.Length - 1
@@ -102,9 +106,10 @@ Function Reassemble(Actor user, bool soulgems = true, bool books = true)
 			i += 1
 		endwhile
 		user.RemoveItem(ArcaneDust, dustRemoved, true)
+		isDisassembledGems = false
 	endif
 	
-	if books
+	if books && isDisassembledBooks
 		; recombine paper to books
 		int bonusPaper = 0
 		if user.HasPerk(PaperHarvesterPerk)
@@ -129,5 +134,6 @@ Function Reassemble(Actor user, bool soulgems = true, bool books = true)
 			i -= 1	
 		EndWhile
 		user.RemoveItem(PaperRoll, paperRemoved, true)
+		isDisassembledBooks = false
 	endif
 EndFunction
