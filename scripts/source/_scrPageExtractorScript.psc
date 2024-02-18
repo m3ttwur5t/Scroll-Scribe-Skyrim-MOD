@@ -77,54 +77,64 @@ Event OnUpdate()
 		MarkerEffectWait.Play(WorkstationScript.SummonedBenchExtract)
 	endif
 
-	bool extractionSuccess = false
-	bool ranOnce = false
-	while !ranOnce || extractionSuccess
-		Scroll firstScroll = none
-		extractionSuccess = false
-		int i = 0
-		while i < itemCount
-			Form theForm = self.GetNthForm(i)
-			if theForm as Book
-				Book itm = theForm as Book
-				Scroll product = ScrollScribeExtender.GetScrollForBook(itm)
-				if product
-					int count = self.GetItemCount(itm)
-					int level = InscriptionLevel.GetValueInt()
-					int finalCount = count * (15 + Math.Ceiling( 0.5 * level ))
-					TempStorage.AddItem(product, finalCount)
-					self.RemoveItem(itm, count)
-					
-					ObjectReference disp = Display(theForm)
-					Drop(product, finalCount)
-					Destroy(disp)
-					
-					extractionSuccess = true
-					ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 10 )
-					
-					if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(40)
-						TutorialQuest.SetStage(40)
-					endif
-				else
-					Debug.Notification("Extraction failed. Invalid Spell Book: " + itm.GetName())
+	int i = 0
+	while i < itemCount
+		Form theForm = self.GetNthForm(i)
+		if theForm as Book
+			Book itm = theForm as Book
+			Scroll product = ScrollScribeExtender.GetScrollForBook(itm)
+			if product
+				int count = self.GetItemCount(itm)
+				int level = InscriptionLevel.GetValueInt()
+				int finalCount = count * (15 + Math.Ceiling( 0.5 * level ))
+				TempStorage.AddItem(product, finalCount)
+				self.RemoveItem(itm, count)
+				
+				ObjectReference disp = Display(theForm)
+				Drop(product, finalCount)
+				Destroy(disp)
+				
+				ProgressScript.AdvInscription( Math.Floor(product.GetGoldValue() * finalCount) / 10 )
+				
+				if !TutorialQuest.IsCompleted() && !TutorialQuest.IsObjectiveCompleted(40)
+					TutorialQuest.SetStage(40)
 				endif
-			elseif ThisActor.HasPerk(DisenchantPerk) 
-				int count = self.GetItemCount(theForm)
-				if theForm as Scroll
-					Scroll itm = theForm as Scroll
-					int finalCount = count * itm.GetGoldValue() / 6
-					TempStorage.AddItem(ArcaneDust, finalCount)
-					self.RemoveItem(itm, count)
-					
-					ObjectReference disp = Display(theForm)
-					Drop(ArcaneDust, finalCount)
-					Destroy(disp)
-					
-					extractionSuccess = true
-					ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 20 )
-				elseif (theForm as Weapon || theForm as Armor) && ((theForm as Weapon).GetEnchantment() || (theForm as Armor).GetEnchantment())					
-					int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
-					int finalCount = (count * val) / 4
+				
+				i -= 1
+			else
+				Debug.Notification("Extraction failed. Invalid Spell Book: " + itm.GetName())
+			endif
+		elseif ThisActor.HasPerk(DisenchantPerk) 
+			int count = self.GetItemCount(theForm)
+			if theForm as Scroll
+				Scroll itm = theForm as Scroll
+				int finalCount = count * itm.GetGoldValue() / 6
+				TempStorage.AddItem(ArcaneDust, finalCount)
+				self.RemoveItem(itm, count)
+				
+				ObjectReference disp = Display(theForm)
+				Drop(ArcaneDust, finalCount)
+				Destroy(disp)
+
+				ProgressScript.AdvInscription( Math.Floor(itm.GetGoldValue() * finalCount) / 20 )
+				
+				i -= 1
+			elseif (theForm as Weapon || theForm as Armor) && ((theForm as Weapon).GetEnchantment() || (theForm as Armor).GetEnchantment())					
+				int val = ScrollScribeExtender.GetApproxFullGoldValue(theForm)
+				int finalCount = (count * val) / 4
+				TempStorage.AddItem(ArcaneDust, finalCount)
+				self.RemoveItem(theForm, count)
+				
+				ObjectReference disp = Display(theForm)
+				Drop(ArcaneDust, finalCount)
+				Destroy(disp)
+
+				ProgressScript.AdvInscription( finalCount / 10 )
+				
+				i -= 1
+			elseif theForm as SoulGem
+				if SoulGemList.HasForm(theForm) || FilledSoulGemList.HasForm(theForm) 
+					int finalCount = count * DustPerGemRank.GetValueInt() * (theForm as SoulGem).GetGemSize()
 					TempStorage.AddItem(ArcaneDust, finalCount)
 					self.RemoveItem(theForm, count)
 					
@@ -132,47 +142,11 @@ Event OnUpdate()
 					Drop(ArcaneDust, finalCount)
 					Destroy(disp)
 					
-					extractionSuccess = true
-					ProgressScript.AdvInscription( finalCount / 10 )
-				elseif theForm as SoulGem
-					int j = 0
-					bool break = false
-					while j < SoulGemList.GetSize() && !break
-						if SoulGemList.GetAt(j) == theForm
-							int finalCount = count * DustPerGemRank.GetValueInt() * (1+j)
-							TempStorage.AddItem(ArcaneDust, finalCount)
-							self.RemoveItem(theForm, count)
-							
-							ObjectReference disp = Display(theForm)
-							Drop(ArcaneDust, finalCount)
-							Destroy(disp)
-							
-							break = true
-						endif
-						j += 1
-					EndWhile
-					
-					j = 0
-					while j < FilledSoulGemList.GetSize() && !break
-						if FilledSoulGemList.GetAt(j) == theForm
-							int finalCount = count * DustPerGemRank.GetValueInt() * (1+j)
-							TempStorage.AddItem(ArcaneDust, finalCount)
-							self.RemoveItem(theForm, count)
-							
-							ObjectReference disp = Display(theForm)
-							Drop(ArcaneDust, finalCount)
-							Destroy(disp)
-							
-							break = true
-						endif
-						j += 1
-					EndWhile
-					extractionSuccess = true
+					i -= 1
 				endif
 			endif
-			i += 1
-		endwhile
-		ranOnce = true
+		endif
+		i += 1
 	endwhile
 	Utility.Wait(0.1)
 	TempStorage.RemoveAllItems(self)

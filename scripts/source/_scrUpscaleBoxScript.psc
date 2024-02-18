@@ -10,7 +10,8 @@ Idle Property IdleStart Auto
 Idle Property IdleStop Auto
 
 VisualEffect Property ItemEffect Auto
-Explosion Property ItemEffectSuccess Auto
+Explosion Property ItemEffectAmplify Auto
+Explosion Property ItemEffectAmplifyLucky Auto
 Sound Property ItemSound Auto
 MiscObject Property ArcaneDust Auto
 
@@ -47,36 +48,57 @@ Event OnUpdate()
 	int i = 0
 	while i < itemCount
 		Scroll theScroll = self.GetNthForm(i) as Scroll
-		if theScroll
-			Spell scrSpell = ScrollScribeExtender.GetSpellFromScroll(theScroll)
-			if scrSpell
-				Spell upSpell = ScrollScribeExtender.GetUpgradedSpell(scrSpell)
-				if upSpell
-					Scroll upScroll = ScrollScribeExtender.GetScrollFromSpell(upSpell)
-					if upScroll
-						int requiredDustBase = theScroll.GetGoldValue() ;ScrollScribeExtender.GetApproxFullGoldValue(theScroll)
-						float weightedActorAVSum = 1.0 + \
-							0.0200 * ThisActor.GetAV("Enchanting") + \
-							0.0050 * ThisActor.GetAV("Alteration") + \
-							0.0050 * ThisActor.GetAV("Conjuration") + \
-							0.0050 * ThisActor.GetAV("Destruction") + \
-							0.0050 * ThisActor.GetAV("Illusion") + \
-							0.0050 * ThisActor.GetAV("Restoration")
-						int scrollCount = self.GetItemCount(theScroll)
-						int dustCost = scrollCount * m3Helper.RoundToInt(requiredDustBase / weightedActorAVSum)
-						if self.GetItemCount(ArcaneDust) >= dustCost
+		if theScroll	
+			int scrollCount = self.GetItemCount(theScroll)
+			if scrollCount < 2
+				Debug.Notification("Amplification requires at least two of the same Scroll.")
+			else 
+				Spell scrSpell = ScrollScribeExtender.GetSpellFromScroll(theScroll)
+				if scrSpell
+					Spell upSpell = ScrollScribeExtender.GetUpgradedSpell(scrSpell)
+					if upSpell
+						Scroll upScroll = ScrollScribeExtender.GetScrollFromSpell(upSpell)
+						if upScroll
+							float weightedActorAVSum = 1.0 + \
+								0.0100 * ThisActor.GetAV("Enchanting") + \
+								0.0025 * ThisActor.GetAV("Alteration") + \
+								0.0025 * ThisActor.GetAV("Conjuration") + \
+								0.0025 * ThisActor.GetAV("Destruction") + \
+								0.0025 * ThisActor.GetAV("Illusion") + \
+								0.0025 * ThisActor.GetAV("Restoration")
+							int halfOfCount = scrollCount - scrollCount / 2
+							float consumedProbability = 1.0 / weightedActorAVSum
+							bool doConsume = Utility.RandomFloat() < consumedProbability
+
 							ObjectReference disp = Display(theScroll)
 							Utility.Wait(1.0)
-							TempStorage.AddItem(upScroll, scrollCount)
-							self.RemoveItem(theScroll, scrollCount)
-							self.RemoveItem(ArcaneDust, dustCost)
+							TempStorage.AddItem(upScroll, halfOfCount)
+							
+							ObjectReference effRef
+							if doConsume
+								self.RemoveItem(theScroll, scrollCount)
+								effRef = disp.PlaceAtMe(ItemEffectAmplify)
+							else
+								self.RemoveItem(theScroll, scrollCount / 2, abSilent = false, akOtherContainer = TempStorage)
+								self.RemoveItem(theScroll, scrollCount)
+								effRef = disp.PlaceAtMe(ItemEffectAmplifyLucky)
+							endif
+							Utility.Wait(2.0)
+							
+							effRef.Disable()
+							effRef.Delete()
+							Destroy(disp)
+							
 							Debug.Notification(theScroll.GetName() + " amplified into " + upScroll.GetName())
 							i -= 1
-							Destroy(disp)
 						else
-							Debug.Notification(dustCost + " Arcane Dust needed to amplify " + scrollCount + " of " + theScroll.GetName())
+							Debug.Notification(theScroll.GetName() + " cannot be amplified further.")
 						endif
+					else
+						Debug.Notification(theScroll.GetName() + " cannot be amplified.")
 					endif
+				else
+					Debug.Notification(theScroll.GetName() + " cannot be amplified.")
 				endif
 			endif
 		endif
@@ -107,11 +129,7 @@ ObjectReference Function Display(Form theForm)
 EndFunction
 
 Function Destroy (ObjectReference ref)
-	ObjectReference effRef = ref.PlaceAtMe(ItemEffectSuccess)
-	Utility.Wait(1.0)
 	ref.Disable()
 	ItemEffect.Stop(ref)
 	ref.Delete()
-	effRef.Disable()
-	effRef.Delete()
 EndFunction

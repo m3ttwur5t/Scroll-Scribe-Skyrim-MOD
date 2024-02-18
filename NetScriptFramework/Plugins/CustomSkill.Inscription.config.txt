@@ -77,14 +77,14 @@ Node1.X = -1
 Node1.Y = -0.25
 Node1.GridX = 3
 Node1.GridY = 0
-Node1.Links = "2 3 6 4 5"
+Node1.Links = "2 3 6 19"
 
 # 2 Dust Discount
 Node2.Enable = true
 Node2.PerkFile = "Scribe.esp"
 Node2.PerkId = 0x82D
-Node2.X = -1
-Node2.Y = -0.3
+Node2.X = -0.55
+Node2.Y = -0.65
 Node2.GridX = 2
 Node2.GridY = 1
 
@@ -120,21 +120,19 @@ Node17.GridY = 1
 Node4.Enable = true
 Node4.PerkFile = "Scribe.esp"
 Node4.PerkId = 0x82E
-Node4.X = -0
-Node4.Y = 0.15
+Node4.X = -0.40
+Node4.Y = -0.45
 Node4.GridX = 1
-Node4.GridY = 0
-Node4.Links = "19"
+Node4.GridY = 1
 
 # 5 Attuned Scrolls
 Node5.Enable = true
 Node5.PerkFile = "Scribe.esp"
 Node5.PerkId = 0x82F
-Node5.X = -0.85
-Node5.Y = 0.15
+Node5.X = -1.0
+Node5.Y = -0.45
 Node5.GridX = 1
-Node5.GridY = 0
-Node5.Links = "19"
+Node5.GridY = 1
 
 # 6 To Dust
 Node6.Enable = true
@@ -244,7 +242,8 @@ Node18.GridY = 1
 Node19.Enable = true
 Node19.PerkFile = "Scribe.esp"
 Node19.PerkId = 0x85C
-Node19.X = -0.75
-Node19.Y = 0.60
+Node19.X = -0.25
+Node19.Y = -0.90
 Node19.GridX = 1
-Node19.GridY = 0
+Node19.GridY = 1
+Node19.Links = "4 5"
