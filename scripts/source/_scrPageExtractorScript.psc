@@ -8,6 +8,7 @@ ObjectReference Property TempStorage  Auto
 GlobalVariable Property InscriptionLevel Auto
 Quest Property TutorialQuest  Auto  
 MiscObject Property ArcaneDust Auto
+MiscObject Property RollOfPaper Auto
 
 Perk Property DisenchantPerk  Auto  
 
@@ -72,7 +73,13 @@ Event OnUpdate()
 		
 		DroppedDustList = new ObjectReference[32] ; MAX_DROPS
 		StickyMarkerRef = ThisActor.PlaceAtMe(StickyMarker,1,FALSE,false)
-		StickyMarkerRef.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, WorkstationScript.SummonedBenchExtract.Z - 1000.0)
+		
+		; weird workaround for physics sometimes not working - i don't know
+		float stickyZ = WorkstationScript.SummonedBenchExtract.Z - 1000.0
+		if stickyZ < - 4000.0
+			stickyZ *= -0.5
+		endif
+		StickyMarkerRef.SetPosition(WorkstationScript.SummonedBenchExtract.X, WorkstationScript.SummonedBenchExtract.Y, stickyZ)
 		Utility.Wait(0.1)
 		MarkerEffectWait.Play(WorkstationScript.SummonedBenchExtract)
 	endif
@@ -80,7 +87,7 @@ Event OnUpdate()
 	int i = 0
 	while i < itemCount
 		Form theForm = self.GetNthForm(i)
-		if theForm as Book
+		if theForm as Book && (theForm as Book).GetSpell()
 			Book itm = theForm as Book
 			Scroll product = ScrollScribeExtender.GetScrollForBook(itm)
 			if product
@@ -144,6 +151,16 @@ Event OnUpdate()
 					
 					i -= 1
 				endif
+			elseif theForm as Book && theForm.GetGoldValue() > 0
+				int finalCount = count * Math.Sqrt(theForm.GetGoldValue()) as int
+				TempStorage.AddItem(RollOfPaper, finalCount)
+				self.RemoveItem(theForm, count)
+				
+				ObjectReference disp = Display(theForm)
+				Drop(RollOfPaper, finalCount, scale = 0.2)
+				Destroy(disp)
+				
+				i -= 1
 			endif
 		endif
 		i += 1
@@ -193,12 +210,11 @@ Function Drop(Form ItemForm, int count, float scale = 0.33)
 		endif
 		ObjectReference Obj
 		Obj = StickyMarkerRef.PlaceAtMe(ItemForm, 1, FALSE, false)
-		Obj.SetActorOwner(ThisActor.GetActorBase())
 		Obj.BlockActivation()
+		Obj.SetActorOwner(ThisActor.GetActorBase())
 		Obj.SetScale(scale)
-		Obj.Disable()
-		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-10.0, 10.0), WorkstationScript.SummonedBenchExtract.Z + 90.0)
-		Obj.EnableNoWait(true)
+		Obj.SetPosition(WorkstationScript.SummonedBenchExtract.X + Utility.RandomFloat(-5.0, 5.0), WorkstationScript.SummonedBenchExtract.Y + Utility.RandomFloat(-5.0, 5.0), WorkstationScript.SummonedBenchExtract.Z + 90.0)
+		Obj.ApplyHavokImpulse(0.0, 0.0, 1.0, 0.25) ; just a small bump
 
 		DroppedDustList[DroppedDustListIndex] = Obj
 		DroppedDustListIndex += 1

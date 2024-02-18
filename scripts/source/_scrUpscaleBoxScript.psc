@@ -78,12 +78,14 @@ Event OnUpdate()
 							if doConsume
 								self.RemoveItem(theScroll, scrollCount)
 								effRef = disp.PlaceAtMe(ItemEffectAmplify)
+								Utility.Wait(2.0)
 							else
 								self.RemoveItem(theScroll, scrollCount / 2, abSilent = false, akOtherContainer = TempStorage)
 								self.RemoveItem(theScroll, scrollCount)
 								effRef = disp.PlaceAtMe(ItemEffectAmplifyLucky)
+								Utility.Wait(2.5)
 							endif
-							Utility.Wait(2.0)
+							
 							
 							effRef.Disable()
 							effRef.Delete()
