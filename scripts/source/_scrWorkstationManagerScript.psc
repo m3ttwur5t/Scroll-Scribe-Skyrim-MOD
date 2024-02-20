@@ -25,6 +25,26 @@ ObjectReference Property SummonedBenchFusion Auto Hidden
 ObjectReference Property SummonedBenchUpscale Auto Hidden
 bool Property IsBusy Auto Hidden
 
+Function InsertionSort(Form[] arrayForms, int[] arrayInts)
+    int i = 1
+    while i < arrayForms.Length
+        Soulgem formKey = arrayForms[i] as Soulgem
+		int intKey = arrayInts[i]
+        int j = i - 1
+
+        While j >= 0 && (arrayForms[j] as Soulgem).GetGemSize() < formKey.GetGemSize()
+            arrayForms[j + 1] = arrayForms[j]
+			arrayInts[j + 1] = arrayInts[j]
+            j -= 1
+        EndWhile
+
+        arrayForms[j + 1] = formKey
+		arrayInts[j + 1] = intKey
+		
+		i += 1
+    endwhile
+EndFunction
+
 Function Disassemble(Actor user, bool soulgems = true, bool books = true)
 	int dustReceived = 0
 	int paperReceived = 0
@@ -89,19 +109,19 @@ Function Reassemble(Actor user, bool soulgems = true, bool books = true)
 	int paperRemoved = 0 
 	
 	if soulgems && isDisassembledGems
+		InsertionSort(dismantledGems, dismantledGemsCount) ; PO3_SKSEFunctions.AddItemsOfTypeToArray does not always return them in order?
+
 		int dustPerSize = DustPerGemRank.GetValueInt()
 		int dustInventory = user.GetItemCount(ArcaneDust)
-		int i = 0 ;dismantledGems.Length - 1
+		int i = 0
 		while i < dismantledGems.Length && dustInventory >= dustPerSize
 			Soulgem gem = dismantledGems[i] as Soulgem
-			if gem && dismantledGemsCount[i] > 0
-				int gemsReturned = m3Helper.Min( dismantledGemsCount[i], Math.Floor(dustInventory / (dustPerSize * gem.GetGemSize())) )
-				int dustConsumed = gemsReturned * dustPerSize * gem.GetGemSize()
-				dustInventory -= dustConsumed
+			int gemsReturned = m3Helper.Min( dismantledGemsCount[i], Math.Floor(dustInventory / (dustPerSize * gem.GetGemSize())) )
+			int dustConsumed = gemsReturned * dustPerSize * gem.GetGemSize()
+			dustInventory -= dustConsumed
 
-				dustRemoved += dustConsumed
-				user.AddItem(dismantledGems[i], gemsReturned, true)
-			endif
+			dustRemoved += dustConsumed
+			user.AddItem(dismantledGems[i], gemsReturned, true)
 			
 			i += 1
 		endwhile
@@ -119,8 +139,8 @@ Function Reassemble(Actor user, bool soulgems = true, bool books = true)
 		int paperBook = PaperPerBook.GetValueInt()
 		int paperInventory = user.GetItemCount(PaperRoll)
 		
-		int i = dismantledBooks.Length - 1
-		while i >= 0 && paperInventory >= paperBook
+		int i = 0
+		while i < dismantledBooks.Length && paperInventory >= paperBook
 			Form theBook = dismantledBooks[i]
 			if theBook && dismantledBooksCount[i] > 0
 				int booksReturned = m3Helper.Min( dismantledBooksCount[i], Math.Floor(paperInventory / (bonusPaper + paperBook)) )
@@ -131,7 +151,7 @@ Function Reassemble(Actor user, bool soulgems = true, bool books = true)
 				user.AddItem(dismantledBooks[i], booksReturned, true)
 			endif
 			
-			i -= 1	
+			i += 1	
 		EndWhile
 		user.RemoveItem(PaperRoll, paperRemoved, true)
 		isDisassembledBooks = false
