@@ -1,20 +1,59 @@
-Scroll Potency 			- Your created Scrolls deal 1% more damage or last 2% longer for each level in Inscription. Additionally, gain a small amount of Inscription experience when using created Scrolls.
-Zap!					- When using a concentration-type Scroll, the initial burst of magic (if it has one) lingers for 5 seconds.
-Preserved Books 		- Obtain 10 additional Rolls of Paper from Ruined Books.
-Dust Discount 			- Reduces the amount of Arcane Dust needed to craft Scrolls by 33%. Cannot reduce the amount below 5.
-To Dust 				- Chance to find Arcane Dust on defeated enemies.
-Focus					- Spells of concentration-type Scrolls can be maintained an additional second for every 20 levels in Inscription.
-Paper Cut				- While holding a Scroll or Scroll-spell in one hand and a weapon in the other, your weapon deals bonus damage equal to 20% of your Inscription level.
-Paper Armor				- Unlock the art of crafting Paper Armor Scrolls, which grant Armor, Magic Resistance, and Stagger Resistance based on Inscription level. 
-						  These Scrolls require no Arcane Dust but large amounts of paper, and cannot be fused.
-Enchanted Scrolls		- Scrolls gain an additional 1% potency per Enchanting level.
-Attuned Scrolls			- Scrolls gain an additional 1% potency per level in the magic school they belong to.
-Tool: Disenchanter		- Upgrades your workbench with a Disenchanter, which can disenchant and convert Spell Tomes directly into Scrolls
-Improved Disenchanter	- Allows the Disenchanter to disenchant Scrolls, Soul Gems, and enchanted Weapons and Armor into Arcane Dust. Does not work with player-enchanted items.
-Lucky Scribe			- When creating Scrolls, there is a 33% chance to create twice as many.	
-Disintegrate 			- Dealing overkill damage with a direct hit from a non-concentration Scroll to an enemy above 25% health will turn its corpse into a pile of Arcane Dust.
-Concentrated Power		- While concentrating on a Scroll, gain stacking Scroll Power (for non-concentration Scrolls), Spell Power, and Attack Damage for each second of uninterrupted concentration.
-Tool: Polymerizer		- Upgrades your Scribe Tools with a Polymerizer, which is able to combine two similar Scrolls into one at the cost of 100 Arcane Dust each. 
-						  Fused Scrolls do not benefit from Scroll Potency, Enchanted Scrolls, and Attuned Scrolls perks, but are twice as strong AND last twice as long.
-Going Further Beyond	- Can fuse two fused Scrolls (four scrolls in total) into one, doubling their power in the process. This miracle requires 1000 Arcane Dust to be offered. Choose your selection wisely.
-Unlimited Power			- Receive 50% less damage while concentrating [on a Scroll]. Consume 100 Arcane Dust from your inventory to extend concentration time beyond the limit. Further extensions double in cost. 
+Scroll Potency
+Your created Scrolls deal 1% more damage or last 2% longer for each level in Inscription. Additionally, gain a small amount of Inscription experience when using created Scrolls.
+
+Zap!
+When using a concentration-type Scroll, the initial burst of magic (if it has one) lingers for 5 seconds.
+
+Preserved Books
+Obtain 10 additional Rolls of Paper from Ruined Books.
+
+Dust Discount
+Reduces the amount of Arcane Dust needed to craft Scrolls by 33%. Cannot reduce the amount below 5.
+
+To Dust
+Chance to find Arcane Dust on defeated enemies.
+
+Focus
+Spells of concentration-type Scrolls can be maintained an additional second for every 20 levels in Inscription.
+
+Paper Cut
+While holding a Scroll or Scroll-spell in one hand and a weapon in the other, your weapon deals bonus damage equal to 20% of your Inscription level.
+
+Paper Armor	
+Unlock the art of crafting Paper Armor Scrolls, which grant Armor, Magic Resistance, and Stagger Resistance based on Inscription level. 
+These Scrolls require no Arcane Dust but large amounts of paper, and cannot be fused.
+
+Tool: Enchantrix Amplificator	
+Upgrades your workbench with the Enchantrix Amplificator. Provided with at least two of the same Scroll, it will disenchant half to amplify the other half, creating a more advanced Scroll of a similar type. 
+Skilled Enchanters and Mages are sometimes able to preserve Scrolls.
+
+Enchanted Scrolls
+Scrolls gain an additional 1% potency per Enchanting level.
+
+Attuned Scrolls
+Scrolls gain an additional 1% potency per level in the magic school they belong to.
+
+Tool: Disenchanter
+Upgrades your workbench with a Disenchanter, which can disenchant and convert Spell Tomes directly into Scrolls
+
+Improved Disenchanter
+Allows the Disenchanter to disenchant Scrolls, Soul Gems, and enchanted Weapons and Armor into Arcane Dust. Does not work with player-enchanted items.
+
+Lucky Scribe
+When creating Scrolls, there is a 33% chance to create twice as many.	
+
+Disintegrate
+Dealing overkill damage with a direct hit from a non-concentration Scroll to an enemy above 25% health will turn its corpse into a pile of Arcane Dust.
+
+Concentrated Power
+While concentrating on a Scroll, gain stacking Scroll Power (for non-concentration Scrolls), Spell Power, and Attack Damage for each second of uninterrupted concentration.
+
+Tool: Polymerizer
+Upgrades your Scribe Tools with a Polymerizer, which is able to combine two similar Scrolls into one at the cost of 100 Arcane Dust each. 
+Fused Scrolls do not benefit from Scroll Potency, Enchanted Scrolls, and Attuned Scrolls perks, but are twice as strong AND last twice as long.
+
+Going Further Beyond
+Can fuse two fused Scrolls (four scrolls in total) into one, doubling their power in the process. This miracle requires 1000 Arcane Dust to be offered. Choose your selection wisely.
+
+Unlimited Power
+Receive 50% less damage while concentrating [on a Scroll]. Consume 100 Arcane Dust from your inventory to extend concentration time beyond the normal limit. Further extensions double in cost. 
