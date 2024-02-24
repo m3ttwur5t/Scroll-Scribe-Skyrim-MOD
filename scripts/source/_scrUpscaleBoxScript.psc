@@ -60,12 +60,12 @@ Event OnUpdate()
 						Scroll upScroll = ScrollScribeExtender.GetScrollFromSpell(upSpell)
 						if upScroll
 							float weightedActorAVSum = 1.0 + \
-								0.0100 * ThisActor.GetAV("Enchanting") + \
-								0.0025 * ThisActor.GetAV("Alteration") + \
-								0.0025 * ThisActor.GetAV("Conjuration") + \
-								0.0025 * ThisActor.GetAV("Destruction") + \
-								0.0025 * ThisActor.GetAV("Illusion") + \
-								0.0025 * ThisActor.GetAV("Restoration")
+								0.0050 * ThisActor.GetAV("Enchanting") + \
+								0.0010 * ThisActor.GetAV("Alteration") + \
+								0.0010 * ThisActor.GetAV("Conjuration") + \
+								0.0010 * ThisActor.GetAV("Destruction") + \
+								0.0010 * ThisActor.GetAV("Illusion") + \
+								0.0010 * ThisActor.GetAV("Restoration")
 							int halfOfCount = scrollCount - scrollCount / 2
 							float consumedProbability = 1.0 / weightedActorAVSum
 							bool doConsume = Utility.RandomFloat() < consumedProbability

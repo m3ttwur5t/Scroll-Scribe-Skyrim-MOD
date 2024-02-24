@@ -152,7 +152,7 @@ Event OnUpdate()
 					i -= 1
 				endif
 			elseif theForm as Book && theForm.GetGoldValue() > 0
-				int finalCount = count * Math.Sqrt(theForm.GetGoldValue()) as int
+				int finalCount = (count * theForm.GetGoldValue()) / 2
 				TempStorage.AddItem(RollOfPaper, finalCount)
 				self.RemoveItem(theForm, count)
 				
