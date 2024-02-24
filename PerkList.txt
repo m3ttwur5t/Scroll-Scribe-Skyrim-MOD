@@ -37,7 +37,7 @@ Tool: Disenchanter
 Upgrades your workbench with a Disenchanter, which can disenchant and convert Spell Tomes directly into Scrolls
 
 Improved Disenchanter
-Allows the Disenchanter to disenchant Scrolls, Soul Gems, and enchanted Weapons and Armor into Arcane Dust. Does not work with player-enchanted items.
+Allows the Disenchanter to disenchant Scrolls, Soul Gems, and enchanted Weapons and Armor into Arcane Dust, and dismantle books into Rolls of Paper. Does not work with custom enchanted items.
 
 Lucky Scribe
 When creating Scrolls, there is a 33% chance to create twice as many.	
