@@ -1,11 +1,11 @@
 Scroll Potency
-Your created Scrolls deal 1% more damage or last 2% longer for each level in Inscription. Additionally, gain a small amount of Inscription experience when using created Scrolls.
+Your Scrolls are 1% stronger or last 2% longer for each level in Inscription. Additionally, gain a small amount of Inscription experience when using Scrolls.
 
 Zap!
 When using a concentration-type Scroll, the initial burst of magic (if it has one) lingers for 5 seconds.
 
 Preserved Books
-Obtain 10 additional Rolls of Paper from Ruined Books.
+Obtain twice as many Rolls of Paper from Ruined and Burned Books.
 
 Dust Discount
 Reduces the amount of Arcane Dust needed to craft Scrolls by 33%. Cannot reduce the amount below 5.
@@ -28,10 +28,10 @@ Upgrades your workbench with the Enchantrix Amplificator. Provided with at least
 Skilled Enchanters and Mages are sometimes able to preserve Scrolls.
 
 Enchanted Scrolls
-Scrolls gain an additional 1% potency per Enchanting level.
+Scrolls gain an additional 0.5% potency per Enchanting level.
 
 Attuned Scrolls
-Scrolls gain an additional 1% potency per level in the magic school they belong to.
+Scrolls gain an additional 0.5% potency per level in the magic school they belong to.
 
 Tool: Disenchanter
 Upgrades your workbench with a Disenchanter, which can disenchant and convert Spell Tomes directly into Scrolls
