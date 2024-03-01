@@ -1,5 +1,5 @@
 Scroll Potency
-Your Scrolls are 1% stronger or last 2% longer for each level in Inscription. Additionally, gain a small amount of Inscription experience when using Scrolls.
+Your Scrolls are 1% stronger or last longer for each level in Inscription. Additionally, gain a small amount of Inscription experience when using Scrolls.
 
 Zap!
 When using a concentration-type Scroll, the initial burst of magic (if it has one) lingers for 5 seconds.
