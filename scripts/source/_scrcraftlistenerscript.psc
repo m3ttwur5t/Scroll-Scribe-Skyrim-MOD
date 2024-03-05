@@ -14,20 +14,8 @@ Event OnInit()
     RegisterForMenu("Crafting Menu")
 EndEvent
 
-Event OnMenuOpen(String OpenedMenu)
-     if (OpenedMenu == "Crafting Menu")
-		  bCrafting = true
-     endif
-EndEvent
-
-Event OnMenuClose(String OpenedMenu)
-     if (OpenedMenu == "Crafting Menu")
-		  bCrafting = false
-     endif
-EndEvent
-
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
-	if !bCrafting
+	if !UI.IsMenuOpen("Crafting Menu") 
 		return
 	endif
 	if luckyBlock
