@@ -4,15 +4,10 @@ _scrProgressionScript Property ProgressScript  Auto
 
 Keyword Property ListenKeyword Auto
 Actor Property Player Auto
-
 Perk Property LuckyScribePerk  Auto  
 
-bool bCrafting = false
 bool luckyBlock = false
 
-Event OnInit()
-    RegisterForMenu("Crafting Menu")
-EndEvent
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
 	if !UI.IsMenuOpen("Crafting Menu") 

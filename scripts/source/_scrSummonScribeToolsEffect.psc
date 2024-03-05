@@ -105,21 +105,31 @@ Function SummonUpscaleBox()
 EndFunction
 
 Function BanishWorkbenches()
+	
 	WorkstationScript.SummonedBenchBase.PlaceAtMe(EffectBanish,1,FALSE,false)
 	Utility.Wait(0.5)
 	WorkstationScript.SummonedBenchBase.DisableNoWait(true)
 	WorkstationScript.SummonedBenchBase.Delete()
 	WorkstationScript.SummonedBenchBase = none
 	
-	WorkstationScript.SummonedBenchExtract.DisableNoWait(true)
-	WorkstationScript.SummonedBenchExtract.Delete()
-	WorkstationScript.SummonedBenchExtract = none
+	if WorkstationScript.SummonedBenchExtract
+		WorkstationScript.SummonedBenchExtract.RemoveAllItems(ThisActor)
+		WorkstationScript.SummonedBenchExtract.DisableNoWait(true)
+		WorkstationScript.SummonedBenchExtract.Delete()
+		WorkstationScript.SummonedBenchExtract = none
+	endif
 	
-	WorkstationScript.SummonedBenchFusion.DisableNoWait(true)
-	WorkstationScript.SummonedBenchFusion.Delete()
-	WorkstationScript.SummonedBenchFusion = none
+	if WorkstationScript.SummonedBenchFusion
+		WorkstationScript.SummonedBenchFusion.RemoveAllItems(ThisActor)
+		WorkstationScript.SummonedBenchFusion.DisableNoWait(true)
+		WorkstationScript.SummonedBenchFusion.Delete()
+		WorkstationScript.SummonedBenchFusion = none
+	endif
 	
-	WorkstationScript.SummonedBenchUpscale.DisableNoWait(true)
-	WorkstationScript.SummonedBenchUpscale.Delete()
-	WorkstationScript.SummonedBenchUpscale = none
+	if WorkstationScript.SummonedBenchUpscale
+		WorkstationScript.SummonedBenchUpscale.RemoveAllItems(ThisActor)
+		WorkstationScript.SummonedBenchUpscale.DisableNoWait(true)
+		WorkstationScript.SummonedBenchUpscale.Delete()
+		WorkstationScript.SummonedBenchUpscale = none
+	endif
 EndFunction
