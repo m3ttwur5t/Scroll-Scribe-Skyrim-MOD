@@ -5,16 +5,10 @@ _scrProgressionScript Property ProgressScript  Auto
 Keyword Property ListenKeyword Auto
 Actor Property Player Auto
 Perk Property LuckyScribePerk  Auto  
-
-bool luckyBlock = false
-
+ObjectReference Property TempStorage  Auto  
 
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer)
 	if !UI.IsMenuOpen("Crafting Menu") 
-		return
-	endif
-	if luckyBlock
-		luckyBlock = false
 		return
 	endif
 	
@@ -22,13 +16,13 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
 		ProgressScript.AdvInscription( Math.Floor(akBaseItem.GetGoldValue() * aiItemCount) )
 		
 		if Player.HasPerk(LuckyScribePerk) 
-			luckyBlock = true
-			int bonus = 0
-			float rng = Utility.RandomFloat(0.0, 1.0)
-			if rng <= 0.33
-				bonus = aiItemCount
+			if Utility.RandomFloat(0.0, 1.0) <= 0.33
+				TempStorage.AddItem(akBaseItem, aiItemCount)
+				TempStorage.RemoveAllItems(Player)
 			endif
-			Player.AddItem(akBaseItem, bonus)
+			Player.AddItem(akBaseItem, aiItemCount)
 		endif
 	EndIf
 EndEvent
+
+
